@@ -1,113 +1,263 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+// pages/index.tsx
+import { 
+  Box, 
+  Container, 
+  Typography, 
+  Card, 
+  CardContent, 
+  CardMedia, 
+  Button,
+  useMediaQuery,
+  useTheme,
+  Fade,
+  Grow,
+  Slide
+} from '@mui/material';
+import Link from 'next/link';
+import AdBanner from '@/components/AdBanner';
+import HeadSEO from '@/components/HeadSEO';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const puzzleGames = [
+  {
+    id: 'pinpoint',
+    title: 'LinkedIn Pinpoint',
+    description: 'Daily word association puzzle that challenges your vocabulary',
+    image: '/images/pinpoint-game.png',
+    path: '/solutions/pinpoint'
+  },
+  {
+    id: 'queens',
+    title: 'LinkedIn Queens',
+    description: 'Classic chess puzzle with modern twists',
+    image: '/images/queens-game.png',
+    path: '/solutions/queens'
+  },
+  {
+    id: 'tango',
+    title: 'LinkedIn Tango',
+    description: 'Spatial reasoning puzzle with beautiful design',
+    image: '/images/tango-game.png',
+    path: '/solutions/tango'
+  },
+  {
+    id: 'crossword',
+    title: 'LinkedIn Crossword',
+    description: 'Traditional crossword with daily challenges',
+    image: '/images/crossword-game.png',
+    path: '/solutions/crossword'
+  },
+  {
+    id: 'zip',
+    title: 'LinkedIn Zip',
+    description: 'Number placement puzzle with unique mechanics',
+    image: '/images/zip-game.png',
+    path: '/solutions/zip'
+  }
+];
 
 export default function Home() {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <>
+      <HeadSEO
+        title="Daily Puzzle Solutions | LogicPuzzleMaster"
+        description="Step-by-step solutions for LinkedIn Pinpoint, Queens, Tango and more puzzles"
+        canonicalUrl="https://yourdomain.com"
+      />
+      
+<Box
+  sx={{
+    position: 'relative',
+    py: 10,
+    mb: 6,
+    overflow: 'hidden',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundImage: `
+        linear-gradient(to right, 
+          rgba(25, 59, 210, 0.52) 0%, 
+          rgba(9, 3, 131, 0.77) 50%, 
+          rgba(25, 59, 210, 0.52) 100%),
+        url('/hero.jpeg')
+      `,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      zIndex: -1
+    }
+  }}
+>
+  <Container maxWidth="lg">
+    <Box sx={{ 
+      position: 'relative',
+      zIndex: 1,
+      textAlign: 'center',
+      maxWidth: '800px',
+      mx: 'auto'
+    }}>
+      <Typography
+        variant="h1"
+        sx={{
+          fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4rem' },
+          fontWeight: 800,
+          lineHeight: 1.2,
+          mb: 3,
+          color: 'common.white',
+          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+        }}
+      >
+        Master Logic Puzzles Like Never Before
+      </Typography>
+      <Typography
+        variant="h5"
+        sx={{
+          fontWeight: 400,
+          mb: 4,
+          fontSize: { xs: '1.1rem', md: '1.25rem' },
+          color: 'rgba(255,255,255,0.9)',
+          textShadow: '0 1px 2px rgba(0,0,0,0.2)'
+        }}
+      >
+        Daily solutions with step-by-step explanations and video walkthroughs.
+      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+        <Link href="#puzzles" passHref>
+          <Button
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: 'white',
+              color: '#1976d2',
+              px: 4,
+              py: 1.5,
+              fontWeight: 600,
+              borderRadius: '50px',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              '&:hover': {
+                backgroundColor: 'rgba(255,255,255,0.9)',
+                transform: 'translateY(-2px)',
+                boxShadow: '0 6px 8px rgba(0, 0, 0, 0.15)',
+              },
+              transition: 'all 0.3s ease',
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            View Solutions
+          </Button>
+        </Link>
+        <Link href="/games" passHref>
+          <Button
+            variant="outlined"
+            size="large"
+            sx={{
+              borderColor: 'white',
+              color: 'white',
+              px: 4,
+              py: 1.5,
+              fontWeight: 600,
+              borderRadius: '50px',
+              '&:hover': {
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                borderColor: 'white',
+                transform: 'translateY(-2px)',
+              },
+              transition: 'all 0.3s ease',
+            }}
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+            More Games
+          </Button>
+        </Link>
+      </Box>
+    </Box>
+  </Container>
+</Box>
+
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        {/* Puzzle Games Grid */}
+        <Box id="puzzles" sx={{ 
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 4,
+          justifyContent: 'center',
+          mb: 4
+        }}>
+          {puzzleGames.map((game, index) => (
+            <Grow in={true} timeout={index * 150} key={game.id}>
+              <Card
+                sx={{
+                  width: { xs: '100%', sm: 345, md: 300 },
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-5px)',
+                    boxShadow: 3
+                  }
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  height="180"
+                  image={game.image}
+                  alt={game.title}
+                />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography 
+                    variant="h5" 
+                    component="h3" 
+                    sx={{ 
+                      fontWeight: 700,
+                      mb: 1,
+                      color: 'text.primary'
+                    }}
+                  >
+                    {game.title}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      mb: 3,
+                      color: 'text.secondary',
+                      minHeight: '4em'
+                    }}
+                  >
+                    {game.description}
+                  </Typography>
+                  <Link href={game.path} passHref>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      sx={{
+                        borderRadius: '50px',
+                        fontWeight: 600,
+                        '&:hover': {
+                          backgroundColor: 'primary.dark',
+                          transform: 'scale(1.02)'
+                        },
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      View Solutions
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </Grow>
+          ))}
+        </Box>
+
+        {/* Ad Banner */}
+        <Slide direction="up" in={true} timeout={800}>
+          <Box sx={{ mt: 6 }}>
+            <AdBanner />
+          </Box>
+        </Slide>
+      </Container>
+    </>
   );
 }
