@@ -9,10 +9,8 @@ import {
   IconButton,
   useMediaQuery,
   useTheme,
-  Fade,
   Grow,
   Slide,
-  Divider,
   CircularProgress,
   Skeleton,
   Menu,
@@ -28,6 +26,7 @@ import AddIcon from '@mui/icons-material/Add';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import FontDownloadIcon from '@mui/icons-material/FontDownload';
 import CloseIcon from '@mui/icons-material/Close';
+import Image from 'next/image';
 import AdBanner from '@/components/AdBanner';
 import HeadSEO from '@/components/HeadSEO';
 import { ChromePicker } from 'react-color';
@@ -52,6 +51,15 @@ interface TextElement {
   isDragging: boolean;
 }
 
+interface RedditPost {
+  data: {
+    id: string;
+    title: string;
+    url: string;
+    permalink: string;
+  };
+}
+
 export default function MemeGenerator() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -68,9 +76,9 @@ export default function MemeGenerator() {
   const [fontFamily, setFontFamily] = useState<string>('Impact');
   const [loading, setLoading] = useState(true);
   
-  const [popularMemes, setPopularMemes] = useState<any[]>([]);
+  const [popularMemes, setPopularMemes] = useState<RedditPost[]>([]);
   const [galleryLoading, setGalleryLoading] = useState(true);
-  const [filter, setFilter] = useState<'Latest' | 'Trending' | 'Top Weekly' | 'Best Of All Time'>('Trending');
+  const [filter, setFilter] = useState<'Trending' | 'Latest' | 'Top Weekly' | 'Best Of All Time'>('Trending');
 
   const [colorPickerAnchor, setColorPickerAnchor] = useState<HTMLElement | null>(null);
   const [fontMenuAnchor, setFontMenuAnchor] = useState<HTMLElement | null>(null);
@@ -125,7 +133,6 @@ export default function MemeGenerator() {
         const response = await fetch(`${url}${timeParam}`);
         const data = await response.json();
         
-        // Handle API response
         const memes = data?.data?.children || [];
         setPopularMemes(memes);
       } catch (error) {
@@ -139,36 +146,35 @@ export default function MemeGenerator() {
     fetchPopularMemes();
   }, [filter]);
 
-  // Draw meme on canvas when inputs change
+
   useEffect(() => {
     if (!selectedTemplate || !canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const img = new Image();
+  
+    const img = document.createElement('img');
     img.crossOrigin = 'Anonymous';
     img.onload = () => {
-      // Set canvas dimensions
       const maxWidth = isSmallScreen ? 350 : 500;
       const ratio = Math.min(maxWidth / img.width, 500 / img.height);
-      canvas.width = img.width * ratio;
-      canvas.height = img.height * ratio;
-
-      // Draw image
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-      // Draw all text elements
-      textElements.forEach(textEl => {
-        ctx.fillStyle = textEl.color;
-        ctx.strokeStyle = '#000000';
-        ctx.lineWidth = textEl.fontSize / 8;
-        ctx.textAlign = 'center';
-        ctx.font = `bold ${textEl.fontSize}px ${textEl.fontFamily}`;
-        ctx.strokeText(textEl.text, textEl.x, textEl.y);
-        ctx.fillText(textEl.text, textEl.x, textEl.y);
-      });
+      
+      if (canvasRef.current) {
+        canvasRef.current.width = img.width * ratio;
+        canvasRef.current.height = img.height * ratio;
+  
+        const ctx = canvasRef.current.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
+  
+          textElements.forEach(textEl => {
+            ctx.fillStyle = textEl.color;
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = textEl.fontSize / 8;
+            ctx.textAlign = 'center';
+            ctx.font = `bold ${textEl.fontSize}px ${textEl.fontFamily}`;
+            ctx.strokeText(textEl.text, textEl.x, textEl.y);
+            ctx.fillText(textEl.text, textEl.x, textEl.y);
+          });
+        }
+      }
     };
     img.src = selectedTemplate.url;
   }, [selectedTemplate, textElements, isSmallScreen]);
@@ -371,7 +377,7 @@ export default function MemeGenerator() {
   return (
     <>
       <HeadSEO
-        title="Programming Meme Generator | LogicPuzzleMaster"
+        title="Programming Meme Generator | PuzzleLogicHub"
         description="Create and share hilarious programming and tech memes"
         canonicalUrl="https://yourdomain.com/memes"
       />
@@ -717,7 +723,7 @@ export default function MemeGenerator() {
               <Button
                 key={f}
                 variant={filter === f ? 'contained' : 'outlined'}
-                onClick={() => setFilter(f as any)}
+                onClick={() => setFilter(f as 'Trending' | 'Latest' | 'Top Weekly' | 'Best Of All Time')}
                 sx={{
                   borderRadius: '50px',
                   fontWeight: 600

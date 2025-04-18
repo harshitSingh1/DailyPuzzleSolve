@@ -7,7 +7,6 @@ import {
   Button, 
   Avatar, 
   Chip, 
-  Divider, 
   Pagination,
   useMediaQuery,
   useTheme,
@@ -20,6 +19,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import AdBanner from '@/components/AdBanner';
 import HeadSEO from '@/components/HeadSEO';
 import Skeleton from '@mui/material/Skeleton';
+import Image from 'next/image';
 
 interface BlogPost {
   id: number;
@@ -45,13 +45,11 @@ export default function BlogPage() {
   const [page, setPage] = useState(1);
   const postsPerPage = 6;
 
-  // Fetch all data in parallel
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         
-        // Fetch in parallel
         const [featuredResponse, monthlyResponse] = await Promise.all([
           fetch('https://dev.to/api/articles?tags=technology,job,programming,coding&top=1'),
           fetch('https://dev.to/api/articles?tags=technology,job,programming,coding&top=7')
@@ -62,12 +60,10 @@ export default function BlogPage() {
 
         setFeaturedPost(featuredData);
         
-        // Filter out the featured post if it exists in the monthly data
         const filteredMonthly = monthlyData.filter((post: BlogPost) => 
           post.id !== featuredData?.id
         );
         
-        // If we filtered out the featured post, take the next one to maintain 30 posts
         const finalPosts = filteredMonthly.length < monthlyData.length
           ? [...filteredMonthly, ...monthlyData.slice(30, 31)]
           : filteredMonthly.slice(0, 30);
@@ -83,7 +79,6 @@ export default function BlogPage() {
     fetchData();
   }, []);
 
-  // Memoized filtered posts to avoid duplicates
   const filteredPosts = useMemo(() => {
     return blogPosts;
   }, [blogPosts]);
@@ -98,17 +93,6 @@ export default function BlogPage() {
     setPage(value);
   };
 
-  // Optimize image URLs with Cloudinary-like parameters
-  const optimizeImageUrl = (url: string, width = 600) => {
-    if (!url) return '';
-    try {
-      const urlObj = new URL(url);
-      return url;
-    } catch {
-      return url;
-    }
-  };
-
   return (
     <>
       <HeadSEO
@@ -118,7 +102,6 @@ export default function BlogPage() {
       />
       
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Page Header */}
         <Typography 
           variant="h3" 
           component="h1" 
@@ -135,7 +118,6 @@ export default function BlogPage() {
           Trending Tech Articles
         </Typography>
 
-        {/* Featured Post */}
         {loading ? (
           <Skeleton variant="rectangular" width="100%" height={300} sx={{ mb: 4 }} />
         ) : featuredPost && (
@@ -162,15 +144,14 @@ export default function BlogPage() {
                     position: 'relative'
                   }}
                 >
-                  <img
-                    src={optimizeImageUrl(featuredPost.cover_image, 800)}
+                  <Image
+                    src={featuredPost.cover_image}
                     alt={featuredPost.title}
+                    fill
                     style={{
-                      width: '100%',
-                      height: '100%',
                       objectFit: 'cover'
                     }}
-                    loading="lazy"
+                    priority
                   />
                 </Box>
               )}
@@ -225,7 +206,7 @@ export default function BlogPage() {
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Avatar
-                      src={optimizeImageUrl(featuredPost.user.profile_image, 100)}
+                      src={featuredPost.user.profile_image}
                       alt={featuredPost.user.name}
                       sx={{ width: 40, height: 40, mr: 2 }}
                     />
@@ -259,14 +240,12 @@ export default function BlogPage() {
           </Fade>
         )}
 
-        {/* Ad Banner */}
         <Slide direction="up" in={!loading} timeout={800}>
           <Box sx={{ mb: 6 }}>
             <AdBanner />
           </Box>
         </Slide>
 
-        {/* Regular Blog Posts */}
         <Box
           sx={{
             display: 'flex',
@@ -316,15 +295,14 @@ export default function BlogPage() {
                       overflow: 'hidden',
                       position: 'relative'
                     }}>
-                      <img
-                        src={optimizeImageUrl(post.cover_image, 500)}
+                      <Image
+                        src={post.cover_image}
                         alt={post.title}
+                        fill
                         style={{
-                          width: '100%',
-                          height: '100%',
                           objectFit: 'cover'
                         }}
-                        loading="lazy"
+                        priority={index < 3}
                       />
                     </Box>
                   )}
@@ -385,7 +363,7 @@ export default function BlogPage() {
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Avatar
-                          src={optimizeImageUrl(post.user.profile_image, 100)}
+                          src={post.user.profile_image}
                           alt={post.user.name}
                           sx={{ width: 32, height: 32, mr: 1 }}
                         />
@@ -420,7 +398,6 @@ export default function BlogPage() {
           )}
         </Box>
 
-        {/* Pagination */}
         {!loading && filteredPosts.length > 0 && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
             <Pagination
@@ -438,7 +415,6 @@ export default function BlogPage() {
           </Box>
         )}
 
-        {/* Ad Banner */}
         <Slide direction="up" in={!loading} timeout={800}>
           <Box sx={{ mt: 6 }}>
             <AdBanner />

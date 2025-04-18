@@ -156,7 +156,7 @@ export default function ContactPage() {
                 mx: 'auto'
               }}
             >
-              Have questions, suggestions, or found a bug? We'd love to hear from you!
+              Have questions, suggestions, or found a bug? We&apos;d love to hear from you!
             </Typography>
           </Box>
         </Fade>

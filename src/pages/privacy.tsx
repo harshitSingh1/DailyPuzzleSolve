@@ -3,7 +3,6 @@ import {
     Container, 
     Typography, 
     useTheme, 
-    useMediaQuery,
     Fade,
     Slide
   } from '@mui/material';
@@ -12,7 +11,6 @@ import {
   
   export default function PrivacyPage() {
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   
     return (
       <>
@@ -133,7 +131,7 @@ import {
               </Typography>
               <Typography variant="body1" paragraph>
                 We may update our Privacy Policy from time to time. We will notify you of any changes by
-                posting the new Privacy Policy on this page and updating the "Last Updated" date.
+                posting the new Privacy Policy on this page and updating the &quot;Last Updated&quot; date.
               </Typography>
             </Box>
   

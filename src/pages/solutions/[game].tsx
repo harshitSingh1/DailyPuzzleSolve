@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { 
   Box, 
   Container, 
@@ -10,7 +11,6 @@ import {
   AccordionSummary, 
   AccordionDetails, 
   Button,
-  useMediaQuery,
   useTheme,
   Fade,
   Grow,
@@ -18,7 +18,6 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import YouTube from 'react-youtube';
-import axios from 'axios';
 import Puzzle from '@/models/Puzzle';
 import dbConnect from '@/utils/dbConnect';
 import AdBanner from '@/components/AdBanner';
@@ -38,7 +37,6 @@ interface SolutionPageProps {
 export default function SolutionPage({ solutions, game }: SolutionPageProps) {
   const router = useRouter();
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [viewMode, setViewMode] = useState<'video' | 'images'>('images');
 
   // Format game name for display
@@ -141,153 +139,154 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-  {/* View Mode Toggle */}
-  <Box sx={{ 
-    display: 'flex', 
-    gap: 2, 
-    mb: 3,
-    '& .MuiButton-root': {
-      borderRadius: '50px',
-      px: 3,
-      fontWeight: 600,
-      textTransform: 'none'
-    }
-  }}>
-    <Button
-      variant={viewMode === 'video' ? 'contained' : 'outlined'}
-      onClick={() => setViewMode('video')}
-    >
-      Video Solution
-    </Button>
-    <Button
-      variant={viewMode === 'images' ? 'contained' : 'outlined'}
-      onClick={() => setViewMode('images')}
-    >
-      Image Solution
-    </Button>
-  </Box>
+                    {/* View Mode Toggle */}
+                    <Box sx={{ 
+                      display: 'flex', 
+                      gap: 2, 
+                      mb: 3,
+                      '& .MuiButton-root': {
+                        borderRadius: '50px',
+                        px: 3,
+                        fontWeight: 600,
+                        textTransform: 'none'
+                      }
+                    }}>
+                      <Button
+                        variant={viewMode === 'video' ? 'contained' : 'outlined'}
+                        onClick={() => setViewMode('video')}
+                      >
+                        Video Solution
+                      </Button>
+                      <Button
+                        variant={viewMode === 'images' ? 'contained' : 'outlined'}
+                        onClick={() => setViewMode('images')}
+                      >
+                        Image Solution
+                      </Button>
+                    </Box>
 
-  {/* Video Solution */}
-  {viewMode === 'video' && solution.ytVideo && (
-    <Box sx={{ 
-      mb: 4,
-      position: 'relative',
-      paddingBottom: '45%',
-      height: 0,
-      overflow: 'hidden',
-      borderRadius: '8px'
-    }}>
-      <YouTube
-        videoId={getVideoId(solution.ytVideo) || ''}
-        opts={{
-          width: '100%',
-          height: '100%',
-          playerVars: {
-            autoplay: 1,
-            modestbranding: 1,
-            rel: 0,
-            mute: 1
-          }
-        }}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%'
-        }}
-      />
-    </Box>
-  )}
+                    {/* Video Solution */}
+                    {viewMode === 'video' && solution.ytVideo && (
+                      <Box sx={{ 
+                        mb: 4,
+                        position: 'relative',
+                        paddingBottom: '45%',
+                        height: 0,
+                        overflow: 'hidden',
+                        borderRadius: '8px'
+                      }}>
+                        <YouTube
+                          videoId={getVideoId(solution.ytVideo) || ''}
+                          opts={{
+                            width: '100%',
+                            height: '100%',
+                            playerVars: {
+                              autoplay: 1,
+                              modestbranding: 1,
+                              rel: 0,
+                              mute: 1
+                            }
+                          }}
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%'
+                          }}
+                        />
+                      </Box>
+                    )}
 
-  {/* Image Solution */}
-  {viewMode === 'images' && solution.screenshots.length > 0 && (
-    <Box sx={{ 
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 2,
-      mb: 4
-    }}>
-      {solution.screenshots.map((screenshot, idx) => (
-        <Box
-          key={idx}
-          sx={{
-            borderRadius: '8px',
-            overflow: 'hidden',
-            boxShadow: 2,
-            '&:hover': {
-              transform: 'scale(1.01)',
-              boxShadow: 4
-            },
-            transition: 'all 0.3s ease'
-          }}
-        >
-          <img
-            src={screenshot}
-            alt={`Step ${idx + 1}`}
-            style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '400px',
-              objectFit: 'contain',
-              display: 'block'
-            }}
-          />
-        </Box>
-      ))}
-    </Box>
-  )}
+                    {/* Image Solution */}
+                    {viewMode === 'images' && solution.screenshots.length > 0 && (
+                      <Box sx={{ 
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        mb: 4
+                      }}>
+                        {solution.screenshots.map((screenshot, idx) => (
+                          <Box
+                            key={idx}
+                            sx={{
+                              borderRadius: '8px',
+                              overflow: 'hidden',
+                              boxShadow: 2,
+                              '&:hover': {
+                                transform: 'scale(1.01)',
+                                boxShadow: 4
+                              },
+                              transition: 'all 0.3s ease'
+                            }}
+                          >
+                            <Image
+                              src={screenshot}
+                              alt={`Step ${idx + 1}`}
+                              width={800}
+                              height={600}
+                              style={{
+                                width: '100%',
+                                height: 'auto',
+                                maxHeight: '400px',
+                                objectFit: 'contain'
+                              }}
+                            />
+                          </Box>
+                        ))}
+                      </Box>
+                    )}
 
-  {/* Action Buttons */}
-  <Box sx={{ 
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: 2,
-    mt: 3
-  }}>
-    <Button
-      variant="outlined"
-      color="error"
-      onClick={() => router.push('/contact')}
-      sx={{
-        borderRadius: '50px',
-        px: 3,
-        fontWeight: 600
-      }}
-    >
-      Report Problem
-    </Button>
-    <Button
-      variant="outlined"
-      color="secondary"
-      href={`https://www.linkedin.com`}
-      target="_blank"
-      rel="noopener noreferrer"
-      sx={{
-        borderRadius: '50px',
-        px: 3,
-        fontWeight: 600
-      }}
-    >
-      Play Game
-    </Button>
-    <Button
-      variant="contained"
-      onClick={() => {
-        navigator.clipboard.writeText(window.location.href);
-        alert('Link copied to clipboard!');
-      }}
-      sx={{
-        borderRadius: '50px',
-        px: 3,
-        fontWeight: 600,
-        ml: 'auto'
-      }}
-    >
-      Share Solution
-    </Button>
-  </Box>
-</AccordionDetails>
+                    {/* Action Buttons */}
+                    <Box sx={{ 
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: 2,
+                      mt: 3
+                    }}>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => router.push('/contact')}
+                        sx={{
+                          borderRadius: '50px',
+                          px: 3,
+                          fontWeight: 600
+                        }}
+                      >
+                        Report Problem
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        href={`https://www.linkedin.com`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          borderRadius: '50px',
+                          px: 3,
+                          fontWeight: 600
+                        }}
+                      >
+                        Play Game
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={() => {
+                          navigator.clipboard.writeText(window.location.href);
+                          alert('Link copied to clipboard!');
+                        }}
+                        sx={{
+                          borderRadius: '50px',
+                          px: 3,
+                          fontWeight: 600,
+                          ml: 'auto'
+                        }}
+                      >
+                        Share Solution
+                      </Button>
+                    </Box>
+                  </AccordionDetails>
                 </Accordion>
               </Grow>
             ))}

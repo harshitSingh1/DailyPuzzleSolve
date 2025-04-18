@@ -32,22 +32,22 @@ import LaunchIcon from '@mui/icons-material/Launch';
 
 interface ToolsProps {
   tools: Tool[];
+  error?: string; // Added error prop to interface
 }
 
 export default function Tools({ tools: initialTools }: ToolsProps) {
   const theme = useTheme();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredTools, setFilteredTools] = useState<Tool[]>(initialTools);
-  const [tools, setTools] = useState<Tool[]>(initialTools);
   const searchRef = useRef<HTMLInputElement>(null);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   // Process description to extract and remove tags
-  const processDescription = (description: string = '') => {
+  const processDescription = (description = '') => {
     const tagRegex = /#(\w+)/g;
     const tags: string[] = [];
-    let cleanDesc = description.replace(tagRegex, (match, tag) => {
+    const cleanDesc = description.replace(tagRegex, (match, tag) => {
       tags.push(tag);
       return '';
     }).trim();
@@ -58,19 +58,19 @@ export default function Tools({ tools: initialTools }: ToolsProps) {
   // Filter tools based on search term
   useEffect(() => {
     if (!searchTerm) {
-      setFilteredTools(tools);
+      setFilteredTools(initialTools);
       return;
     }
 
     const searchWords = searchTerm.toLowerCase().split(' ');
-    const results = tools.filter(tool => {
+    const results = initialTools.filter(tool => {
       const { cleanDesc, tags } = processDescription(tool.subheading);
       const searchContent = `${tool.title.toLowerCase()} ${cleanDesc.toLowerCase()} ${tags.join(' ').toLowerCase()}`;
       return searchWords.some(word => searchContent.includes(word));
     });
 
     setFilteredTools(results);
-  }, [searchTerm, tools]);
+  }, [searchTerm, initialTools]); // Changed from tools to initialTools
 
   // Focus search on "/" key press
   useEffect(() => {
@@ -329,6 +329,7 @@ export const getServerSideProps: GetServerSideProps<ToolsProps> = async () => {
     return {
       props: {
         tools: [],
+        error: error instanceof Error ? error.message : 'Failed to load tools'
       },
     };
   }

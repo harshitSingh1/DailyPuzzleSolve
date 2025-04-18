@@ -9,6 +9,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const tools = await Tool.find();
     res.status(200).json({ success: true, data: tools });
   } catch (error) {
-    res.status(400).json({ success: false });
+    console.error('Error fetching tools:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to fetch tools'
+    });
   }
 }
