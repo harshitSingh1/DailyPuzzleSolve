@@ -9,6 +9,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const shops = await Shop.find();
     res.status(200).json({ success: true, data: shops });
   } catch (error) {
-    res.status(400).json({ success: false });
+    console.error('Error fetching shop items:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to fetch shop items'
+    });
   }
 }

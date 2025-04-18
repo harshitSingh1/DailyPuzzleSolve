@@ -11,7 +11,7 @@ interface MongooseCache {
   promise: Promise<typeof mongoose> | null;
 }
 
-let mongooseCache: MongooseCache = {
+const mongooseCache: MongooseCache = {
   conn: null,
   promise: null
 };

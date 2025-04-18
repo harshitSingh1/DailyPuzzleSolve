@@ -70,7 +70,7 @@ import {
               </Typography>
               <Typography variant="body1" paragraph>
               PuzzleLogicHub was founded in 2025 by a team of puzzle enthusiasts who wanted to create
-                a comprehensive resource for puzzle solvers of all levels. We're dedicated to providing
+                a comprehensive resource for puzzle solvers of all levels. We&apos;re dedicated to providing
                 high-quality solutions, strategies, and tools to help you master logic puzzles.
               </Typography>
             </Box>
@@ -120,7 +120,7 @@ import {
               </Typography>
               <Typography variant="body1" paragraph>
                 Our team consists of puzzle champions, software developers, and educators who are passionate
-                about sharing their knowledge. We're constantly working to expand our library of resources
+                about sharing their knowledge. We&apos;re constantly working to expand our library of resources
                 and improve your puzzle-solving experience.
               </Typography>
             </Box>

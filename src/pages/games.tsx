@@ -6,22 +6,20 @@ import {
   CardContent, 
   Button, 
   Chip, 
-  Divider, 
   useMediaQuery,
   useTheme,
   Fade,
   Grow,
   Slide,
-  IconButton,
-  Stack
+  IconButton
 } from '@mui/material';
 import { useState, useRef } from 'react';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import LaunchIcon from '@mui/icons-material/Launch';
 import AdBanner from '@/components/AdBanner';
 import HeadSEO from '@/components/HeadSEO';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Image from 'next/image';
 
 interface Game {
   id: string;
@@ -34,7 +32,6 @@ interface Game {
 
 export default function GamesPage() {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const tagsContainerRef = useRef<HTMLDivElement>(null);
   
@@ -43,7 +40,7 @@ export default function GamesPage() {
       id: '1',
       title: 'Chess',
       description: 'Master the king of strategy games—sharpen focus, foresight, and mental stamina in every move.',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Chess_pieces_close_up.jpg',
+      image: '/images/chess.jpg',
       url: 'https://www.chess.com/',
       tags: ['Strategy', 'Puzzle', 'Board']
     },
@@ -51,7 +48,7 @@ export default function GamesPage() {
       id: '2',
       title: 'Sudoku',
       description: 'Train your brain with numbers—classic Sudoku boosts logic, patience, and pattern recognition.',
-      image: 'https://raw.githubusercontent.com/harshitSingh1/BreakBuddy/refs/heads/main/images/tasks/sudoku.jpeg',
+      image: '/images/sudoku.jpeg',
       url: 'https://sudoku.com/',
       tags: ['Focus', 'Logic', 'Puzzle']
     },
@@ -59,7 +56,7 @@ export default function GamesPage() {
       id: '3',
       title: 'Connect 4',
       description: 'Think ahead and block your rival—Connect 4 is a fun and fast-paced tactical duel of minds',
-      image: 'https://www.calculators.org/games/titles/connect-4.png',
+      image: '/images/connect-4.png',
       url: 'https://www.sudoku.com',
       tags: ['Board', 'Strategy', 'Skill']
     },
@@ -67,7 +64,7 @@ export default function GamesPage() {
       id: '4',
       title: 'Checkers',
       description: 'Simple yet smart—checkers trains strategic thinking and helps develop sharp decision-making skills.',
-      image: 'https://www.247checkers.com/images/how-to-play/Checkers-start1.png',
+      image: '/images/Checkers.png',
       url: 'https://www.247checkers.com/',
       tags: ['Board', 'Logic', 'Strategy']
     },
@@ -75,7 +72,7 @@ export default function GamesPage() {
       id: '5',
       title: 'Minesweeper',
       description: 'Uncover the field without blowing up! A perfect logic test packed into a classic brain teaser.',
-      image: 'https://store-images.s-microsoft.com/image/apps.48814.13510798887052059.3dc63a1e-31ca-4538-b5fb-372cd5d7dbc8.e6941503-cd87-48fa-939e-b691bcd61ec3?h=1080',
+      image: '/images/minesweepers.jpeg',
       url: 'https://minesweeper.online',
       tags: ['Logic', 'Focus', 'Brain']
     },
@@ -83,7 +80,7 @@ export default function GamesPage() {
       id: '6',
       title: '2048 Game',
       description: 'Swipe to win! Merge tiles, reach 2048, and test your tactical thinking under pressure.',
-      image: 'https://imgs.crazygames.com/games/2048/cover_16x9-1707828856995.png?metadata=none&quality=70&width=467.5',
+      image: '/images/game2048.jpg',
       url: 'https://2048game.com/',
       tags: ['Strategy', 'Logic', 'Brain']
     }
@@ -248,13 +245,11 @@ export default function GamesPage() {
                       position: 'relative'
                     }}
                   >
-                    <img
+                    <Image
                       src={game.image}
                       alt={game.title}
-                      loading="lazy"
+                      fill
                       style={{
-                        width: '100%',
-                        height: '100%',
                         objectFit: 'cover',
                         transition: 'transform 0.5s ease',
                       }}

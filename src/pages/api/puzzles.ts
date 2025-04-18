@@ -19,6 +19,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json({ success: true, data: puzzles });
   } catch (error) {
-    res.status(400).json({ success: false });
+    console.error('Error fetching puzzles:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to fetch puzzles'
+    });
   }
 }

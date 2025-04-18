@@ -3,7 +3,6 @@ import {
     Container, 
     Typography, 
     useTheme, 
-    useMediaQuery,
     Fade,
     Slide
   } from '@mui/material';
@@ -12,12 +11,11 @@ import {
   
   export default function TermsPage() {
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   
     return (
       <>
         <HeadSEO
-          title="Terms of Service | LogicPuzzleMaster"
+          title="Terms of Service | PuzzleLogicHub"
           description="Review our Terms of Service governing your use of LogicPuzzleMaster website and services."
           canonicalUrl="https://yourdomain.com/terms"
           keywords="terms of service, terms and conditions, website terms, user agreement"
@@ -87,7 +85,7 @@ import {
                 <li>Infringe on intellectual property rights</li>
                 <li>Distribute harmful or malicious content</li>
                 <li>Attempt to gain unauthorized access to our systems</li>
-                <li>Interfere with other users' enjoyment of the service</li>
+                <li>Interfere with other users&apos; enjoyment of the service</li>
               </Box>
             </Box>
   

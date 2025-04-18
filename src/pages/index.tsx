@@ -7,9 +7,7 @@ import {
   CardContent, 
   CardMedia, 
   Button,
-  useMediaQuery,
   useTheme,
-  Fade,
   Grow,
   Slide
 } from '@mui/material';
@@ -57,7 +55,6 @@ const puzzleGames = [
 
 export default function Home() {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>
@@ -67,115 +64,115 @@ export default function Home() {
         canonicalUrl="https://yourdomain.com"
       />
       
-<Box
-  sx={{
-    position: 'relative',
-    py: 10,
-    mb: 6,
-    overflow: 'hidden',
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundImage: `
-        linear-gradient(to right, 
-          rgba(25, 59, 210, 0.52) 0%, 
-          rgba(9, 3, 131, 0.77) 50%, 
-          rgba(25, 59, 210, 0.52) 100%),
-        url('/hero.jpeg')
-      `,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      zIndex: -1
-    }
-  }}
->
-  <Container maxWidth="lg">
-    <Box sx={{ 
-      position: 'relative',
-      zIndex: 1,
-      textAlign: 'center',
-      maxWidth: '800px',
-      mx: 'auto'
-    }}>
-      <Typography
-        variant="h1"
+      <Box
         sx={{
-          fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4rem' },
-          fontWeight: 800,
-          lineHeight: 1.2,
-          mb: 3,
-          color: 'common.white',
-          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+          position: 'relative',
+          py: 10,
+          mb: 6,
+          overflow: 'hidden',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `
+              linear-gradient(to right, 
+                rgba(25, 59, 210, 0.52) 0%, 
+                rgba(9, 3, 131, 0.77) 50%, 
+                rgba(25, 59, 210, 0.52) 100%),
+              url('/hero.jpeg')
+            `,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            zIndex: -1
+          }
         }}
       >
-        Master Logic Puzzles Like Never Before
-      </Typography>
-      <Typography
-        variant="h5"
-        sx={{
-          fontWeight: 400,
-          mb: 4,
-          fontSize: { xs: '1.1rem', md: '1.25rem' },
-          color: 'rgba(255,255,255,0.9)',
-          textShadow: '0 1px 2px rgba(0,0,0,0.2)'
-        }}
-      >
-        Daily solutions with step-by-step explanations and video walkthroughs.
-      </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-        <Link href="#puzzles" passHref>
-          <Button
-            variant="contained"
-            size="large"
-            sx={{
-              backgroundColor: 'white',
-              color: '#1976d2',
-              px: 4,
-              py: 1.5,
-              fontWeight: 600,
-              borderRadius: '50px',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              '&:hover': {
-                backgroundColor: 'rgba(255,255,255,0.9)',
-                transform: 'translateY(-2px)',
-                boxShadow: '0 6px 8px rgba(0, 0, 0, 0.15)',
-              },
-              transition: 'all 0.3s ease',
-            }}
-          >
-            View Solutions
-          </Button>
-        </Link>
-        <Link href="/games" passHref>
-          <Button
-            variant="outlined"
-            size="large"
-            sx={{
-              borderColor: 'white',
-              color: 'white',
-              px: 4,
-              py: 1.5,
-              fontWeight: 600,
-              borderRadius: '50px',
-              '&:hover': {
-                backgroundColor: 'rgba(255,255,255,0.1)',
-                borderColor: 'white',
-                transform: 'translateY(-2px)',
-              },
-              transition: 'all 0.3s ease',
-            }}
-          >
-            More Games
-          </Button>
-        </Link>
+        <Container maxWidth="lg">
+          <Box sx={{ 
+            position: 'relative',
+            zIndex: 1,
+            textAlign: 'center',
+            maxWidth: '800px',
+            mx: 'auto'
+          }}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4rem' },
+                fontWeight: 800,
+                lineHeight: 1.2,
+                mb: 3,
+                color: 'common.white',
+                textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+              }}
+            >
+              Master Logic Puzzles Like Never Before
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 400,
+                mb: 4,
+                fontSize: { xs: '1.1rem', md: '1.25rem' },
+                color: 'rgba(255,255,255,0.9)',
+                textShadow: '0 1px 2px rgba(0,0,0,0.2)'
+              }}
+            >
+              Daily solutions with step-by-step explanations and video walkthroughs.
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+              <Link href="#puzzles" passHref>
+                <Button
+                  variant="contained"
+                  size="large"
+                  sx={{
+                    backgroundColor: 'white',
+                    color: '#1976d2',
+                    px: 4,
+                    py: 1.5,
+                    fontWeight: 600,
+                    borderRadius: '50px',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255,255,255,0.9)',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 6px 8px rgba(0, 0, 0, 0.15)',
+                    },
+                    transition: 'all 0.3s ease',
+                  }}
+                >
+                  View Solutions
+                </Button>
+              </Link>
+              <Link href="/games" passHref>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  sx={{
+                    borderColor: 'white',
+                    color: 'white',
+                    px: 4,
+                    py: 1.5,
+                    fontWeight: 600,
+                    borderRadius: '50px',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      borderColor: 'white',
+                      transform: 'translateY(-2px)',
+                    },
+                    transition: 'all 0.3s ease',
+                  }}
+                >
+                  More Games
+                </Button>
+              </Link>
+            </Box>
+          </Box>
+        </Container>
       </Box>
-    </Box>
-  </Container>
-</Box>
 
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {/* Puzzle Games Grid */}
