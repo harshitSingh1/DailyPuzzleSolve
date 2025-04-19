@@ -23,6 +23,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'v.redd.it',
       },
+      {
+        protocol: 'https',
+        hostname: 'raw.githubusercontent.com',
+      },
     ],
   },
   async headers() {
