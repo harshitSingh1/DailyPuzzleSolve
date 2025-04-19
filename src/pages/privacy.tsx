@@ -17,7 +17,7 @@ import {
         <HeadSEO
           title="Privacy Policy | LogicPuzzleMaster"
           description="Read our Privacy Policy to understand how we collect, use, and protect your personal information."
-          canonicalUrl="https://yourdomain.com/privacy"
+          canonicalUrl="https://daily-puzzle-solve.vercel.app/privacy"
           keywords="privacy policy, data protection, personal information, cookies"
         />
         

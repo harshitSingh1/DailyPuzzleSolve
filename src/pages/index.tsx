@@ -57,7 +57,7 @@ export default function Home() {
       <HeadSEO
         title="Daily Puzzle Solutions | LogicPuzzleMaster"
         description="Step-by-step solutions for LinkedIn Pinpoint, Queens, Tango and more puzzles"
-        canonicalUrl="https://yourdomain.com"
+        canonicalUrl="https://daily-puzzle-solve.vercel.app"
       />
       
       <Box

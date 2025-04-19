@@ -57,7 +57,7 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
       <HeadSEO
         title={`${formattedGameName} Solutions | LogicPuzzleMaster`}
         description={`Step-by-step solutions for ${formattedGameName} puzzles with images and video explanations`}
-        canonicalUrl={`https://yourdomain.com/solutions/${game.toLowerCase()}`}
+        canonicalUrl={`https://daily-puzzle-solve.vercel.app/solutions/${game.toLowerCase()}`}
       />
       
       <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -259,7 +259,7 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
                       <Button
                         variant="outlined"
                         color="secondary"
-                        href={`https://www.linkedin.com`}
+                        href={`https://www.linkedin.com/games/`}
                         target="_blank"
                         rel="noopener noreferrer"
                         sx={{

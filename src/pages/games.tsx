@@ -111,7 +111,7 @@ export default function GamesPage() {
       <HeadSEO
         title="Puzzle Games Collection | LogicPuzzleMaster"
         description="Explore our collection of the best puzzle games to challenge your mind"
-        canonicalUrl="https://yourdomain.com/games"
+        canonicalUrl="https://daily-puzzle-solve.vercel.app/games"
       />
       
       <Container maxWidth="lg" sx={{ py: 4 }}>

@@ -378,7 +378,7 @@ export default function MemeGenerator() {
       <HeadSEO
         title="Programming Meme Generator | PuzzleLogicHub"
         description="Create and share hilarious programming and tech memes"
-        canonicalUrl="https://yourdomain.com/memes"
+        canonicalUrl="https://daily-puzzle-solve.vercel.app/memes"
       />
       
       <Container maxWidth="lg" sx={{ py: 4 }}>

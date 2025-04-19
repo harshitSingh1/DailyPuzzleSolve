@@ -1,8 +1,9 @@
+// src/pages/api/tools.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '@/utils/dbConnect';
 import Tool from '@/models/Tool';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
 
   try {
