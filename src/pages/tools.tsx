@@ -97,7 +97,7 @@ export default function Tools({ tools: initialTools }: ToolsProps) {
       <HeadSEO
         title="Useful Tech Tools for Puzzle Solvers | LogicPuzzleMaster"
         description="Collection of useful technology tools and resources for puzzle enthusiasts"
-        canonicalUrl="https://yourdomain.com/tools"
+        canonicalUrl="https://daily-puzzle-solve.vercel.app/tools"
       />
       
       <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -319,7 +319,12 @@ export default function Tools({ tools: initialTools }: ToolsProps) {
 
 export const getServerSideProps: GetServerSideProps<ToolsProps> = async () => {
   try {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/tools`);
+    const res = await axios.get('/api/tools', {
+      baseURL: process.env.NEXT_PUBLIC_API_URL || 
+              (process.env.NODE_ENV === 'production' 
+                ? 'https://daily-puzzle-solve.vercel.app' 
+                : 'http://localhost:3000')
+    });
     return {
       props: {
         tools: res.data.data || [],

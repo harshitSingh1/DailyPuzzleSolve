@@ -98,7 +98,7 @@ export default function BlogPage() {
       <HeadSEO
         title="Tech Blog | LogicPuzzleMaster"
         description="Latest technology, programming, and coding articles from the DEV community"
-        canonicalUrl="https://yourdomain.com/blog"
+        canonicalUrl="https://daily-puzzle-solve.vercel.app/blog"
       />
       
       <Container maxWidth="lg" sx={{ py: 4 }}>

@@ -126,7 +126,7 @@ export default function ContactPage() {
       <HeadSEO
         title="Contact Us | LogicPuzzleMaster"
         description="Have questions or feedback? Get in touch with our team."
-        canonicalUrl="https://yourdomain.com/contact"
+        canonicalUrl="https://daily-puzzle-solve.vercel.app/contact"
       />
       
       <Container maxWidth="lg" sx={{ py: 4 }}>
