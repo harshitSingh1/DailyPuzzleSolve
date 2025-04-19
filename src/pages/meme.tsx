@@ -26,7 +26,7 @@ import AddIcon from '@mui/icons-material/Add';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import FontDownloadIcon from '@mui/icons-material/FontDownload';
 import CloseIcon from '@mui/icons-material/Close';
-import Image from 'next/image';
+import NextImage from 'next/image';
 import AdBanner from '@/components/AdBanner';
 import HeadSEO from '@/components/HeadSEO';
 import { ChromePicker } from 'react-color';
@@ -145,7 +145,6 @@ export default function MemeGenerator() {
 
     fetchPopularMemes();
   }, [filter]);
-
 
   useEffect(() => {
     if (!selectedTemplate || !canvasRef.current) return;
@@ -709,7 +708,7 @@ export default function MemeGenerator() {
               textAlign: 'center'
             }}
           >
-            Puzzled? Same. Let’s Meme Instead
+            Puzzled? Same. Let&apos;s Meme Instead
           </Typography>
           
           <Box sx={{ 
@@ -778,9 +777,11 @@ export default function MemeGenerator() {
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}>
-                    <img
+                    <NextImage
                       src={meme.data.url}
                       alt={meme.data.title}
+                      width={350}
+                      height={350}
                       loading="lazy"
                       style={{
                         width: '100%',

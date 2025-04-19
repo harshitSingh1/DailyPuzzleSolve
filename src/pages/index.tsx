@@ -1,4 +1,3 @@
-// pages/index.tsx
 import { 
   Box, 
   Container, 
@@ -7,7 +6,6 @@ import {
   CardContent, 
   CardMedia, 
   Button,
-  useTheme,
   Grow,
   Slide
 } from '@mui/material';
@@ -54,8 +52,6 @@ const puzzleGames = [
 ];
 
 export default function Home() {
-  const theme = useTheme();
-
   return (
     <>
       <HeadSEO

@@ -6,7 +6,6 @@ import {
   CardContent, 
   Button, 
   Chip, 
-  useMediaQuery,
   useTheme,
   Fade,
   Grow,

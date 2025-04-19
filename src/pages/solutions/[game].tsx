@@ -341,6 +341,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         solutions: [],
+        error: error instanceof Error ? error.message : 'Failed to load Solutions',
         game
       },
     };
