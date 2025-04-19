@@ -3,7 +3,6 @@ import {
     Container, 
     Typography, 
     useTheme, 
-    useMediaQuery,
     Fade,
     Slide
   } from '@mui/material';
@@ -12,7 +11,6 @@ import {
   
   export default function AboutPage() {
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   
     return (
       <>

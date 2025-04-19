@@ -405,10 +405,10 @@ export const getServerSideProps: GetServerSideProps<ShopProps> = async () => {
         shopItems: res.data.data || [],
       },
     };
-  } catch (err) {
+  } catch (error) {
     return {
       props: {
-        error: 'Failed to load products. Please try again later.',
+        error: error instanceof Error ? error.message : 'Failed to load Items',
         shopItems: []
       },
     };
