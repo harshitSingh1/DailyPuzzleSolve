@@ -1,3 +1,4 @@
+// src\pages\api\puzzles.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '@/utils/dbConnect';
 import Puzzle from '@/models/Puzzle';

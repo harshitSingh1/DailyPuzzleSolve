@@ -136,7 +136,7 @@ export default function Shop({ shopItems: initialShopItems, error }: ShopProps) 
       <HeadSEO
         title="Buy Books and Games | PuzzleLogicHub"
         description="Collection of useful technology tools and resources for puzzle enthusiasts"
-        canonicalUrl="https://daily-puzzle-solve.vercel.app/tools"
+        canonicalUrl="https://daily-puzzle-solve.vercel.app/shop"
       />
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ textAlign: 'center', mb: 4 }}>

@@ -325,16 +325,18 @@ export const getServerSideProps: GetServerSideProps<ToolsProps> = async () => {
                 ? 'https://daily-puzzle-solve.vercel.app' 
                 : 'http://localhost:3000')
     });
+    
     return {
       props: {
         tools: res.data.data || [],
       },
     };
   } catch (error) {
+    console.error('Error in getServerSideProps:', error);
     return {
       props: {
         tools: [],
-        error: error instanceof Error ? error.message : 'Failed to load tools'
+        error: 'Failed to load tools'
       },
     };
   }

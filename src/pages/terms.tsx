@@ -17,7 +17,7 @@ import {
         <HeadSEO
           title="Terms of Service | PuzzleLogicHub"
           description="Review our Terms of Service governing your use of LogicPuzzleMaster website and services."
-          canonicalUrl="https://yourdomain.com/terms"
+          canonicalUrl="https://daily-puzzle-solve.vercel.app/terms"
           keywords="terms of service, terms and conditions, website terms, user agreement"
         />
         
