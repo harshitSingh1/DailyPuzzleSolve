@@ -20,7 +20,7 @@ export default function NotFoundPage() {
       <HeadSEO
         title="Page Not Found | LogicPuzzleMaster"
         description="The page you're looking for doesn't exist. Find puzzle solutions and resources on our homepage."
-        canonicalUrl="https://yourdomain.com/404"
+        canonicalUrl="https://daily-puzzle-solve.vercel.app/404"
       />
       
       <Container maxWidth="lg" sx={{ 

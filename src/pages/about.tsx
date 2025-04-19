@@ -17,7 +17,7 @@ import {
         <HeadSEO
           title="About LogicPuzzleMaster | Puzzle Solutions & Resources"
           description="Learn about LogicPuzzleMaster - your go-to source for daily puzzle solutions, expert strategies, and brain-teasing challenges."
-          canonicalUrl="https://yourdomain.com/about"
+          canonicalUrl="https://daily-puzzle-solve.vercel.app/about"
           keywords="about LogicPuzzleMaster, puzzle solutions, brain games, logic puzzles, about us"
         />
         
