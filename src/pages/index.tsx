@@ -37,10 +37,10 @@ const puzzleGames = [
   },
   {
     id: 'crossword',
-    title: 'LinkedIn Crossword',
-    description: 'Traditional crossword with daily challenges',
-    image: '/images/crossword-game.png',
-    path: '/solutions/crossword'
+    title: 'LinkedIn Crossclimb',
+    description: 'Traditional crossclimb with daily challenges',
+    image: '/images/crossclimb-game.png',
+    path: '/solutions/crossclimb'
   },
   {
     id: 'zip',
@@ -55,7 +55,7 @@ export default function Home() {
   return (
     <>
       <HeadSEO
-        title="Daily Puzzle Solutions | LogicPuzzleMaster"
+        title="Daily Puzzle Solutions | LogicPuzzleHub"
         description="Step-by-step solutions for LinkedIn Pinpoint, Queens, Tango and more puzzles"
         canonicalUrl="https://daily-puzzle-solve.vercel.app"
       />

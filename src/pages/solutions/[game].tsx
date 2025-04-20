@@ -55,7 +55,7 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
   return (
     <>
       <HeadSEO
-        title={`${formattedGameName} Solutions | LogicPuzzleMaster`}
+        title={`${formattedGameName} Solutions | LogicPuzzleHub`}
         description={`Step-by-step solutions for ${formattedGameName} puzzles with images and video explanations`}
         canonicalUrl={`https://daily-puzzle-solve.vercel.app/solutions/${game.toLowerCase()}`}
       />
@@ -87,7 +87,7 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
                 mx: 'auto'
               }}
             >
-              Browse the collection of {formattedGameName.toLowerCase()} puzzle solutions with proper explanations
+              Get All Puzzle Answers: Browse the collection of {formattedGameName.toLowerCase()} puzzle solutions with proper explanations
             </Typography>
           </Box>
         </Fade>
