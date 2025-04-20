@@ -9,7 +9,7 @@ const puzzleSchema = new mongoose.Schema({
   gameType: {
     type: String,
     required: true,
-    enum: ['Pinpoint', 'Queens', 'Tango', 'Crossword', 'Zip']
+    enum: ['Pinpoint', 'Queens', 'Tango', 'Crossclimb', 'Zip']
   },
   ytVideo: { 
     type: String,
