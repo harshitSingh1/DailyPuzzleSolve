@@ -21,6 +21,7 @@
     "next-seo": "^6.6.0",
     "nodemailer": "^6.10.1",
     "react": "^19.1.0",
+    "react-adsense": "^0.1.0",
     "react-color": "^2.19.3",
     "react-dom": "^19.1.0",
     "react-share": "^5.2.2",
