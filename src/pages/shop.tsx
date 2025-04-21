@@ -20,6 +20,7 @@ import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { ShopItem } from '@/types/types';
 import HeadSEO from '@/components/HeadSEO';
+import AdSenseAd from '@/components/AdSenseAd';
 import { useState, useEffect } from 'react';
 
 interface ShopProps {
@@ -392,6 +393,12 @@ export default function Shop({ shopItems: initialShopItems, error }: ShopProps) 
             Products Only For You
           </Button>
         </Box>
+        
+        <AdSenseAd 
+  slot="4661598458" 
+  format="autorelaxed" 
+  style={{ display: 'block' }}
+/>
       </Container>
     </>
   );

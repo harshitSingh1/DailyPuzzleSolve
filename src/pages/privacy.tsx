@@ -7,7 +7,7 @@ import {
     Slide
   } from '@mui/material';
   import HeadSEO from '@/components/HeadSEO';
-  import AdBanner from '@/components/AdBanner';
+  import AdSenseAd from '@/components/AdSenseAd';
   
   export default function PrivacyPage() {
     const theme = useTheme();
@@ -56,7 +56,12 @@ import {
           {/* Ad Banner */}
           <Slide direction="up" in={true} timeout={800}>
             <Box sx={{ mb: 6 }}>
-              <AdBanner />
+            <AdSenseAd
+  slot="4661598458"
+  format="autorelaxed"
+  style={{ display: 'block' }}
+  className="privacy-ad"
+/>
             </Box>
           </Slide>
   
@@ -149,7 +154,12 @@ import {
           {/* Ad Banner */}
           <Slide direction="up" in={true} timeout={800}>
             <Box sx={{ mt: 6 }}>
-              <AdBanner />
+            <AdSenseAd
+  slot="4661598458"
+  format="autorelaxed"
+  style={{ display: 'block' }}
+  className="privacy-ad"
+/>
             </Box>
           </Slide>
         </Container>

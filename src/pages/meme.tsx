@@ -27,7 +27,7 @@ import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import FontDownloadIcon from '@mui/icons-material/FontDownload';
 import CloseIcon from '@mui/icons-material/Close';
 import NextImage from 'next/image';
-import AdBanner from '@/components/AdBanner';
+import AdSenseAd from '@/components/AdSenseAd';
 import HeadSEO from '@/components/HeadSEO';
 import { ChromePicker } from 'react-color';
 
@@ -415,7 +415,13 @@ export default function MemeGenerator() {
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={500}>
           <Box sx={{ mb: 6 }}>
-            <AdBanner />
+          <AdSenseAd
+  slot="3955548106"
+  format="fluid"
+  layoutKey="+2o+s4-16-1z+89"
+  style={{ display: 'block' }}
+  className="meme-ad"
+/>
           </Box>
         </Slide>
 
@@ -692,7 +698,13 @@ export default function MemeGenerator() {
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={800}>
           <Box sx={{ mb: 6 }}>
-            <AdBanner />
+          <AdSenseAd
+  slot="3955548106"
+  format="fluid"
+  layoutKey="+2o+s4-16-1z+89"
+  style={{ display: 'block' }}
+  className="meme-ad"
+/>
           </Box>
         </Slide>
 
@@ -830,7 +842,13 @@ export default function MemeGenerator() {
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={800}>
           <Box sx={{ mt: 6 }}>
-            <AdBanner />
+          <AdSenseAd
+  slot="3955548106"
+  format="fluid"
+  layoutKey="+2o+s4-16-1z+89"
+  style={{ display: 'block' }}
+  className="meme-ad"
+/>
           </Box>
         </Slide>
       </Container>

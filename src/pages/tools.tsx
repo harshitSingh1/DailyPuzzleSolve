@@ -24,7 +24,7 @@ import {
   Grow
 } from '@mui/material';
 import HeadSEO from '@/components/HeadSEO';
-import AdBanner from '@/components/AdBanner';
+import AdSenseAd from '@/components/AdSenseAd';
 import axios from 'axios';
 import { Tool } from '@/types/types';
 import SearchIcon from '@mui/icons-material/Search';
@@ -167,7 +167,11 @@ export default function Tools({ tools: initialTools }: ToolsProps) {
           </Grow>
         </Box>
 
-        <AdBanner />
+        <AdSenseAd 
+  slot="4661598458" 
+  format="autorelaxed" 
+  style={{ display: 'block' }}
+/>
 
         {/* Tools Grid */}
         <Box sx={{ 
@@ -311,7 +315,11 @@ export default function Tools({ tools: initialTools }: ToolsProps) {
           )}
         </Box>
 
-        <AdBanner />
+        <AdSenseAd 
+  slot="4661598458" 
+  format="autorelaxed" 
+  style={{ display: 'block' }}
+/>
       </Container>
     </>
   );

@@ -5,11 +5,9 @@ import {
   Button, 
   useTheme,
   Fade,
-  Slide
 } from '@mui/material';
 import Link from 'next/link';
 import HeadSEO from '@/components/HeadSEO';
-import AdBanner from '@/components/AdBanner';
 import { motion } from 'framer-motion';
 
 export default function NotFoundPage() {
@@ -267,13 +265,6 @@ export default function NotFoundPage() {
             />
           ))}
         </Box>
-
-        {/* Ad Banner */}
-        <Slide direction="up" in={true} timeout={1000}>
-          <Box sx={{ width: '100%', maxWidth: '800px', mx: 'auto' }}>
-            <AdBanner />
-          </Box>
-        </Slide>
       </Container>
     </>
   );

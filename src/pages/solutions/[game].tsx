@@ -20,7 +20,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import YouTube from 'react-youtube';
 import Puzzle from '@/models/Puzzle';
 import dbConnect from '@/utils/dbConnect';
-import AdBanner from '@/components/AdBanner';
+import AdSenseAd from '@/components/AdSenseAd';
 import HeadSEO from '@/components/HeadSEO';
 
 interface SolutionPageProps {
@@ -95,7 +95,12 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={800}>
           <Box sx={{ mb: 6 }}>
-            <AdBanner />
+          <AdSenseAd 
+  slot="9391098809" 
+  format="fluid" 
+  layout="in-article"
+  style={{ display: 'block', textAlign: 'center' }}
+/>
           </Box>
         </Slide>
 
@@ -309,7 +314,12 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={800}>
           <Box sx={{ mt: 6 }}>
-            <AdBanner />
+          <AdSenseAd 
+  slot="9391098809" 
+  format="fluid" 
+  layout="in-article"
+  style={{ display: 'block', textAlign: 'center' }}
+/>
           </Box>
         </Slide>
       </Container>

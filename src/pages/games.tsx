@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useState, useRef } from 'react';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import AdBanner from '@/components/AdBanner';
+import AdSenseAd from '@/components/AdSenseAd';
 import HeadSEO from '@/components/HeadSEO';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -207,7 +207,12 @@ export default function GamesPage() {
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={500}>
           <Box sx={{ mb: 6 }}>
-            <AdBanner />
+          <AdSenseAd 
+  slot="3955548106" 
+  format="fluid" 
+  layoutKey="+2o+s4-16-1z+89"
+  style={{ display: 'block' }}
+/>
           </Box>
         </Slide>
 
@@ -363,7 +368,12 @@ export default function GamesPage() {
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={800}>
           <Box sx={{ mt: 6 }}>
-            <AdBanner />
+          <AdSenseAd 
+  slot="3955548106" 
+  format="fluid" 
+  layoutKey="+2o+s4-16-1z+89"
+  style={{ display: 'block' }}
+/>
           </Box>
         </Slide>
       </Container>

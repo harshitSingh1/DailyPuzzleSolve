@@ -10,7 +10,7 @@ import {
   Slide
 } from '@mui/material';
 import Link from 'next/link';
-import AdBanner from '@/components/AdBanner';
+import AdSenseAd from '@/components/AdSenseAd';
 import HeadSEO from '@/components/HeadSEO';
 
 const puzzleGames = [
@@ -247,7 +247,11 @@ export default function Home() {
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={800}>
           <Box sx={{ mt: 6 }}>
-            <AdBanner />
+          <AdSenseAd 
+  slot="3923231851" 
+  format="auto" 
+  style={{ display: 'block' }}
+/>
           </Box>
         </Slide>
       </Container>

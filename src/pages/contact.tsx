@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import HeadSEO from '@/components/HeadSEO';
-import AdBanner from '@/components/AdBanner';
+import AdSenseAd from '@/components/AdSenseAd';
 
 export default function ContactPage() {
   const theme = useTheme();
@@ -164,7 +164,12 @@ export default function ContactPage() {
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={800}>
           <Box sx={{ mb: 6 }}>
-            <AdBanner />
+          <AdSenseAd
+  slot="3923231851"
+  format="auto"
+  style={{ display: 'block' }}
+  className="about-ad"
+/>
           </Box>
         </Slide>
 
@@ -315,7 +320,12 @@ export default function ContactPage() {
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={800}>
           <Box sx={{ mt: 6 }}>
-            <AdBanner />
+          <AdSenseAd
+  slot="3923231851"
+  format="auto"
+  style={{ display: 'block' }}
+  className="about-ad"
+/>
           </Box>
         </Slide>
       </Container>

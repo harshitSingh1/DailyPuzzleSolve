@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
 import LaunchIcon from '@mui/icons-material/Launch';
-import AdBanner from '@/components/AdBanner';
+import AdSenseAd from '@/components/AdSenseAd';
 import HeadSEO from '@/components/HeadSEO';
 import Skeleton from '@mui/material/Skeleton';
 import Image from 'next/image';
@@ -242,7 +242,13 @@ export default function BlogPage() {
 
         <Slide direction="up" in={!loading} timeout={800}>
           <Box sx={{ mb: 6 }}>
-            <AdBanner />
+          <AdSenseAd
+  slot="9391098809"
+  format="fluid"
+  layout="in-article"
+  style={{ display: 'block', textAlign: 'center' }}
+  className="article-ad"
+/>
           </Box>
         </Slide>
 
@@ -417,7 +423,13 @@ export default function BlogPage() {
 
         <Slide direction="up" in={!loading} timeout={800}>
           <Box sx={{ mt: 6 }}>
-            <AdBanner />
+          <AdSenseAd
+  slot="9391098809"
+  format="fluid"
+  layout="in-article"
+  style={{ display: 'block', textAlign: 'center' }}
+  className="article-ad"
+/>
           </Box>
         </Slide>
       </Container>
