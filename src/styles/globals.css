@@ -58,3 +58,37 @@ a {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
 }
+
+.ad-container {
+  margin: 2rem auto;
+  text-align: center;
+  max-width: 100%;
+}
+
+.meme-ad {
+  margin: 1.5rem 0;
+}
+
+.article-ad {
+  margin: 2.5rem 0;
+}
+
+.about-ad, .contact-ad {
+  margin: 2rem auto;
+  max-width: 728px;
+}
+
+.privacy-ad, .terms-ad {
+  margin: 1.5rem 0;
+  padding: 0 1rem;
+}
+
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .ad-container {
+    margin: 1.5rem 0;
+  }
+}
