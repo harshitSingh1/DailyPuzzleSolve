@@ -1,4 +1,3 @@
-// pages/solutions/[game].tsx
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -12,16 +11,17 @@ import {
   AccordionDetails, 
   Button,
   useTheme,
-  Fade,
-  Grow,
-  Slide
+  Fade
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import YouTube from 'react-youtube';
+import dynamic from 'next/dynamic';
 import Puzzle from '@/models/Puzzle';
 import dbConnect from '@/utils/dbConnect';
-import AdSenseAd from '@/components/AdSenseAd';
 import HeadSEO from '@/components/HeadSEO';
+
+// Lazy load heavy components
+const YouTube = dynamic(() => import('react-youtube'), { ssr: false });
+const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), { ssr: false });
 
 interface SolutionPageProps {
   solutions: {
@@ -38,6 +38,7 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
   const router = useRouter();
   const theme = useTheme();
   const [viewMode, setViewMode] = useState<'video' | 'images'>('images');
+  const [expandedAccordion, setExpandedAccordion] = useState<string | false>(solutions[0]?._id || false);
 
   // Format game name for display
   const formattedGameName = game
@@ -50,6 +51,10 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
     if (!url) return null;
     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
     return match ? match[1] : null;
+  };
+
+  const handleAccordionChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpandedAccordion(isExpanded ? panel : false);
   };
 
   return (
@@ -93,16 +98,16 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
         </Fade>
 
         {/* Ad Banner */}
-        <Slide direction="up" in={true} timeout={800}>
+        {AdSenseAd && (
           <Box sx={{ mb: 6 }}>
-          <AdSenseAd 
-  slot="9391098809" 
-  format="fluid" 
-  layout="in-article"
-  style={{ display: 'block', textAlign: 'center' }}
-/>
+            <AdSenseAd 
+              slot="9391098809" 
+              format="fluid" 
+              layout="in-article"
+              style={{ display: 'block', textAlign: 'center' }}
+            />
           </Box>
-        </Slide>
+        )}
 
         {/* Solutions Accordion */}
         {solutions.length > 0 ? (
@@ -112,84 +117,85 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
             gap: 2,
             mb: 4
           }}>
-            {solutions.map((solution, index) => (
-              <Grow in={true} timeout={index * 150} key={solution._id}>
-                <Accordion 
-                  defaultExpanded={index === 0}
+            {solutions.map((solution) => (
+              <Accordion 
+                key={solution._id}
+                expanded={expandedAccordion === solution._id}
+                onChange={handleAccordionChange(solution._id)}
+                sx={{
+                  borderRadius: '8px !important',
+                  overflow: 'hidden',
+                  boxShadow: 3,
+                  '&:hover': {
+                    boxShadow: 6
+                  },
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
                   sx={{
-                    borderRadius: '8px !important',
-                    overflow: 'hidden',
-                    boxShadow: 3,
-                    '&:hover': {
-                      boxShadow: 6
-                    },
-                    transition: 'all 0.3s ease'
+                    backgroundColor: 'primary.light',
+                    '&.Mui-expanded': {
+                      backgroundColor: 'primary.main',
+                      color: 'common.white',
+                      '& .MuiTypography-root': {
+                        color: 'common.white'
+                      }
+                    }
                   }}
                 >
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    sx={{
-                      backgroundColor: 'primary.light',
-                      '&.Mui-expanded': {
-                        backgroundColor: 'primary.main',
-                        color: 'common.white',
-                        '& .MuiTypography-root': {
-                          color: 'common.white'
-                        }
-                      }
-                    }}
-                  >
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      {solution.heading}
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {/* View Mode Toggle */}
-                    <Box sx={{ 
-                      display: 'flex', 
-                      gap: 2, 
-                      mb: 3,
-                      '& .MuiButton-root': {
-                        borderRadius: '50px',
-                        px: 3,
-                        fontWeight: 600,
-                        textTransform: 'none'
-                      }
-                    }}>
-                      <Button
-                        variant={viewMode === 'video' ? 'contained' : 'outlined'}
-                        onClick={() => setViewMode('video')}
-                      >
-                        Video Solution
-                      </Button>
-                      <Button
-                        variant={viewMode === 'images' ? 'contained' : 'outlined'}
-                        onClick={() => setViewMode('images')}
-                      >
-                        Image Solution
-                      </Button>
-                    </Box>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {solution.heading}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {/* View Mode Toggle */}
+                  <Box sx={{ 
+                    display: 'flex', 
+                    gap: 2, 
+                    mb: 3,
+                    '& .MuiButton-root': {
+                      borderRadius: '50px',
+                      px: 3,
+                      fontWeight: 600,
+                      textTransform: 'none'
+                    }
+                  }}>
+                    <Button
+                      variant={viewMode === 'video' ? 'contained' : 'outlined'}
+                      onClick={() => setViewMode('video')}
+                    >
+                      Video Solution
+                    </Button>
+                    <Button
+                      variant={viewMode === 'images' ? 'contained' : 'outlined'}
+                      onClick={() => setViewMode('images')}
+                    >
+                      Image Solution
+                    </Button>
+                  </Box>
 
-                    {/* Video Solution */}
-                    {viewMode === 'video' && solution.ytVideo && (
-                      <Box sx={{ 
-                        mb: 4,
-                        position: 'relative',
-                        paddingBottom: '45%',
-                        height: 0,
-                        overflow: 'hidden',
-                        borderRadius: '8px'
-                      }}>
+                  {/* Video Solution */}
+                  {viewMode === 'video' && solution.ytVideo && (
+                    <Box sx={{ 
+                      mb: 4,
+                      position: 'relative',
+                      paddingBottom: '56.25%', // 16:9 aspect ratio
+                      height: 0,
+                      overflow: 'hidden',
+                      borderRadius: '8px'
+                    }}>
+                      {YouTube && (
                         <YouTube
                           videoId={getVideoId(solution.ytVideo) || ''}
                           opts={{
                             width: '100%',
                             height: '100%',
                             playerVars: {
-                              autoplay: 1,
+                              autoplay: 0, // Changed from 1 to 0 for better performance
                               modestbranding: 1,
-                              rel: 0,
-                              mute: 1
+                              rel: 0
                             }
                           }}
                           style={{
@@ -200,100 +206,101 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
                             height: '100%'
                           }}
                         />
-                      </Box>
-                    )}
+                      )}
+                    </Box>
+                  )}
 
-                    {/* Image Solution */}
-                    {viewMode === 'images' && solution.screenshots.length > 0 && (
-                      <Box sx={{ 
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2,
-                        mb: 4
-                      }}>
-                        {solution.screenshots.map((screenshot, idx) => (
-                          <Box
-                            key={idx}
-                            sx={{
-                              borderRadius: '8px',
-                              overflow: 'hidden',
-                              boxShadow: 2,
-                              '&:hover': {
-                                transform: 'scale(1.01)',
-                                boxShadow: 4
-                              },
-                              transition: 'all 0.3s ease'
-                            }}
-                          >
-                            <Image
-                              src={screenshot}
-                              alt={`Step ${idx + 1}`}
-                              width={800}
-                              height={600}
-                              style={{
-                                width: '100%',
-                                height: 'auto',
-                                maxHeight: '400px',
-                                objectFit: 'contain'
-                              }}
-                            />
-                          </Box>
-                        ))}
-                      </Box>
-                    )}
-
-                    {/* Action Buttons */}
+                  {/* Image Solution */}
+                  {viewMode === 'images' && solution.screenshots.length > 0 && (
                     <Box sx={{ 
                       display: 'flex',
-                      flexWrap: 'wrap',
+                      flexDirection: 'column',
                       gap: 2,
-                      mt: 3
+                      mb: 4
                     }}>
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={() => router.push('/contact')}
-                        sx={{
-                          borderRadius: '50px',
-                          px: 3,
-                          fontWeight: 600
-                        }}
-                      >
-                        Report Problem
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        href={`https://www.linkedin.com/games/`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          borderRadius: '50px',
-                          px: 3,
-                          fontWeight: 600
-                        }}
-                      >
-                        Play Game
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          navigator.clipboard.writeText(window.location.href);
-                          alert('Link copied to clipboard!');
-                        }}
-                        sx={{
-                          borderRadius: '50px',
-                          px: 3,
-                          fontWeight: 600,
-                          ml: 'auto'
-                        }}
-                      >
-                        Share Solution
-                      </Button>
+                      {solution.screenshots.map((screenshot, idx) => (
+                        <Box
+                          key={idx}
+                          sx={{
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            boxShadow: 2,
+                            '&:hover': {
+                              transform: 'scale(1.01)',
+                              boxShadow: 4
+                            },
+                            transition: 'all 0.3s ease'
+                          }}
+                        >
+                          <Image
+                            src={screenshot}
+                            alt={`Step ${idx + 1}`}
+                            width={800}
+                            height={600}
+                            priority={idx < 2} // Only prioritize first 2 images
+                            style={{
+                              width: '100%',
+                              height: 'auto',
+                              maxHeight: '400px',
+                              objectFit: 'contain'
+                            }}
+                          />
+                        </Box>
+                      ))}
                     </Box>
-                  </AccordionDetails>
-                </Accordion>
-              </Grow>
+                  )}
+
+                  {/* Action Buttons */}
+                  <Box sx={{ 
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 2,
+                    mt: 3
+                  }}>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => router.push('/contact')}
+                      sx={{
+                        borderRadius: '50px',
+                        px: 3,
+                        fontWeight: 600
+                      }}
+                    >
+                      Report Problem
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      href={`https://www.linkedin.com/games/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{
+                        borderRadius: '50px',
+                        px: 3,
+                        fontWeight: 600
+                      }}
+                    >
+                      Play Game
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        navigator.clipboard.writeText(window.location.href);
+                        alert('Link copied to clipboard!');
+                      }}
+                      sx={{
+                        borderRadius: '50px',
+                        px: 3,
+                        fontWeight: 600,
+                        ml: 'auto'
+                      }}
+                    >
+                      Share Solution
+                    </Button>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
             ))}
           </Box>
         ) : (
@@ -312,16 +319,16 @@ export default function SolutionPage({ solutions, game }: SolutionPageProps) {
         )}
 
         {/* Ad Banner */}
-        <Slide direction="up" in={true} timeout={800}>
+        {AdSenseAd && (
           <Box sx={{ mt: 6 }}>
-          <AdSenseAd 
-  slot="9391098809" 
-  format="fluid" 
-  layout="in-article"
-  style={{ display: 'block', textAlign: 'center' }}
-/>
+            <AdSenseAd 
+              slot="9391098809" 
+              format="fluid" 
+              layout="in-article"
+              style={{ display: 'block', textAlign: 'center' }}
+            />
           </Box>
-        </Slide>
+        )}
       </Container>
     </>
   );

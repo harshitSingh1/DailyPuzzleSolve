@@ -14,11 +14,17 @@ import {
 } from '@mui/material';
 import { useState, useRef } from 'react';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import AdSenseAd from '@/components/AdSenseAd';
+import dynamic from 'next/dynamic';
 import HeadSEO from '@/components/HeadSEO';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Image from 'next/image';
+
+// Lazy load AdSense component
+const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), { 
+  ssr: false,
+  loading: () => <div style={{ height: '100px', background: '#f5f5f5' }} />
+});
 
 interface Game {
   id: string;
@@ -109,7 +115,7 @@ export default function GamesPage() {
   return (
     <>
       <HeadSEO
-        title="Puzzle Games Collection | LogicPuzzleMaster"
+        title="Puzzle Games Collection | PuzzleLogicHub"
         description="Explore our collection of the best puzzle games to challenge your mind"
         canonicalUrl="https://daily-puzzle-solve.vercel.app/games"
       />
@@ -204,15 +210,18 @@ export default function GamesPage() {
           </Box>
         </Box>
         
-        {/* Ad Banner */}
+        {/* Ad Banner - Fixed Height Container */}
         <Slide direction="up" in={true} timeout={500}>
-          <Box sx={{ mb: 6 }}>
-          <AdSenseAd 
-  slot="3955548106" 
-  format="fluid" 
-  layoutKey="+2o+s4-16-1z+89"
-  style={{ display: 'block' }}
-/>
+          <Box sx={{ mb: 6, height: '100px' }}>
+            <AdSenseAd 
+              slot="3955548106" 
+              format="fluid"
+              style={{ 
+                display: 'block',
+                height: '100px',
+                maxHeight: '100px'
+              }}
+            />
           </Box>
         </Slide>
 
@@ -253,6 +262,7 @@ export default function GamesPage() {
                       src={game.image}
                       alt={game.title}
                       fill
+                      priority={index < 3} // Only prioritize first 3 images
                       style={{
                         objectFit: 'cover',
                         transition: 'transform 0.5s ease',
@@ -365,15 +375,18 @@ export default function GamesPage() {
           )}
         </Box>
 
-        {/* Ad Banner */}
+        {/* Ad Banner - Fixed Height Container */}
         <Slide direction="up" in={true} timeout={800}>
-          <Box sx={{ mt: 6 }}>
-          <AdSenseAd 
-  slot="3955548106" 
-  format="fluid" 
-  layoutKey="+2o+s4-16-1z+89"
-  style={{ display: 'block' }}
-/>
+          <Box sx={{ mt: 6, height: '100px' }}>
+            <AdSenseAd 
+              slot="3955548106" 
+              format="fluid"
+              style={{ 
+                display: 'block',
+                height: '100px',
+                maxHeight: '100px'
+              }}
+            />
           </Box>
         </Slide>
       </Container>

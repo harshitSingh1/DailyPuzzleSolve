@@ -20,60 +20,30 @@ import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { ShopItem } from '@/types/types';
 import HeadSEO from '@/components/HeadSEO';
-import AdSenseAd from '@/components/AdSenseAd';
-import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { useState, useEffect, useMemo } from 'react';
+import React from 'react';
+import { Theme } from '@mui/material/styles';
+
+// Lazy load the AdSense component since it's not critical for initial render
+const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), { 
+  ssr: false,
+  loading: () => <div style={{ height: '90px' }}></div>
+});
 
 interface ShopProps {
   shopItems?: ShopItem[];
   error?: string;
 }
 
-export default function Shop({ shopItems: initialShopItems, error }: ShopProps) {
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-  const [shopItems, setShopItems] = useState<ShopItem[]>(initialShopItems || []);
-  const [filteredItems, setFilteredItems] = useState<ShopItem[]>(initialShopItems || []);
-  const [loading, setLoading] = useState(!initialShopItems);
-  const [category, setCategory] = useState('All');
-  
-  useEffect(() => {
-    if (!initialShopItems && !error) {
-      setLoading(true);
-      axios.get('/api/shops')
-        .then(response => {
-          setShopItems(response.data.data);
-          setFilteredItems(response.data.data);
-        })
-        .catch(() => {
-          // Handle error if needed
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [initialShopItems, error]);
-
-  const handleCategoryChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newCategory: string | null,
-  ) => {
-    if (newCategory !== null) {
-      setCategory(newCategory);
-    }
-  };
-
-  useEffect(() => {
-    if (category === 'All') {
-      setFilteredItems(shopItems);
-    } else {
-      const filtered = shopItems.filter(item => {
-        const description = item.description?.toLowerCase() || '';
-        return description.includes(category.toLowerCase());
-      });
-      setFilteredItems(filtered);
-    }
-  }, [category, shopItems]);
-
-  const processDescription = (description = '') => {
+// Memoize this component to prevent unnecessary re-renders
+const ShopItemCard = React.memo(({ item, getItemsPerRow, theme }: { 
+  item: ShopItem, 
+  getItemsPerRow: () => number, 
+  theme: Theme 
+}) => {
+  const { cleanDescription, price, discount } = useMemo(() => {
+    const description = item.description || '';
     const priceRegex = /(Rs|₹)\s*([\d,]+)\s*\/-/;
     const discountRegex = /\(([^)]+)\)/;
     
@@ -91,13 +61,198 @@ export default function Shop({ shopItems: initialShopItems, error }: ShopProps) 
       price: priceMatch ? `${priceMatch[1]} ${priceMatch[2]}/-` : null,
       discount: discountMatch ? discountMatch[1] : null
     };
+  }, [item.description]);
+
+  return (
+    <Card 
+      key={item._id}
+      sx={{ 
+        width: `calc(${100 / getItemsPerRow()}% - ${theme.spacing(4)})`,
+        minWidth: 300,
+        maxWidth: 400,
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        transition: 'transform 0.3s, box-shadow 0.3s',
+        '&:hover': {
+          transform: 'translateY(-5px)',
+          boxShadow: 3
+        },
+        [theme.breakpoints.down('sm')]: {
+          width: '100%'
+        }
+      }}
+    >
+      {discount && (
+        <Chip
+          label={discount}
+          sx={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            fontWeight: 'bold',
+            zIndex: 1,
+            transform: 'none !important',
+            backgroundColor: '#FFA500',
+            color: '#000', 
+            fontSize: '0.75rem',
+            height: '24px'
+          }}
+        />
+      )}
+
+      <CardMedia
+        component="img"
+        height="220"
+        image={item.image}
+        alt={item.productName}
+        sx={{ 
+          objectFit: 'contain',
+          p: 2,
+          backgroundColor: 'grey.50'
+        }}
+        loading="lazy" // Add lazy loading for images
+      />
+
+      <CardContent sx={{ flexGrow: 1, pt: 2, pb: '16px !important' }}>
+        <Typography 
+          gutterBottom 
+          variant="h6" 
+          component="h3"
+          sx={{ 
+            fontWeight: 600,
+            color: '#000',
+            minHeight: '4.5em',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            wordBreak: 'break-word',
+            mb: -3
+          }}
+        >
+          {item.productName}
+        </Typography>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+          <Rating 
+            value={item.rating || 0} 
+            precision={0.5} 
+            readOnly 
+            sx={{ mr: 1 }}
+          />
+          <Typography variant="body2" color="text.secondary">
+            {(item.rating || 0).toFixed(1)}
+          </Typography>
+        </Box>
+
+        <Typography 
+          variant="body2" 
+          color="text.secondary"
+          sx={{ 
+            mb: 2,
+            minHeight: '4em',
+            display: '-webkit-box',
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}
+        >
+          {cleanDescription}
+        </Typography>
+
+        <Box sx={{ 
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mt: 'auto'
+        }}>
+          {price && (
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                color: 'primary.main',
+                fontWeight: 'bold',
+                fontSize: '1.1rem'
+              }}
+            >
+              {price}
+            </Typography>
+          )}
+          <Button
+            variant="contained"
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            sx={{
+              ml: 'auto',
+              fontWeight: 600,
+              '&:hover': {
+                backgroundColor: 'primary.dark'
+              }
+            }}
+          >
+            {item.buttonText || 'Buy Now'}
+          </Button>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+});
+
+ShopItemCard.displayName = 'ShopItemCard';
+
+export default function Shop({ shopItems: initialShopItems, error }: ShopProps) {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const [shopItems, setShopItems] = useState<ShopItem[]>(initialShopItems || []);
+  const [category, setCategory] = useState('All');
+  const [loading, setLoading] = useState(!initialShopItems);
+  
+  // Memoize filtered items to prevent unnecessary recalculations
+  const filteredItems = useMemo(() => {
+    if (category === 'All') {
+      return shopItems;
+    }
+    return shopItems.filter(item => {
+      const description = item.description?.toLowerCase() || '';
+      return description.includes(category.toLowerCase());
+    });
+  }, [category, shopItems]);
+
+  useEffect(() => {
+    if (!initialShopItems && !error) {
+      setLoading(true);
+      axios.get('/api/shops')
+        .then(response => {
+          setShopItems(response.data.data);
+        })
+        .catch(() => {
+          // Handle error if needed
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [initialShopItems, error]);
+
+  const handleCategoryChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newCategory: string | null,
+  ) => {
+    if (newCategory !== null) {
+      setCategory(newCategory);
+    }
   };
 
-  const getItemsPerRow = () => {
-    if (isSmallScreen) return 1;
-    if (isMediumScreen) return 2;
-    return 3;
-  };
+  const getItemsPerRow = useMemo(() => {
+    return () => {
+      if (isSmallScreen) return 1;
+      if (isMediumScreen) return 2;
+      return 3;
+    };
+  }, [isSmallScreen, isMediumScreen]);
 
   const handleSuggestProduct = () => {
     const shoppingSites = [
@@ -220,154 +375,22 @@ export default function Shop({ shopItems: initialShopItems, error }: ShopProps) 
         </Box>
 
         <Box sx={{ 
-          display: 'flex',
-          flexWrap: 'wrap',
+          display: 'grid',
+          gridTemplateColumns: `repeat(auto-fill, minmax(300px, 1fr))`,
           gap: 4,
           justifyContent: 'center'
         }}>
           {filteredItems && filteredItems.length > 0 ? (
-            filteredItems.map((item) => {
-              const { cleanDescription, price, discount } = processDescription(item.description);
-              
-              return (
-                <Card 
-                  key={item._id}
-                  sx={{ 
-                    width: `calc(${100 / getItemsPerRow()}% - ${theme.spacing(4)})`,
-                    minWidth: 300,
-                    maxWidth: 400,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    position: 'relative',
-                    transition: 'transform 0.3s, box-shadow 0.3s',
-                    '&:hover': {
-                      transform: 'translateY(-5px)',
-                      boxShadow: 3
-                    },
-                    [theme.breakpoints.down('sm')]: {
-                      width: '100%'
-                    }
-                  }}
-                >
-                  {discount && (
-                    <Chip
-                      label={discount}
-                      sx={{
-                        position: 'absolute',
-                        top: 10,
-                        right: 10,
-                        fontWeight: 'bold',
-                        zIndex: 1,
-                        transform: 'none !important',
-                        backgroundColor: '#FFA500',
-                        color: '#000', 
-                        fontSize: '0.75rem',
-                        height: '24px'
-                      }}
-                    />
-                  )}
-
-                  <CardMedia
-                    component="img"
-                    height="220"
-                    image={item.image}
-                    alt={item.productName}
-                    sx={{ 
-                      objectFit: 'contain',
-                      p: 2,
-                      backgroundColor: 'grey.50'
-                    }}
-                  />
-
-                  <CardContent sx={{ flexGrow: 1, pt: 2, pb: '16px !important' }}>
-                    <Typography 
-                      gutterBottom 
-                      variant="h6" 
-                      component="h3"
-                      sx={{ 
-                        fontWeight: 600,
-                        color: '#000',
-                        minHeight: '4.5em',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        wordBreak: 'break-word',
-                        mb: -3
-                      }}
-                    >
-                      {item.productName}
-                    </Typography>
-
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                      <Rating 
-                        value={item.rating || 0} 
-                        precision={0.5} 
-                        readOnly 
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="body2" color="text.secondary">
-                        {(item.rating || 0).toFixed(1)}
-                      </Typography>
-                    </Box>
-
-                    <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ 
-                        mb: 2,
-                        minHeight: '4em',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}
-                    >
-                      {cleanDescription}
-                    </Typography>
-
-                    <Box sx={{ 
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      mt: 'auto'
-                    }}>
-                      {price && (
-                        <Typography 
-                          variant="h6" 
-                          sx={{ 
-                            color: 'primary.main',
-                            fontWeight: 'bold',
-                            fontSize: '1.1rem'
-                          }}
-                        >
-                          {price}
-                        </Typography>
-                      )}
-                      <Button
-                        variant="contained"
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        sx={{
-                          ml: 'auto',
-                          fontWeight: 600,
-                          '&:hover': {
-                            backgroundColor: 'primary.dark'
-                          }
-                        }}
-                      >
-                        {item.buttonText || 'Buy Now'}
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
-              );
-            })
+            filteredItems.map((item) => (
+              <ShopItemCard 
+                key={item._id} 
+                item={item} 
+                getItemsPerRow={getItemsPerRow}
+                theme={theme}
+              />
+            ))
           ) : (
-            <Typography variant="body1" align="center" sx={{ py: 4 }}>
+            <Typography variant="body1" align="center" sx={{ py: 4, gridColumn: '1 / -1' }}>
               {category === 'All' 
                 ? 'No products available at the moment.' 
                 : `No ${category} products found.`}
@@ -395,29 +418,36 @@ export default function Shop({ shopItems: initialShopItems, error }: ShopProps) 
         </Box>
         
         <AdSenseAd 
-  slot="4661598458" 
-  format="autorelaxed" 
-  style={{ display: 'block' }}
-/>
+          slot="4661598458" 
+          format="autorelaxed" 
+          style={{ display: 'block' }}
+        />
       </Container>
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps<ShopProps> = async () => {
+export const getServerSideProps: GetServerSideProps<ShopProps> = async ({ res }) => {
   try {
-    const res = await axios.get('/api/shops', {
-      baseURL: process.env.NEXT_PUBLIC_API_URL || 
-              (process.env.NODE_ENV === 'production' 
-                ? 'https://daily-puzzle-solve.vercel.app' 
-                : 'http://localhost:3000')
-    });
+    // Set cache headers for better performance
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=3600, stale-while-revalidate=1800'
+    );
+
+    const apiUrl = process.env.NODE_ENV === 'production' 
+      ? 'https://daily-puzzle-solve.vercel.app/api/shops' 
+      : 'http://localhost:3000/api/shops';
+
+    const response = await axios.get(apiUrl);
+    
     return {
       props: {
-        shopItems: res.data.data || [],
+        shopItems: response.data.data || [],
       },
     };
   } catch (error) {
+    console.error('Error in getServerSideProps:', error);
     return {
       props: {
         error: error instanceof Error ? error.message : 'Failed to load Items',

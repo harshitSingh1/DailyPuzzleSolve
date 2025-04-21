@@ -413,15 +413,17 @@ export default function MemeGenerator() {
         </Typography>
 
         {/* Ad Banner */}
-        <Slide direction="up" in={true} timeout={500}>
-          <Box sx={{ mb: 6 }}>
-          <AdSenseAd
-  slot="3955548106"
-  format="fluid"
-  layoutKey="+2o+s4-16-1z+89"
-  style={{ display: 'block' }}
-  className="meme-ad"
-/>
+        <Slide direction="up" in={true} timeout={800}>
+          <Box sx={{ mt: 6, height: '100px' }}>
+            <AdSenseAd 
+              slot="3955548106" 
+              format="fluid"
+              style={{ 
+                display: 'block',
+                height: '100px',
+                maxHeight: '100px'
+              }}
+            />
           </Box>
         </Slide>
 
@@ -697,14 +699,16 @@ export default function MemeGenerator() {
 
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={800}>
-          <Box sx={{ mb: 6 }}>
-          <AdSenseAd
-  slot="3955548106"
-  format="fluid"
-  layoutKey="+2o+s4-16-1z+89"
-  style={{ display: 'block' }}
-  className="meme-ad"
-/>
+          <Box sx={{ mt: 6, height: '100px' }}>
+            <AdSenseAd 
+              slot="3955548106" 
+              format="fluid"
+              style={{ 
+                display: 'block',
+                height: '100px',
+                maxHeight: '100px'
+              }}
+            />
           </Box>
         </Slide>
 
@@ -841,14 +845,16 @@ export default function MemeGenerator() {
 
         {/* Ad Banner */}
         <Slide direction="up" in={true} timeout={800}>
-          <Box sx={{ mt: 6 }}>
-          <AdSenseAd
-  slot="3955548106"
-  format="fluid"
-  layoutKey="+2o+s4-16-1z+89"
-  style={{ display: 'block' }}
-  className="meme-ad"
-/>
+          <Box sx={{ mt: 6, height: '100px' }}>
+            <AdSenseAd 
+              slot="3955548106" 
+              format="fluid"
+              style={{ 
+                display: 'block',
+                height: '100px',
+                maxHeight: '100px'
+              }}
+            />
           </Box>
         </Slide>
       </Container>
