@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+
+Sitemap: https://daily-puzzle-solve.vercel.app/sitemap.xml

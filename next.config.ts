@@ -60,6 +60,15 @@ const nextConfig = {
           }
         ],
       },
+      {
+        source: '/robots.txt',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'text/plain',
+          },
+        ],
+      },
     ];
   },
 };
