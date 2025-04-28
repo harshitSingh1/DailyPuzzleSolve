@@ -1,11 +1,7 @@
-import { 
-  useState, 
-  useMemo 
-} from 'react';
-import { 
-  GetServerSideProps 
-} from 'next';
+import { useState, useMemo } from 'react';
+import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { 
   Box, 
   Container, 
@@ -24,18 +20,15 @@ import {
   ToggleButtonGroup,
   ToggleButton
 } from '@mui/material';
-import HeadSEO from '@/components/HeadSEO';
 import { ShopItem } from '@/types/types';
+
+// Static imports for critical components
 import React from 'react';
 
+// Lazy load non-critical components
 const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
   ssr: false,
-  loading: () => <div style={{ 
-    height: '90px', 
-    background: '#f5f5f5',
-    margin: '16px 0',
-    borderRadius: '4px'
-  }} />
+  loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
 });
 
 interface ShopProps {
@@ -75,6 +68,8 @@ const ShopItemCard = React.memo(({
         boxShadow: 3
       }
     }}
+    itemScope
+    itemType="http://schema.org/Product"
   >
     {discount && (
       <Chip
@@ -106,6 +101,7 @@ const ShopItemCard = React.memo(({
       loading="lazy"
       decoding="async"
       fetchPriority="low"
+      itemProp="image"
     />
 
     <CardContent sx={{ flexGrow: 1, pt: 2, pb: '16px !important' }}>
@@ -125,20 +121,24 @@ const ShopItemCard = React.memo(({
           wordBreak: 'break-word',
           mb: -3
         }}
+        itemProp="name"
       >
         {item.productName}
       </Typography>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }} itemProp="aggregateRating" itemScope itemType="http://schema.org/AggregateRating">
         <Rating
           value={item.rating || 0}
           precision={0.5}
           readOnly
           sx={{ mr: 1 }}
+          itemProp="ratingValue"
         />
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" itemProp="reviewCount">
           {(item.rating || 0).toFixed(1)}
         </Typography>
+        <meta itemProp="bestRating" content="5" />
+        <meta itemProp="worstRating" content="0" />
       </Box>
 
       <Typography
@@ -153,6 +153,7 @@ const ShopItemCard = React.memo(({
           overflow: 'hidden',
           textOverflow: 'ellipsis'
         }}
+        itemProp="description"
       >
         {cleanDescription}
       </Typography>
@@ -171,8 +172,13 @@ const ShopItemCard = React.memo(({
               fontWeight: 'bold',
               fontSize: '1.1rem'
             }}
+            itemProp="offers"
+            itemScope
+            itemType="http://schema.org/Offer"
           >
-            {price}
+            <span itemProp="price" content={price.replace(/[^\d.]/g, '')}>{price}</span>
+            <link itemProp="availability" href="http://schema.org/InStock" />
+            <link itemProp="url" href={item.url} />
           </Typography>
         )}
         <Button
@@ -187,6 +193,7 @@ const ShopItemCard = React.memo(({
               backgroundColor: 'primary.dark'
             }
           }}
+          aria-label={`Buy ${item.productName}`}
         >
           {item.buttonText || 'Buy Now'}
         </Button>
@@ -250,17 +257,54 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
     );
   }
 
+  const pageTitle = "Premium Puzzle Books & Games Collection | LogicPuzzleHub";
+  const pageDescription = "Explore our curated collection of mind-challenging puzzle books and games. Find the perfect brain teasers for all skill levels with detailed solutions.";
+  const canonicalUrl = "https://daily-puzzle-solve.vercel.app/shop";
+  const featuredImage = preprocessedItems.length > 0 ? preprocessedItems[0].item.image : "https://daily-puzzle-solve.vercel.app/default-shop-image.jpg";
+
   return (
     <>
-      <HeadSEO
-        title="Buy Books and Games | PuzzleLogicHub"
-        description="Collection of useful technology tools and resources for puzzle enthusiasts"
-        canonicalUrl="https://daily-puzzle-solve.vercel.app/shop"
-      />
-      
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Head>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:image" content={featuredImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={canonicalUrl} />
+        <meta property="twitter:title" content={pageTitle} />
+        <meta property="twitter:description" content={pageDescription} />
+        <meta property="twitter:image" content={featuredImage} />
+
+        {/* Schema.org */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": pageTitle,
+            "description": pageDescription,
+            "url": canonicalUrl,
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": `${canonicalUrl}?search={search_term_string}`,
+              "query-input": "required name=search_term_string"
+            }
+          })}
+        </script>
+      </Head>
+
+      <Container maxWidth="lg" sx={{ py: 4 }} itemScope itemType="http://schema.org/ItemList">
         <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <Typography
+        <Typography
             variant="h3"
             component="h1"
             sx={{ 
@@ -331,6 +375,7 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
                   textTransform: 'none',
                   fontWeight: 600
                 }}
+                aria-label={`Filter by ${cat}`}
               >
                 {cat}
               </ToggleButton>
@@ -349,15 +394,17 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
           justifyContent: 'center'
         }}>
           {filteredItems.length > 0 ? (
-            filteredItems.map(({ item, cleanDescription, price, discount }) => (
-              <ShopItemCard 
-                key={item._id}
-                item={item}
-                cleanDescription={cleanDescription}
-                price={price}
-                discount={discount}
-                cardWidth={cardWidth}
-              />
+            filteredItems.map(({ item, cleanDescription, price, discount }, index) => (
+              <div key={item._id} itemProp="itemListElement" itemScope itemType="http://schema.org/ListItem">
+                <meta itemProp="position" content={String(index + 1)} />
+                <ShopItemCard 
+                  item={item}
+                  cleanDescription={cleanDescription}
+                  price={price}
+                  discount={discount}
+                  cardWidth={cardWidth}
+                />
+              </div>
             ))
           ) : (
             <Typography variant="body1" align="center" sx={{ py: 4, gridColumn: '1 / -1' }}>
@@ -368,10 +415,10 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
           )}
         </Box>
 
-        <Divider sx={{ my: 4 }} /> {/* Reduced from 6 to 4 */}
+        <Divider sx={{ my: 4 }} />
 
         <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="body1" sx={{ mb: 2 }}>
+          <Typography variant="h2" component="h2" sx={{ mb: 2, fontSize: '1.5rem', color: 'common.black' }}>
             Can&apos;t find what you&apos;re looking for?
           </Typography>
           <Button
@@ -382,11 +429,21 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
               px: 4,
               fontWeight: 600
             }}
+            aria-label="Browse more products on Amazon"
           >
-            Products Only For You
+            Browse More Products
           </Button>
         </Box>
         
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="body1" sx={{ mb: 2, textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
+            Our carefully curated selection of puzzle books and games is designed to challenge minds of all skill levels. 
+            Whether you&apos;re a beginner looking to improve your problem-solving skills or an expert seeking complex challenges, 
+            we have something for everyone. Each product in our collection has been selected for its quality, educational value, 
+            and ability to provide hours of engaging mental exercise.
+          </Typography>
+        </Box>
+
         <AdSenseAd
           slot="4661598458"
           format="autorelaxed"
@@ -399,10 +456,12 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
 
 export const getServerSideProps: GetServerSideProps<ShopProps> = async ({ res }) => {
   try {
+    // Set aggressive caching headers
     res.setHeader(
       'Cache-Control',
       'public, s-maxage=86400, stale-while-revalidate=3600'
     );
+    res.setHeader('Expires', new Date(Date.now() + 86400000).toUTCString());
 
     const apiUrl = process.env.NODE_ENV === 'production'
       ? 'https://daily-puzzle-solve.vercel.app/api/shops'

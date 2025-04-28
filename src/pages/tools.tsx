@@ -1,13 +1,7 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-  Suspense,
-} from 'react';
+import { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import {
   Box,
   Container,
@@ -21,78 +15,69 @@ import {
   Chip,
   useTheme,
   useMediaQuery,
-  CircularProgress,
+  Fade,
 } from '@mui/material';
-import HeadSEO from '@/components/HeadSEO';
 import SearchIcon from '@mui/icons-material/Search';
 import LaunchIcon from '@mui/icons-material/Launch';
 import { Tool } from '@/types/types';
 
+// Lazy load non-critical components
 const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
   ssr: false,
-  loading: () => null,
+  loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
 });
-const Fade = dynamic(() => import('@mui/material/Fade'), { loading: () => null });
-const Slide = dynamic(() => import('@mui/material/Slide'), { loading: () => null });
-const Grow = dynamic(() => import('@mui/material/Grow'), { loading: () => null });
-
-// Define a loading component for the tools grid
-const ToolsGridLoading = () => (
-  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 4, my: 4, justifyContent: 'center' }}>
-    {[...Array(6)].map((_, index) => (
-      <Card key={index} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 150 }}>
-        <CircularProgress />
-      </Card>
-    ))}
-  </Box>
-);
 
 interface ToolsProps {
   tools: Tool[];
   error?: string;
 }
 
-export default function Tools({ tools: initialTools }: ToolsProps) {
+// Pre-process tools data on server to reduce client-side work
+function preprocessTools(tools: Tool[]) {
+  return tools.map(tool => {
+    const tagRegex = /#(\w+)/g;
+    const tags: string[] = [];
+    const cleanDesc = (tool.subheading || '').replace(tagRegex, (match, tag) => {
+      tags.push(tag);
+      return '';
+    }).trim();
+    
+    return { ...tool, cleanDesc, tags };
+  });
+}
+
+export default function Tools({ tools: initialTools, error }: ToolsProps) {
   const theme = useTheme();
   const [searchTerm, setSearchTerm] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  const processedTools = useMemo(() => {
-    return initialTools.map((tool) => {
-      const tagRegex = /#(\w+)/g;
-      const tags: string[] = [];
-      const cleanDesc = (tool.subheading || '').replace(tagRegex, (match, tag) => {
-        tags.push(tag);
-        return '';
-      }).trim();
+  // Use pre-processed tools from server when available
+  const processedTools = useMemo(() => 
+    initialTools ? preprocessTools(initialTools) : [], 
+    [initialTools]
+  );
 
-      return { ...tool, cleanDesc, tags };
-    });
-  }, [initialTools]);
-
+  // Memoize filtered tools with debounced search
   const filteredTools = useMemo(() => {
     if (!searchTerm) return processedTools;
 
     const searchWords = searchTerm.toLowerCase().split(' ');
-    return processedTools.filter((tool) => {
+    return processedTools.filter(tool => {
       const searchContent = `${tool.title.toLowerCase()} ${tool.cleanDesc.toLowerCase()} ${tool.tags.join(' ').toLowerCase()}`;
-      return searchWords.some((word) => searchContent.includes(word));
+      return searchWords.some(word => searchContent.includes(word));
     });
   }, [searchTerm, processedTools]);
 
-  const itemsPerRow = useMemo(() => {
-    if (isSmallScreen) return 1;
-    if (isMediumScreen) return 2;
-    return 3;
+  // Responsive layout calculations
+  const gridTemplateColumns = useMemo(() => {
+    if (isSmallScreen) return 'repeat(auto-fill, minmax(280px, 1fr))';
+    if (isMediumScreen) return 'repeat(auto-fill, minmax(320px, 1fr))';
+    return 'repeat(auto-fill, minmax(350px, 1fr))';
   }, [isSmallScreen, isMediumScreen]);
 
-  const minCardWidth = useMemo(() => {
-    return `minmax(${itemsPerRow === 3 ? '300px' : itemsPerRow === 2 ? '350px' : '100%'}, 1fr)`;
-  }, [itemsPerRow]);
-
+  // Handle search focus on "/" key press
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === '/' && !(e.target instanceof HTMLInputElement)) {
       e.preventDefault();
@@ -105,26 +90,63 @@ export default function Tools({ tools: initialTools }: ToolsProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInitialLoad(false);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Typography color="error">{error}</Typography>
+      </Container>
+    );
+  }
+
+  const pageTitle = "Essential Developer Tools for Puzzle Solvers | LogicPuzzleMaster";
+  const pageDescription = "Discover the best technology tools and resources for puzzle enthusiasts. Enhance your problem-solving skills with our curated collection of developer tools.";
+  const canonicalUrl = "https://daily-puzzle-solve.vercel.app/tools";
+  const featuredImage = processedTools.length > 0 ? processedTools[0].image : "https://daily-puzzle-solve.vercel.app/default-tools-image.jpg";
 
   return (
     <>
-      <HeadSEO
-        title="Useful Tech Tools for Puzzle Solvers | LogicPuzzleMaster"
-        description="Collection of useful technology tools and resources for puzzle enthusiasts"
-        canonicalUrl="https://daily-puzzle-solve.vercel.app/tools"
-      />
+      <Head>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <link rel="canonical" href={canonicalUrl} />
 
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:image" content={featuredImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={canonicalUrl} />
+        <meta property="twitter:title" content={pageTitle} />
+        <meta property="twitter:description" content={pageDescription} />
+        <meta property="twitter:image" content={featuredImage} />
+
+        {/* Schema.org */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": pageTitle,
+            "description": pageDescription,
+            "url": canonicalUrl,
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": `${canonicalUrl}?search={search_term_string}`,
+              "query-input": "required name=search_term_string"
+            }
+          })}
+        </script>
+      </Head>
+
+      <Container maxWidth="lg" sx={{ py: 4 }} itemScope itemType="http://schema.org/ItemList">
         {/* Page Header */}
         <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <Slide in={true} direction="down">
-            <Typography
+        <Typography
               variant="h3"
               component="h1"
               sx={{
@@ -139,116 +161,130 @@ export default function Tools({ tools: initialTools }: ToolsProps) {
             >
               Tools For Developers
             </Typography>
-          </Slide>
+          
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ 
+              color: 'text.secondary',
+              maxWidth: '700px',
+              mx: 'auto',
+              mb: 3,
+              [theme.breakpoints.down('md')]: {
+                fontSize: '1rem'
+              }
+            }}
+          >
+            Boost your puzzle-solving skills with these carefully selected tools
+          </Typography>
         </Box>
 
         {/* Search Bar */}
         <Box sx={{ mb: 6 }}>
-          <Grow in={true} timeout={1000}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Search tools..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              inputRef={searchRef}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color="primary" />
-                  </InputAdornment>
-                ),
-                sx: {
-                  borderRadius: '50px',
-                  backgroundColor: 'background.paper',
-                  boxShadow: theme.shadows[1],
-                  '&:hover': {
-                    boxShadow: theme.shadows[3],
-                  },
-                  transition: 'all 0.3s ease',
-                  height: '56px',
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Search tools..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            inputRef={searchRef}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="primary" />
+                </InputAdornment>
+              ),
+              sx: {
+                borderRadius: '50px',
+                backgroundColor: 'background.paper',
+                boxShadow: theme.shadows[1],
+                '&:hover': {
+                  boxShadow: theme.shadows[3]
                 },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: 'transparent',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'transparent',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: 'primary.main',
-                    boxShadow: `0 0 0 2px ${theme.palette.primary.light}`,
-                  },
+                transition: 'all 0.3s ease',
+                height: '56px'
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'transparent'
                 },
-              }}
-            />
-          </Grow>
+                '&:hover fieldset': {
+                  borderColor: 'transparent'
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'primary.main',
+                  boxShadow: `0 0 0 2px ${theme.palette.primary.light}`
+                }
+              }
+            }}
+            aria-label="Search developer tools"
+          />
         </Box>
 
-        <Suspense fallback={null}>
-          <AdSenseAd
-            slot="4661598458"
-            format="autorelaxed"
-            style={{ display: 'block' }}
-          />
-        </Suspense>
+        <AdSenseAd 
+          slot="4661598458" 
+          format="autorelaxed" 
+          style={{ display: 'block' }}
+        />
 
         {/* Tools Grid */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(auto-fill, ${minCardWidth})`,
-            gap: 4,
-            my: 4,
-          }}
-        >
-          {isInitialLoad ? (
-            <ToolsGridLoading />
-          ) : filteredTools.length > 0 ? (
+        <Box sx={{ 
+          display: 'grid',
+          gridTemplateColumns,
+          gap: 4,
+          my: 4
+        }}>
+          {filteredTools.length > 0 ? (
             filteredTools.map((tool, index) => (
-              <Grow
-                key={tool._id}
-                in={!isInitialLoad}
-                style={{ transformOrigin: '0 0 0', transitionDelay: `${(index % 6) * 100}ms` }}
-                timeout={300}
-              >
-                <Card
-                  sx={{
+              <Fade in={true} key={tool._id} timeout={300} style={{ transitionDelay: `${index * 100}ms` }}>
+                <Card 
+                  sx={{ 
                     display: 'flex',
                     flexDirection: 'column',
                     position: 'relative',
                     transition: 'transform 0.3s, box-shadow 0.3s',
                     '&:hover': {
                       transform: 'translateY(-5px)',
-                      boxShadow: theme.shadows[6],
-                    },
+                      boxShadow: theme.shadows[6]
+                    }
                   }}
+                  itemScope
+                  itemType="http://schema.org/SoftwareApplication"
                 >
                   {/* Tool Image and Title */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', p: 3, pb: 0 }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    p: 3,
+                    pb: 0
+                  }}>
                     <CardMedia
                       component="img"
                       image={tool.image || '/tool-placeholder.png'}
                       alt={tool.title}
-                      sx={{
-                        width: 60,
-                        height: 60,
+                      sx={{ 
+                        width: 60, 
+                        height: 60, 
                         objectFit: 'contain',
                         mr: 2,
-                        borderRadius: '8px',
+                        borderRadius: '8px'
                       }}
                       loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                      itemProp="image"
                     />
-                    <Typography
-                      variant="h6"
+                    <Typography 
+                      variant="h6" 
                       component="h3"
-                      sx={{
+                      sx={{ 
                         fontWeight: 600,
                         flexGrow: 1,
-                        color: 'text.primary',
+                        color: 'text.primary'
                       }}
+                      itemProp="name"
                     >
                       {tool.title}
                     </Typography>
@@ -257,12 +293,13 @@ export default function Tools({ tools: initialTools }: ToolsProps) {
                   {/* Tool Description */}
                   <CardContent sx={{ pt: 2, pb: '16px !important' }}>
                     <Typography
-                      variant="body2"
+                      variant="body2" 
                       color="text.secondary"
-                      sx={{
+                      sx={{ 
                         mb: 2,
-                        minHeight: '4em',
+                        minHeight: '4em'
                       }}
+                      itemProp="description"
                     >
                       {tool.cleanDesc}
                     </Typography>
@@ -275,12 +312,13 @@ export default function Tools({ tools: initialTools }: ToolsProps) {
                             key={i}
                             label={`#${tag}`}
                             size="small"
-                            sx={{
+                            sx={{ 
                               backgroundColor: 'primary.light',
                               color: 'white',
                               fontSize: '0.7rem',
-                              height: '24px',
+                              height: '24px'
                             }}
+                            itemProp="keywords"
                           />
                         ))}
                       </Box>
@@ -298,70 +336,86 @@ export default function Tools({ tools: initialTools }: ToolsProps) {
                         fontWeight: 600,
                         borderRadius: '8px',
                         '&:hover': {
-                          backgroundColor: 'primary.dark',
-                        },
+                          backgroundColor: 'primary.dark'
+                        }
                       }}
+                      aria-label={`Visit ${tool.title}`}
+                      itemProp="url"
                     >
                       Visit Tool
                     </Button>
                   </CardContent>
                 </Card>
-              </Grow>
+              </Fade>
             ))
           ) : (
-            <Fade in={!isInitialLoad}>
-              <Typography
-                variant="body1"
-                align="center"
-                sx={{
-                  py: 4,
-                  color: 'text.secondary',
-                  gridColumn: '1 / -1',
-                }}
-              >
-                {searchTerm
-                  ? `No tools found matching "${searchTerm}"`
-                  : 'No tools available at the moment.'}
-              </Typography>
-            </Fade>
+            <Typography 
+              variant="body1" 
+              align="center" 
+              sx={{ 
+                py: 4,
+                color: 'text.secondary',
+                gridColumn: '1 / -1'
+              }}
+            >
+              {searchTerm 
+                ? `No tools found matching "${searchTerm}"` 
+                : 'No tools available at the moment.'}
+            </Typography>
           )}
         </Box>
 
-        <Suspense fallback={null}>
-          <AdSenseAd
-            slot="4661598458"
-            format="autorelaxed"
-            style={{ display: 'block' }}
-          />
-        </Suspense>
+        {/* Additional Content Section */}
+        <Box sx={{ mt: 6 }}>
+          <Typography variant="h2" component="h2" sx={{ mb: 2, fontSize: '1.5rem', textAlign: 'center',color: 'common.black' }}>
+            About Our Tool Collection
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2, textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
+            Our carefully curated selection of developer tools is designed to enhance your puzzle-solving workflow. 
+            Whether you&apos;re debugging complex algorithms or optimizing your solutions, these tools will help you work 
+            more efficiently. Each tool has been selected for its reliability, performance, and relevance to puzzle 
+            enthusiasts and competitive programmers.
+          </Typography>
+        </Box>
+
+        <AdSenseAd 
+          slot="4661598458" 
+          format="autorelaxed" 
+          style={{ display: 'block' }}
+        />
       </Container>
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps<ToolsProps> = async () => {
+export const getServerSideProps: GetServerSideProps<ToolsProps> = async ({ res }) => {
   try {
-    const apiUrl = process.env.NODE_ENV === 'production'
-      ? 'https://daily-puzzle-solve.vercel.app/api/tools'
+    // Set aggressive caching headers
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=86400, stale-while-revalidate=3600'
+    );
+    res.setHeader('Expires', new Date(Date.now() + 86400000).toUTCString());
+
+    const apiUrl = process.env.NODE_ENV === 'production' 
+      ? 'https://daily-puzzle-solve.vercel.app/api/tools' 
       : 'http://localhost:3000/api/tools';
 
-    const startTime = performance.now();
-    const res = await fetch(apiUrl);
-    const endTime = performance.now();
-    console.log(`API Fetch Time: ${endTime - startTime} ms`);
-
-    if (!res.ok) {
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Cache-Control': 'no-cache'
+      }
+    });
+    
+    if (!response.ok) {
       throw new Error('Failed to fetch tools');
     }
-
-    const startTimeJSON = performance.now();
-    const data = await res.json();
-    const endTimeJSON = performance.now();
-    console.log(`JSON Parse Time: ${endTimeJSON - startTimeJSON} ms`);
-
+    
+    const { data } = await response.json();
+    
     return {
       props: {
-        tools: data.data || [],
+        tools: data || [],
       },
     };
   } catch (error) {
@@ -369,7 +423,7 @@ export const getServerSideProps: GetServerSideProps<ToolsProps> = async () => {
     return {
       props: {
         tools: [],
-        error: 'Failed to load tools',
+        error: error instanceof Error ? error.message : 'Failed to load tools'
       },
     };
   }

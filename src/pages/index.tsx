@@ -6,12 +6,17 @@ import {
   CardContent, 
   CardMedia, 
   Button,
-  Grow,
-  Slide
+  Fade
 } from '@mui/material';
 import Link from 'next/link';
-import AdSenseAd from '@/components/AdSenseAd';
-import HeadSEO from '@/components/HeadSEO';
+import Head from 'next/head';
+import dynamic from 'next/dynamic';
+
+// Lazy load non-critical components
+const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
+  ssr: false,
+  loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
+});
 
 const puzzleGames = [
   {
@@ -52,14 +57,51 @@ const puzzleGames = [
 ];
 
 export default function Home() {
+  const pageTitle = "Daily Puzzle Solutions & Walkthroughs | LogicPuzzleHub";
+  const pageDescription = "Get step-by-step solutions for LinkedIn Pinpoint, Queens, Tango, Crossclimb, and Zip puzzles. Master logic games with our expert walkthroughs and strategies.";
+  const canonicalUrl = "https://daily-puzzle-solve.vercel.app";
+  const featuredImage = "https://daily-puzzle-solve.vercel.app/hero.jpeg";
+
   return (
     <>
-      <HeadSEO
-        title="Daily Puzzle Solutions | LogicPuzzleHub"
-        description="Step-by-step solutions for LinkedIn Pinpoint, Queens, Tango and more puzzles"
-        canonicalUrl="https://daily-puzzle-solve.vercel.app"
-      />
-      
+      <Head>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:image" content={featuredImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={canonicalUrl} />
+        <meta property="twitter:title" content={pageTitle} />
+        <meta property="twitter:description" content={pageDescription} />
+        <meta property="twitter:image" content={featuredImage} />
+
+        {/* Schema.org */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": pageTitle,
+            "description": pageDescription,
+            "url": canonicalUrl,
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": `${canonicalUrl}?search={search_term_string}`,
+              "query-input": "required name=search_term_string"
+            }
+          })}
+        </script>
+      </Head>
+
       <Box
         sx={{
           position: 'relative',
@@ -85,6 +127,8 @@ export default function Home() {
             zIndex: -1
           }
         }}
+        itemScope
+        itemType="http://schema.org/WPHeader"
       >
         <Container maxWidth="lg">
           <Box sx={{ 
@@ -96,6 +140,7 @@ export default function Home() {
           }}>
             <Typography
               variant="h1"
+              component="h1"
               sx={{
                 fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4rem' },
                 fontWeight: 800,
@@ -104,11 +149,13 @@ export default function Home() {
                 color: 'common.white',
                 textShadow: '0 2px 4px rgba(0,0,0,0.3)'
               }}
+              itemProp="headline"
             >
               Master Logic Puzzles Like Never Before
             </Typography>
             <Typography
-              variant="h5"
+              variant="h2"
+              component="h2"
               sx={{
                 fontWeight: 400,
                 mb: 4,
@@ -120,7 +167,7 @@ export default function Home() {
               Daily solutions with step-by-step explanations and video walkthroughs.
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-              <Link href="#puzzles" passHref>
+              <Link href="#puzzles" passHref legacyBehavior>
                 <Button
                   variant="contained"
                   size="large"
@@ -139,11 +186,12 @@ export default function Home() {
                     },
                     transition: 'all 0.3s ease',
                   }}
+                  aria-label="View puzzle solutions"
                 >
                   View Solutions
                 </Button>
               </Link>
-              <Link href="/games" passHref>
+              <Link href="/games" passHref legacyBehavior>
                 <Button
                   variant="outlined"
                   size="large"
@@ -161,6 +209,7 @@ export default function Home() {
                     },
                     transition: 'all 0.3s ease',
                   }}
+                  aria-label="Explore more games"
                 >
                   More Games
                 </Button>
@@ -173,17 +222,16 @@ export default function Home() {
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {/* Puzzle Games Grid */}
         <Box id="puzzles" sx={{ 
-          display: 'flex',
-          flexWrap: 'wrap',
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
           gap: 4,
-          justifyContent: 'center',
           mb: 4
         }}>
           {puzzleGames.map((game, index) => (
-            <Grow in={true} timeout={index * 150} key={game.id}>
+            <Fade in={true} key={game.id} timeout={index * 150}>
               <Card
                 sx={{
-                  width: { xs: '100%', sm: 345, md: 300 },
+                  width: '100%',
                   display: 'flex',
                   flexDirection: 'column',
                   transition: 'all 0.3s ease',
@@ -192,22 +240,30 @@ export default function Home() {
                     boxShadow: 3
                   }
                 }}
+                itemScope
+                itemType="http://schema.org/Game"
               >
                 <CardMedia
                   component="img"
                   height="180"
                   image={game.image}
                   alt={game.title}
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
+                  itemProp="image"
                 />
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography 
-                    variant="h5" 
+                    variant="h3" 
                     component="h3" 
                     sx={{ 
                       fontWeight: 700,
                       mb: 1,
-                      color: 'text.primary'
+                      color: 'text.primary',
+                      fontSize: '1.25rem'
                     }}
+                    itemProp="name"
                   >
                     {game.title}
                   </Typography>
@@ -218,10 +274,11 @@ export default function Home() {
                       color: 'text.secondary',
                       minHeight: '4em'
                     }}
+                    itemProp="description"
                   >
                     {game.description}
                   </Typography>
-                  <Link href={game.path} passHref>
+                  <Link href={game.path} passHref legacyBehavior>
                     <Button
                       variant="contained"
                       fullWidth
@@ -234,26 +291,39 @@ export default function Home() {
                         },
                         transition: 'all 0.2s ease'
                       }}
+                      aria-label={`View ${game.title} solutions`}
+                      itemProp="url"
                     >
                       View Solutions
                     </Button>
                   </Link>
                 </CardContent>
               </Card>
-            </Grow>
+            </Fade>
           ))}
         </Box>
 
+        {/* About Section */}
+        <Box sx={{ mt: 6, mb: 6 }}>
+          <Typography variant="h4" component="h2" sx={{ mb: 3, textAlign: 'center', color: 'text.primary' }}>
+            About LogicPuzzleHub
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2, textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
+            LogicPuzzleHub is your ultimate resource for solving and mastering popular logic puzzles. 
+            Our detailed walkthroughs and strategies help you understand the underlying patterns and 
+            techniques to solve puzzles efficiently. Whether you&apos;re a beginner or an experienced solver, 
+            our solutions will enhance your problem-solving skills.
+          </Typography>
+        </Box>
+
         {/* Ad Banner */}
-        <Slide direction="up" in={true} timeout={800}>
-          <Box sx={{ mt: 6 }}>
+        <Box sx={{ mt: 6 }}>
           <AdSenseAd 
-  slot="3923231851" 
-  format="auto" 
-  style={{ display: 'block' }}
-/>
-          </Box>
-        </Slide>
+            slot="3923231851" 
+            format="auto" 
+            style={{ display: 'block' }}
+          />
+        </Box>
       </Container>
     </>
   );
