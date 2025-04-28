@@ -9,8 +9,6 @@ import {
   IconButton,
   useMediaQuery,
   useTheme,
-  Grow,
-  Slide,
   CircularProgress,
   Skeleton,
   Menu,
@@ -19,6 +17,8 @@ import {
   TextField
 } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
+import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import DownloadIcon from '@mui/icons-material/Download';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ShareIcon from '@mui/icons-material/Share';
@@ -27,9 +27,17 @@ import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import FontDownloadIcon from '@mui/icons-material/FontDownload';
 import CloseIcon from '@mui/icons-material/Close';
 import NextImage from 'next/image';
-import AdSenseAd from '@/components/AdSenseAd';
-import HeadSEO from '@/components/HeadSEO';
-import { ChromePicker } from 'react-color';
+
+// Lazy load non-critical components
+const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
+  ssr: false,
+  loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
+});
+
+const ChromePicker = dynamic(() => import('react-color').then(mod => mod.ChromePicker), {
+  ssr: false,
+  loading: () => <div style={{ width: '225px', height: '300px', background: '#f5f5f5' }} />
+});
 
 interface Meme {
   id: string;
@@ -86,7 +94,24 @@ export default function MemeGenerator() {
 
   const fonts = ['Impact', 'Arial', 'Comic Sans MS', 'Courier New', 'Georgia', 'Verdana'];
 
-  // Fetch meme templates
+  // Schema.org data for the page
+  const pageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Programming Meme Generator | PuzzleLogicHub",
+    "description": "Create and share hilarious programming and tech memes with our easy-to-use meme generator",
+    "url": "https://daily-puzzle-solve.vercel.app/memes",
+    "potentialAction": {
+      "@type": "CreateAction",
+      "target": "https://daily-puzzle-solve.vercel.app/memes",
+      "result": {
+        "@type": "ImageObject",
+        "contentUrl": "https://daily-puzzle-solve.vercel.app/default-meme.jpg"
+      }
+    }
+  };
+
+  // Fetch meme templates with error handling
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
@@ -106,6 +131,7 @@ export default function MemeGenerator() {
     fetchTemplates();
   }, []);
 
+  // Fetch popular memes with caching
   useEffect(() => {
     const fetchPopularMemes = async () => {
       try {
@@ -146,10 +172,11 @@ export default function MemeGenerator() {
     fetchPopularMemes();
   }, [filter]);
 
+  // Canvas rendering with memoization
   useEffect(() => {
     if (!selectedTemplate || !canvasRef.current) return;
   
-    const img = document.createElement('img');
+    const img = new Image();
     img.crossOrigin = 'Anonymous';
     img.onload = () => {
       const maxWidth = isSmallScreen ? 350 : 500;
@@ -178,6 +205,7 @@ export default function MemeGenerator() {
     img.src = selectedTemplate.url;
   }, [selectedTemplate, textElements, isSmallScreen]);
 
+  // Event handlers with proper memoization
   const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return;
     
@@ -186,7 +214,6 @@ export default function MemeGenerator() {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
-    // Find if we clicked on a text element
     const clickedText = textElements.find(text => {
       const textWidth = canvasRef.current?.getContext('2d')?.measureText(text.text).width || 0;
       return (
@@ -203,7 +230,6 @@ export default function MemeGenerator() {
         x: x - clickedText.x,
         y: y - clickedText.y
       });
-      // Set dragging state
       setTextElements(textElements.map(el => 
         el.id === clickedText.id ? { ...el, isDragging: true } : el
       ));
@@ -218,7 +244,6 @@ export default function MemeGenerator() {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
-    // Update position if dragging
     setTextElements(textElements.map(el => {
       if (el.id === activeTextId && el.isDragging) {
         return { 
@@ -232,7 +257,6 @@ export default function MemeGenerator() {
   };
 
   const handleCanvasMouseUp = () => {
-    // Clear dragging state
     setTextElements(textElements.map(el => ({ ...el, isDragging: false })));
   };
 
@@ -292,14 +316,11 @@ export default function MemeGenerator() {
 
   const handleDownload = (url?: string) => {
     if (url) {
-      // Download for gallery memes
       const link = document.createElement('a');
       link.download = 'meme.png';
       link.href = url;
       link.click();
-    } else {
-      // Download for created meme
-      if (!canvasRef.current) return;
+    } else if (canvasRef.current) {
       const link = document.createElement('a');
       link.download = 'meme.png';
       link.href = canvasRef.current.toDataURL('image/png');
@@ -310,7 +331,6 @@ export default function MemeGenerator() {
   const handleShare = async (url?: string) => {
     try {
       if (url) {
-        // Share for gallery memes
         if (navigator.share) {
           await navigator.share({
             title: 'Check out this programming meme!',
@@ -319,9 +339,7 @@ export default function MemeGenerator() {
         } else {
           window.open(url, '_blank');
         }
-      } else {
-        // Share for created meme
-        if (!canvasRef.current) return;
+      } else if (canvasRef.current) {
         const blob = await new Promise<Blob | null>(resolve => {
           canvasRef.current?.toBlob(resolve, 'image/png');
         });
@@ -375,57 +393,77 @@ export default function MemeGenerator() {
 
   return (
     <>
-      <HeadSEO
-        title="Programming Meme Generator | PuzzleLogicHub"
-        description="Create and share hilarious programming and tech memes"
-        canonicalUrl="https://daily-puzzle-solve.vercel.app/memes"
-      />
-      
+      <Head>
+        <title>Programming Meme Generator | Create & Share Tech Memes | PuzzleLogicHub</title>
+        <meta name="description" content="Create hilarious programming and tech memes with our easy-to-use meme generator. Customize text, fonts, and colors. Download or share your creations instantly!" />
+        <link rel="canonical" href="https://daily-puzzle-solve.vercel.app/memes" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://daily-puzzle-solve.vercel.app/memes" />
+        <meta property="og:title" content="Programming Meme Generator | PuzzleLogicHub" />
+        <meta property="og:description" content="Create and share hilarious programming and tech memes with our easy-to-use meme generator" />
+        <meta property="og:image" content="https://daily-puzzle-solve.vercel.app/default-meme.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://daily-puzzle-solve.vercel.app/memes" />
+        <meta property="twitter:title" content="Programming Meme Generator | PuzzleLogicHub" />
+        <meta property="twitter:description" content="Create and share hilarious programming and tech memes with our easy-to-use meme generator" />
+        <meta property="twitter:image" content="https://daily-puzzle-solve.vercel.app/default-meme.jpg" />
+
+        {/* Schema.org */}
+        <script type="application/ld+json">
+          {JSON.stringify(pageSchema)}
+        </script>
+      </Head>
+
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Page Header */}
-        <Typography 
-              variant="h3" 
-              component="h1" 
-              sx={{ 
-                fontWeight: 800,
-                mb: 2,
-                color: 'common.black',
-                textAlign: 'center',
-                letterSpacing: '-0.5px',
-                [theme.breakpoints.down('md')]: {
-                  fontSize: '2rem'
-                }
-              }}
-            >
-              DevMode: Here LOLs Are Born
-            </Typography>
+        {/* Page Header with proper heading hierarchy */}
+        <Box component="header" sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography 
+             variant="h3" 
+             component="h1" 
+            sx={{ 
+              fontWeight: 800,
+              mb: 2,
+              color: 'common.black',
+              letterSpacing: '-0.5px',
+              [theme.breakpoints.down('md')]: {
+                fontSize: '2rem'
+              }
+            }}
+          >
+            DevMode: Here LOLs Are Born
+          </Typography>
         
-        <Typography 
-          variant="body1" 
-          sx={{ 
-            textAlign: 'center',
-            mb: 4,
-            color: 'text.secondary',
-            fontSize: '1.2rem'
-          }}
-        >
-          A tale for the grandkids: This is how I met your Meme-ther!
-        </Typography>
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              textAlign: 'center',
+              mb: 4,
+              color: 'text.secondary',
+              fontSize: '1.2rem'
+            }}
+          >
+            A tale for the grandkids: This is how I met your Meme-ther!
+          </Typography>
+        </Box>
 
         {/* Ad Banner */}
-        <Slide direction="up" in={true} timeout={800}>
-          <Box sx={{ mt: 6, height: '100px' }}>
-            <AdSenseAd 
-              slot="3955548106" 
-              format="fluid"
-              style={{ 
-                display: 'block',
-                height: '100px',
-                maxHeight: '100px'
-              }}
-            />
-          </Box>
-        </Slide>
+        <Box sx={{ mt: 6, height: '100px' }}>
+          <AdSenseAd 
+            slot="3955548106" 
+            format="fluid"
+            style={{ 
+              display: 'block',
+              height: '100px',
+              maxHeight: '100px'
+            }}
+          />
+        </Box>
 
         {/* Meme Creator Section */}
         <Box sx={{ 
@@ -435,17 +473,21 @@ export default function MemeGenerator() {
           mb: 6
         }}>
           {/* Canvas Preview */}
-          <Box sx={{ 
-            flex: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'background.paper',
-            borderRadius: 2,
-            p: 2,
-            boxShadow: 1,
-            position: 'relative'
-          }}>
+          <Box 
+            component="section"
+            aria-label="Meme preview"
+            sx={{ 
+              flex: 1,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'background.paper',
+              borderRadius: 2,
+              p: 2,
+              boxShadow: 1,
+              position: 'relative'
+            }}
+          >
             {loading ? (
               <Box sx={{ 
                 width: 500, 
@@ -471,26 +513,31 @@ export default function MemeGenerator() {
                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                     cursor: activeTextId ? 'move' : 'default'
                   }}
+                  aria-label="Meme canvas"
                 />
                 {activeTextId && (
-                  <Box sx={{
-                    position: 'absolute',
-                    top: 10,
-                    left: 10,
-                    backgroundColor: 'rgba(0,0,0,0.7)',
-                    color: 'white',
-                    px: 2,
-                    py: 1,
-                    borderRadius: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1
-                  }}>
+                  <Box 
+                    component="aside"
+                    sx={{
+                      position: 'absolute',
+                      top: 10,
+                      left: 10,
+                      backgroundColor: 'rgba(0,0,0,0.7)',
+                      color: 'white',
+                      px: 2,
+                      py: 1,
+                      borderRadius: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1
+                    }}
+                  >
                     <span>Click here to delete text &#128073;</span>
                     <IconButton 
                       size="small" 
                       onClick={() => handleDeleteText(activeTextId)}
                       sx={{ color: 'white' }}
+                      aria-label="Delete text"
                     >
                       <CloseIcon fontSize="small" />
                     </IconButton>
@@ -501,12 +548,20 @@ export default function MemeGenerator() {
           </Box>
           
           {/* Controls */}
-          <Box sx={{ 
-            width: { xs: '100%', md: 350 },
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 3
-          }}>
+          <Box 
+            component="aside"
+            aria-label="Meme customization controls"
+            sx={{ 
+              width: { xs: '100%', md: 350 },
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 3
+            }}
+          >
+            <Typography variant="h3" component="h3" sx={{ fontSize: '1.2rem', fontWeight: 600 }}>
+              Customize Your Meme
+            </Typography>
+            
             <Box sx={{ display: 'flex', gap: 2 }}>
               <Button
                 variant="outlined"
@@ -517,6 +572,7 @@ export default function MemeGenerator() {
                   borderRadius: '50px',
                   fontWeight: 600
                 }}
+                aria-label="Get random meme template"
               >
                 New Template
               </Button>
@@ -533,6 +589,7 @@ export default function MemeGenerator() {
                   borderRadius: '50px',
                   fontWeight: 600
                 }}
+                aria-label="Add text to meme"
               >
                 Add Text
               </Button>
@@ -548,6 +605,7 @@ export default function MemeGenerator() {
                   borderRadius: '50px',
                   fontWeight: 600
                 }}
+                aria-label="Change text color"
               >
                 Text Color
               </Button>
@@ -561,6 +619,7 @@ export default function MemeGenerator() {
                   borderRadius: '50px',
                   fontWeight: 600
                 }}
+                aria-label="Change font family"
               >
                 {fontFamily}
               </Button>
@@ -612,7 +671,7 @@ export default function MemeGenerator() {
             
             {/* Font Size Slider */}
             <Box>
-              <Typography gutterBottom sx={{ fontWeight: 600 }}>
+              <Typography variant="h4" component="h4" sx={{ fontWeight: 600, fontSize: '1rem' }}>
                 Font Size: {fontSize}px
               </Typography>
               <Slider
@@ -632,6 +691,7 @@ export default function MemeGenerator() {
                     height: 24
                   }
                 }}
+                aria-label="Font size slider"
               />
             </Box>
             
@@ -645,6 +705,7 @@ export default function MemeGenerator() {
                   borderRadius: '50px',
                   fontWeight: 600
                 }}
+                aria-label="Download meme"
               >
                 Download
               </Button>
@@ -658,6 +719,7 @@ export default function MemeGenerator() {
                   borderRadius: '50px',
                   fontWeight: 600
                 }}
+                aria-label="Share meme"
               >
                 Share
               </Button>
@@ -686,11 +748,14 @@ export default function MemeGenerator() {
               fullWidth
               variant="outlined"
               sx={{ mb: 2 }}
+              label="Edit text"
+              aria-label="Edit meme text"
             />
             <Button 
               variant="contained" 
               onClick={closeTextEdit}
               fullWidth
+              aria-label="Finish editing"
             >
               Done
             </Button>
@@ -698,22 +763,20 @@ export default function MemeGenerator() {
         </Popover>
 
         {/* Ad Banner */}
-        <Slide direction="up" in={true} timeout={800}>
-          <Box sx={{ mt: 6, height: '100px' }}>
-            <AdSenseAd 
-              slot="3955548106" 
-              format="fluid"
-              style={{ 
-                display: 'block',
-                height: '100px',
-                maxHeight: '100px'
-              }}
-            />
-          </Box>
-        </Slide>
+        <Box sx={{ mt: 6, height: '100px' }}>
+          <AdSenseAd 
+            slot="3955548106" 
+            format="fluid"
+            style={{ 
+              display: 'block',
+              height: '100px',
+              maxHeight: '100px'
+            }}
+          />
+        </Box>
 
         {/* Popular Memes Gallery */}
-        <Box sx={{ mb: 4 }}>
+        <Box component="section" sx={{ mb: 4 }}>
           <Typography 
             variant="h4" 
             component="h2" 
@@ -727,13 +790,17 @@ export default function MemeGenerator() {
             Puzzled? Same. Let&apos;s Meme Instead
           </Typography>
           
-          <Box sx={{ 
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 2,
-            mb: 4,
-            flexWrap: 'wrap'
-          }}>
+          <Box 
+            component="nav"
+            aria-label="Meme gallery filters"
+            sx={{ 
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 2,
+              mb: 4,
+              flexWrap: 'wrap'
+            }}
+          >
             {['Trending', 'Latest', 'Top Weekly', 'Best Of All Time'].map((f) => (
               <Button
                 key={f}
@@ -743,6 +810,7 @@ export default function MemeGenerator() {
                   borderRadius: '50px',
                   fontWeight: 600
                 }}
+                aria-label={`Show ${f} memes`}
               >
                 {f}
               </Button>
@@ -751,6 +819,7 @@ export default function MemeGenerator() {
         </Box>
         
         <Box
+          component="div"
           sx={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -761,102 +830,131 @@ export default function MemeGenerator() {
         >
           {galleryLoading ? (
             Array.from(new Array(12)).map((_, index) => (
-              <Grow in={true} timeout={index * 150} key={index}>
-                <Card sx={{ width: { xs: '100%', sm: 300 }, height: 300 }}>
-                  <Skeleton variant="rectangular" height={240} />
-                  <CardContent>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Skeleton variant="rectangular" width="50%" height={36} />
-                      <Skeleton variant="rectangular" width="50%" height={36} />
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grow>
+              <Card key={index} sx={{ width: { xs: '100%', sm: 300 }, height: 300 }}>
+                <Skeleton variant="rectangular" height={240} />
+                <CardContent>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Skeleton variant="rectangular" width="50%" height={36} />
+                    <Skeleton variant="rectangular" width="50%" height={36} />
+                  </Box>
+                </CardContent>
+              </Card>
             ))
           ) : (
-            popularMemes.map((meme, index) => (
-              <Grow in={true} timeout={index * 150} key={meme.data.id}>
-                <Card
-                  sx={{
-                    width: { xs: '100%', sm: 350 },
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      transform: 'translateY(-5px)',
-                      boxShadow: 3
-                    }
-                  }}
-                >
-                  <Box sx={{ 
-                    height: 350,
-                    overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <NextImage
-                      src={meme.data.url}
-                      alt={meme.data.title}
-                      width={350}
-                      height={350}
-                      loading="lazy"
-                      style={{
-                        width: '100%',
-                        height: 'auto',
-                        maxHeight: '350px',
-                        objectFit: 'contain'
-                      }}
-                    />
-                  </Box>
-                  <CardContent sx={{ 
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 1
-                  }}>
-                    <Button
-                      variant="contained"
-                      startIcon={<DownloadIcon />}
-                      onClick={() => handleDownload(meme.data.url)}
-                      sx={{
-                        borderRadius: '50px',
-                        fontWeight: 600,
-                        flex: 1
-                      }}
-                    >
-                      Download
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      startIcon={<ShareIcon />}
-                      onClick={() => handleShare(`https://reddit.com${meme.data.permalink}`)}
-                      sx={{
-                        borderRadius: '50px',
-                        fontWeight: 600,
-                        flex: 1
-                      }}
-                    >
-                      Share
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grow>
+            popularMemes.map((meme) => (
+              <Card
+                key={meme.data.id}
+                sx={{
+                  width: { xs: '100%', sm: 350 },
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-5px)',
+                    boxShadow: 3
+                  }
+                }}
+                itemScope
+                itemType="http://schema.org/ImageObject"
+              >
+                <Box sx={{ 
+                  height: 350,
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <NextImage
+                    src={meme.data.url}
+                    alt={meme.data.title}
+                    width={350}
+                    height={350}
+                    loading="lazy"
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      maxHeight: '350px',
+                      objectFit: 'contain'
+                    }}
+                    itemProp="contentUrl"
+                  />
+                </Box>
+                <CardContent sx={{ 
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  gap: 1
+                }}>
+                  <Button
+                    variant="contained"
+                    startIcon={<DownloadIcon />}
+                    onClick={() => handleDownload(meme.data.url)}
+                    sx={{
+                      borderRadius: '50px',
+                      fontWeight: 600,
+                      flex: 1
+                    }}
+                    aria-label={`Download meme: ${meme.data.title}`}
+                  >
+                    Download
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    startIcon={<ShareIcon />}
+                    onClick={() => handleShare(`https://reddit.com${meme.data.permalink}`)}
+                    sx={{
+                      borderRadius: '50px',
+                      fontWeight: 600,
+                      flex: 1
+                    }}
+                    aria-label={`Share meme: ${meme.data.title}`}
+                  >
+                    Share
+                  </Button>
+                </CardContent>
+                <meta itemProp="name" content={meme.data.title} />
+                <meta itemProp="description" content={`Programming meme: ${meme.data.title}`} />
+              </Card>
             ))
           )}
         </Box>
 
         {/* Ad Banner */}
-        <Slide direction="up" in={true} timeout={800}>
-          <Box sx={{ mt: 6, height: '100px' }}>
-            <AdSenseAd 
-              slot="3955548106" 
-              format="fluid"
-              style={{ 
-                display: 'block',
-                height: '100px',
-                maxHeight: '100px'
-              }}
-            />
+        <Box sx={{ mt: 6, height: '100px' }}>
+          <AdSenseAd 
+            slot="3955548106" 
+            format="fluid"
+            style={{ 
+              display: 'block',
+              height: '100px',
+              maxHeight: '100px'
+            }}
+          />
+        </Box>
+
+        {/* Additional Content for SEO */}
+        <Box component="section" sx={{ mt: 6, mb: 4 }}>
+          <Typography variant="h2" component="h2" sx={{ mb: 2, fontSize: '1.5rem', textAlign: 'center',color: 'common.black' }}>
+            About Our Meme Generator
+          </Typography>
+          <Box sx={{ maxWidth: '800px', mx: 'auto' }}>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Our programming meme generator is the perfect tool for developers, tech enthusiasts, and anyone who loves a good laugh about coding. 
+              With easy-to-use customization options, you can create hilarious memes in seconds. 
+              Whether you&apos;re poking fun at JavaScript quirks, celebrating Python&apos;s simplicity, or lamenting debugging sessions, our meme maker has you covered.
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Features include:
+            </Typography>
+            <ul>
+              <li><Typography variant="body1">Custom text with multiple font options</Typography></li>
+              <li><Typography variant="body1">Color customization for text and backgrounds</Typography></li>
+              <li><Typography variant="body1">Popular programming meme templates</Typography></li>
+              <li><Typography variant="body1">Trending tech memes from Reddit</Typography></li>
+              <li><Typography variant="body1">Easy download and sharing options</Typography></li>
+            </ul>
+            <Typography variant="body1" sx={{ mt: 2 }}>
+              Create, share, and enjoy programming humor with our free online meme generator today!
+            </Typography>
           </Box>
-        </Slide>
+        </Box>
       </Container>
     </>
   );

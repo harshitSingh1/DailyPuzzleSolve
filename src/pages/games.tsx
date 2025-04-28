@@ -1,21 +1,18 @@
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Card, 
-  CardContent, 
-  Button, 
-  Chip, 
+import { useState, useRef } from 'react';
+import Head from 'next/head';
+import {
+  Box,
+  Container,
+  Typography,
+  Card,
+  CardContent,
+  Button,
+  Chip,
   useTheme,
-  Fade,
-  Grow,
-  Slide,
   IconButton
 } from '@mui/material';
-import { useState, useRef } from 'react';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import dynamic from 'next/dynamic';
-import HeadSEO from '@/components/HeadSEO';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Image from 'next/image';
@@ -92,7 +89,6 @@ export default function GamesPage() {
   ];
 
   const allTags = [...new Set(games.flatMap(game => game.tags))];
-
   const filteredGames = selectedTags.length === 0 
     ? games 
     : games.filter(game => game.tags.some(tag => selectedTags.includes(tag)));
@@ -112,13 +108,52 @@ export default function GamesPage() {
     }
   };
 
+  const pageTitle = "Brain Training Games Collection | PuzzleLogicHub";
+  const pageDescription = "Challenge your mind with our collection of the best puzzle games. Improve logic, strategy and problem-solving skills with these carefully selected brain games.";
+  const canonicalUrl = "https://daily-puzzle-solve.vercel.app/games";
+  const featuredImage = "https://daily-puzzle-solve.vercel.app/images/chess.jpg";
+
   return (
     <>
-      <HeadSEO
-        title="Puzzle Games Collection | PuzzleLogicHub"
-        description="Explore our collection of the best puzzle games to challenge your mind"
-        canonicalUrl="https://daily-puzzle-solve.vercel.app/games"
-      />
+      <Head>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:image" content={featuredImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={canonicalUrl} />
+        <meta property="twitter:title" content={pageTitle} />
+        <meta property="twitter:description" content={pageDescription} />
+        <meta property="twitter:image" content={featuredImage} />
+
+        {/* Schema.org */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": pageTitle,
+            "description": pageDescription,
+            "url": canonicalUrl,
+            "hasPart": games.map(game => ({
+              "@type": "Game",
+              "name": game.title,
+              "description": game.description,
+              "url": game.url,
+              "keywords": game.tags.join(", ")
+            }))
+          })}
+        </script>
+      </Head>
       
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {/* Page Header */}
@@ -135,9 +170,25 @@ export default function GamesPage() {
               }
             }}
           >
-            Train Your Brain
+            Brain Training Games
           </Typography>
           
+          <Typography 
+            variant="h6" 
+            component="h2" 
+            sx={{ 
+              color: 'text.secondary',
+              maxWidth: '700px',
+              mx: 'auto',
+              mb: 4,
+              [theme.breakpoints.down('md')]: {
+                fontSize: '1rem'
+              }
+            }}
+          >
+            Challenge your mind and improve cognitive skills
+          </Typography>
+
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
             <IconButton 
               onClick={() => scrollTags('left')}
@@ -148,6 +199,7 @@ export default function GamesPage() {
                   backgroundColor: 'rgba(25, 118, 210, 0.1)'
                 }
               }}
+              aria-label="Scroll tags left"
             >
               <ChevronLeftIcon />
             </IconButton>
@@ -191,6 +243,7 @@ export default function GamesPage() {
                     transition: 'all 0.2s ease',
                     flexShrink: 0
                   }}
+                  aria-label={`Filter by ${tag}`}
                 />
               ))}
             </Box>
@@ -204,43 +257,48 @@ export default function GamesPage() {
                   backgroundColor: 'rgba(25, 118, 210, 0.1)'
                 }
               }}
+              aria-label="Scroll tags right"
             >
               <ChevronRightIcon />
             </IconButton>
           </Box>
         </Box>
         
-        {/* Ad Banner - Fixed Height Container */}
-        <Slide direction="up" in={true} timeout={500}>
-          <Box sx={{ mb: 6, height: '100px' }}>
-            <AdSenseAd 
-              slot="3955548106" 
-              format="fluid"
-              style={{ 
-                display: 'block',
-                height: '100px',
-                maxHeight: '100px'
-              }}
-            />
-          </Box>
-        </Slide>
+        {/* Ad Banner */}
+        <Box sx={{ mb: 6, height: '100px' }}>
+          <AdSenseAd 
+            slot="3955548106" 
+            format="fluid"
+            style={{ 
+              display: 'block',
+              height: '100px',
+              maxHeight: '100px'
+            }}
+          />
+        </Box>
 
         {/* Games Grid */}
         <Box
           sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: 'repeat(2, 1fr)',
+              md: 'repeat(3, 1fr)'
+            },
             gap: 4,
-            justifyContent: 'center',
             mb: 4
           }}
+          itemScope
+          itemType="http://schema.org/ItemList"
         >
           {filteredGames.length > 0 ? (
             filteredGames.map((game, index) => (
-              <Grow in={true} timeout={index * 150} key={game.id}>
+              <div key={game.id} itemProp="itemListElement" itemScope itemType="http://schema.org/Game">
+                <meta itemProp="position" content={String(index + 1)} />
                 <Card
                   sx={{
-                    width: { xs: '100%', sm: 345, md: 300 },
+                    width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     transition: 'all 0.3s ease',
@@ -260,9 +318,9 @@ export default function GamesPage() {
                   >
                     <Image
                       src={game.image}
-                      alt={game.title}
+                      alt={`${game.title} game screenshot`}
                       fill
-                      priority={index < 3} // Only prioritize first 3 images
+                      priority={index < 3}
                       style={{
                         objectFit: 'cover',
                         transition: 'transform 0.5s ease',
@@ -273,13 +331,14 @@ export default function GamesPage() {
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'scale(1)';
                       }}
+                      itemProp="image"
                     />
                   </Box>
                   
                   <CardContent sx={{ flexGrow: 1 }}>
                     {/* Game Title */}
                     <Typography
-                      variant="h6"
+                      variant="h3"
                       component="h3"
                       sx={{
                         fontWeight: 700,
@@ -289,8 +348,10 @@ export default function GamesPage() {
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
+                        fontSize: '1.25rem'
                       }}
+                      itemProp="name"
                     >
                       {game.title}
                     </Typography>
@@ -307,6 +368,7 @@ export default function GamesPage() {
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden'
                       }}
+                      itemProp="description"
                     >
                       {game.description}
                     </Typography>
@@ -329,6 +391,7 @@ export default function GamesPage() {
                             },
                             transition: 'all 0.2s ease'
                           }}
+                          itemProp="keywords"
                         />
                       ))}
                     </Box>
@@ -352,43 +415,55 @@ export default function GamesPage() {
                         },
                         transition: 'all 0.2s ease'
                       }}
+                      aria-label={`Play ${game.title}`}
+                      itemProp="url"
                     >
                       Play Now
                     </Button>
                   </CardContent>
                 </Card>
-              </Grow>
+              </div>
             ))
           ) : (
-            <Fade in={true}>
-              <Typography 
-                variant="body1" 
-                align="center" 
-                sx={{ 
-                  py: 4,
-                  color: 'text.secondary'
-                }}
-              >
-                No games found matching your selected filters.
-              </Typography>
-            </Fade>
+            <Typography 
+              variant="body1" 
+              align="center" 
+              sx={{ 
+                py: 4,
+                color: 'text.secondary',
+                gridColumn: '1 / -1'
+              }}
+            >
+              No games found matching your selected filters.
+            </Typography>
           )}
         </Box>
 
-        {/* Ad Banner - Fixed Height Container */}
-        <Slide direction="up" in={true} timeout={800}>
-          <Box sx={{ mt: 6, height: '100px' }}>
-            <AdSenseAd 
-              slot="3955548106" 
-              format="fluid"
-              style={{ 
-                display: 'block',
-                height: '100px',
-                maxHeight: '100px'
-              }}
-            />
-          </Box>
-        </Slide>
+        {/* Additional Content Section */}
+        <Box sx={{ mt: 6 }}>
+          <Typography variant="h2" component="h2" sx={{ mb: 2, fontSize: '1.5rem', textAlign: 'center', color: 'common.black' }}>
+            Why Play Puzzle Games?
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2, textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
+            Puzzle games offer more than just entertainment—they&apos;re powerful tools for cognitive development. 
+            Regular play can improve memory, enhance problem-solving skills, boost concentration, and even 
+            help prevent cognitive decline. Our carefully selected games target different mental skills, from 
+            logical reasoning to strategic planning, ensuring a comprehensive brain workout.
+          </Typography>
+        </Box>
+
+        {/* Ad Banner */}
+        <Box sx={{ mt: 6, height: '100px' }}>
+          <AdSenseAd 
+            slot="3955548106" 
+            format="fluid"
+            style={{ 
+              display: 'block',
+              height: '100px',
+              maxHeight: '100px'
+            }}
+          />
+        </Box>
       </Container>
     </>
   );
