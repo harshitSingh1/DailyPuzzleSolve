@@ -22,35 +22,35 @@ const puzzleGames = [
   {
     id: 'pinpoint',
     title: 'LinkedIn Pinpoint',
-    description: 'Daily word association puzzle that challenges your vocabulary',
+    description: 'Word puzzle where you find the common connection between four given words',
     image: '/images/pinpoint-game.png',
     path: '/solutions/pinpoint'
   },
   {
     id: 'queens',
     title: 'LinkedIn Queens',
-    description: 'Classic chess puzzle with modern twists',
+    description: 'Logic puzzle where you place queens on a chessboard without them attacking each other',
     image: '/images/queens-game.png',
     path: '/solutions/queens'
   },
   {
     id: 'tango',
     title: 'LinkedIn Tango',
-    description: 'Spatial reasoning puzzle with beautiful design',
+    description: 'Pattern-matching puzzle where you connect colored dots with non-crossing lines',
     image: '/images/tango-game.png',
     path: '/solutions/tango'
   },
   {
-    id: 'crossword',
+    id: 'crossclimb',
     title: 'LinkedIn Crossclimb',
-    description: 'Traditional crossclimb with daily challenges',
+    description: 'Hybrid puzzle combining crossword clues with a ladder-style word progression',
     image: '/images/crossclimb-game.png',
     path: '/solutions/crossclimb'
   },
   {
     id: 'zip',
     title: 'LinkedIn Zip',
-    description: 'Number placement puzzle with unique mechanics',
+    description: 'Number sequence puzzle where you find the missing number in an interlocking pattern',
     image: '/images/zip-game.png',
     path: '/solutions/zip'
   }
@@ -58,7 +58,7 @@ const puzzleGames = [
 
 export default function Home() {
   const pageTitle = "Daily Puzzle Solutions & Walkthroughs | LogicPuzzleHub";
-  const pageDescription = "Get step-by-step solutions for LinkedIn Pinpoint, Queens, Tango, Crossclimb, and Zip puzzles. Master logic games with our expert walkthroughs and strategies.";
+  const pageDescription = "Get step-by-step solutions for Todays LinkedIn Pinpoint Answer, Todays Linkedin Queens Answer, Todays Linkedin Tango Answer, Todays Linkedin Crossclimb Answer, and Todays Linkedin Zip puzzles Answer.";
   const canonicalUrl = "https://daily-puzzle-solve.vercel.app";
   const featuredImage = "https://daily-puzzle-solve.vercel.app/hero.jpeg";
 
@@ -309,7 +309,7 @@ export default function Home() {
             About LogicPuzzleHub
           </Typography>
           <Typography variant="body1" sx={{ mb: 2, textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
-            LogicPuzzleHub is your ultimate resource for solving and mastering popular logic puzzles. 
+            LogicPuzzleHub is your ultimate resource for solving and mastering popular logic puzzles like linkedin pinpoint, linkedin queens, linkedin tango, linkedin crossclimb, linkedin zip. 
             Our detailed walkthroughs and strategies help you understand the underlying patterns and 
             techniques to solve puzzles efficiently. Whether you&apos;re a beginner or an experienced solver, 
             our solutions will enhance your problem-solving skills.

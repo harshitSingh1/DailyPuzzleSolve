@@ -53,7 +53,6 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
   const formattedGameName = game
     .replace(/([A-Z])/g, ' $1')
     .replace(/^./, str => str.toUpperCase())
-    .replace('Linkedin', 'LinkedIn');
 
   // Extract video ID from YouTube URL
   const getVideoId = (url: string) => {
@@ -68,7 +67,7 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
 
   // SEO Metadata
   const pageTitle = `${formattedGameName} Puzzle Solutions - Step by Step Guides | LogicPuzzleHub`;
-  const pageDescription = `Comprehensive ${formattedGameName} puzzle solutions with detailed step-by-step guides. Learn strategies and improve your puzzle-solving skills with our visual explanations.`;
+  const pageDescription = `Comprehensive ${formattedGameName} puzzle solutions with detailed step-by-step guides. Get step-by-step solutions for Todays LinkedIn Pinpoint Answer, Todays Linkedin Queens Answer, Todays Linkedin Tango Answer, Todays Linkedin Crossclimb Answer, and Todays Linkedin Zip puzzles Answer.`;
   const canonicalUrl = `https://daily-puzzle-solve.vercel.app/solutions/${game.toLowerCase()}`;
   const featuredImage = solutions.length > 0 ? solutions[0].screenshots[0] : 'https://daily-puzzle-solve.vercel.app/default-puzzle-solution.jpg';
 
@@ -167,7 +166,7 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
                 fontWeight: 500
               }}
             >
-              Step-by-step guides to master {formattedGameName.toLowerCase()} puzzles with detailed explanations
+              Step-by-step guides to master {formattedGameName.toLowerCase()} puzzle game solutions including Todays Answers with Explanation
             </Typography>
           </Box>
         </Fade>

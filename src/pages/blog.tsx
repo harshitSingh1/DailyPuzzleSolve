@@ -81,7 +81,7 @@ export default function BlogPage({ featuredPost, blogPosts, error }: BlogProps) 
   }
 
   const pageTitle = "Tech Blog & Programming Articles | LogicPuzzleMaster";
-  const pageDescription = "Stay updated with the latest technology trends, programming tips, and coding articles from the DEV community.";
+  const pageDescription = "Stay updated with the latest technology trends, programming tips, and coding articles from the DEV community. Latest Technical Blogs and articles";
   const canonicalUrl = "https://daily-puzzle-solve.vercel.app/blog";
   const featuredImage = featuredPost?.cover_image || "https://daily-puzzle-solve.vercel.app/default-blog-image.jpg";
 
