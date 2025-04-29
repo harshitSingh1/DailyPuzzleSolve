@@ -21,8 +21,6 @@ import {
   ToggleButton
 } from '@mui/material';
 import { ShopItem } from '@/types/types';
-
-// Static imports for critical components
 import React from 'react';
 
 // Lazy load non-critical components
