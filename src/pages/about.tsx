@@ -7,7 +7,6 @@ import {
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 
-// Lazy load non-critical components
 const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
   ssr: false,
   loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
