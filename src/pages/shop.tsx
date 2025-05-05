@@ -23,10 +23,14 @@ import {
 import { ShopItem } from '@/types/types';
 import React from 'react';
 
-// Lazy load non-critical components
 const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
   ssr: false,
-  loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
+  loading: () => <div style={{ 
+    height: '90px', 
+    background: '#f5f5f5',
+    margin: '1rem 0',
+    borderRadius: '4px'
+  }} />
 });
 
 interface ShopProps {
@@ -83,12 +87,14 @@ const ShopItemCard = React.memo(({
           fontSize: '0.75rem',
           height: '24px'
         }}
+        aria-label={`Discount: ${discount}`}
       />
     )}
 
     <CardMedia
       component="img"
       height="220"
+      width="400"
       image={item.image}
       alt={item.productName}
       sx={{ 
@@ -124,7 +130,12 @@ const ShopItemCard = React.memo(({
         {item.productName}
       </Typography>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }} itemProp="aggregateRating" itemScope itemType="http://schema.org/AggregateRating">
+      <Box 
+        sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }} 
+        itemProp="aggregateRating" 
+        itemScope 
+        itemType="http://schema.org/AggregateRating"
+      >
         <Rating
           value={item.rating || 0}
           precision={0.5}
@@ -187,11 +198,13 @@ const ShopItemCard = React.memo(({
           sx={{
             ml: 'auto',
             fontWeight: 600,
+            minWidth: '120px',
+            minHeight: '44px',
             '&:hover': {
               backgroundColor: 'primary.dark'
             }
           }}
-          aria-label={`Buy ${item.productName}`}
+          aria-label={`Buy ${item.productName} for ${price}`}
         >
           {item.buttonText || 'Buy Now'}
         </Button>
@@ -275,13 +288,15 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
         <meta property="og:image" content={featuredImage} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="LogicPuzzleHub" />
 
         {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={canonicalUrl} />
-        <meta property="twitter:title" content={pageTitle} />
-        <meta property="twitter:description" content={pageDescription} />
-        <meta property="twitter:image" content={featuredImage} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={canonicalUrl} />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content={featuredImage} />
+        <meta name="twitter:site" content="@LogicPuzzleHub" />
 
         {/* Schema.org */}
         <script type="application/ld+json">
@@ -291,6 +306,14 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
             "name": pageTitle,
             "description": pageDescription,
             "url": canonicalUrl,
+            "publisher": {
+              "@type": "Organization",
+              "name": "LogicPuzzleHub",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://daily-puzzle-solve.vercel.app/logo.png"
+              }
+            },
             "potentialAction": {
               "@type": "SearchAction",
               "target": `${canonicalUrl}?search={search_term_string}`,
@@ -302,7 +325,7 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
 
       <Container maxWidth="lg" sx={{ py: 4 }} itemScope itemType="http://schema.org/ItemList">
         <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <Typography
+          <Typography
             variant="h3"
             component="h1"
             sx={{ 
@@ -338,7 +361,7 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
             value={category}
             exclusive
             onChange={handleCategoryChange}
-            aria-label="product category"
+            aria-label="Filter products by category"
             sx={{
               mb: 4,
               '& .MuiToggleButtonGroup-grouped': {
@@ -371,9 +394,11 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
                   px: 3,
                   py: 1,
                   textTransform: 'none',
-                  fontWeight: 600
+                  fontWeight: 600,
+                  minWidth: '100px',
+                  minHeight: '44px'
                 }}
-                aria-label={`Filter by ${cat}`}
+                aria-label={`Filter by ${cat} category`}
               >
                 {cat}
               </ToggleButton>
@@ -422,10 +447,12 @@ export default function Shop({ preprocessedItems, error }: ShopProps) {
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => window.open('https://www.amazon.com', '_blank')}
+            onClick={() => window.open('https://fktr.in/mIGawZ6', '_blank')}
             sx={{
               px: 4,
-              fontWeight: 600
+              fontWeight: 600,
+              minWidth: '200px',
+              minHeight: '44px'
             }}
             aria-label="Browse more products on Amazon"
           >
@@ -465,11 +492,7 @@ export const getServerSideProps: GetServerSideProps<ShopProps> = async ({ res })
       ? 'https://daily-puzzle-solve.vercel.app/api/shops'
       : 'http://localhost:3000/api/shops';
 
-    const response = await fetch(apiUrl, {
-      headers: {
-        'Cache-Control': 'no-cache'
-      }
-    });
+    const response = await fetch(apiUrl);
     
     if (!response.ok) {
       throw new Error('Failed to fetch shop items');

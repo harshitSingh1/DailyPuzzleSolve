@@ -95,13 +95,13 @@ export default function Navbar() {
               variant="h6" 
               component="div" 
               sx={{ 
-                fontWeight: 800, // Increased weight
-                fontSize: '1.5rem', // Increased size
+                fontWeight: 800,
+                fontSize: '1.5rem',
                 letterSpacing: '0.5px',
                 background: 'linear-gradient(90deg, #1976d2 0%, #00b0ff 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                fontFamily: '"Poppins", sans-serif' // Changed font
+                fontFamily: '"Poppins", sans-serif'
               }}
             >
               PuzzleLogicHub
@@ -121,11 +121,11 @@ export default function Navbar() {
                     sx={{
                       mx: 1,
                       color: isActive(item.path) ? '#1976d2' : 'black',
-                      fontWeight: isActive(item.path) ? 700 : 500, // Increased weight
-                      fontSize: '1rem', // Increased size
+                      fontWeight: isActive(item.path) ? 700 : 500,
+                      fontSize: '1rem', 
                       position: 'relative',
-                      fontFamily: '"Poppins", sans-serif', // Changed font
-                      textTransform: 'none', // Normal case
+                      fontFamily: '"Poppins", sans-serif',
+                      textTransform: 'none',
                       '&:after': {
                         content: '""',
                         position: 'absolute',
@@ -164,8 +164,8 @@ export default function Navbar() {
                   px: 3,
                   py: 1,
                   fontWeight: 600,
-                  fontSize: '1rem', // Increased size
-                  fontFamily: '"Poppins", sans-serif', // Changed font
+                  fontSize: '1rem',
+                  fontFamily: '"Poppins", sans-serif',
                   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
                   '&:hover': {
                     backgroundColor: '#1565c0',
@@ -202,7 +202,7 @@ export default function Navbar() {
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile
+          keepMounted: true,
         }}
         sx={{
           '& .MuiDrawer-paper': {

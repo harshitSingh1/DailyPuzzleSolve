@@ -7,7 +7,8 @@ import {
   Button,
   Divider,
   IconButton,
-  Stack
+  Stack,
+  Tooltip
 } from '@mui/material';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -15,10 +16,69 @@ import {
   YouTube, 
   LinkedIn, 
   Twitter, 
-  Reddit 
+  Reddit,
+  /* Facebook,
+  Instagram,
+  GitHub,
+  Telegram,
+  Pinterest,
+  Discord*/
 } from '@mui/icons-material';
 
 export default function Footer() {
+  const socialLinks = [
+    { 
+      icon: <YouTube />, 
+      color: '#FF0000', 
+      url: 'https://youtube.com/',
+      label: 'YouTube'
+    },
+    { 
+      icon: <LinkedIn />, 
+      color: '#0077B5', 
+      url: 'https://linkedin.com/',
+      label: 'LinkedIn'
+    },
+    { 
+      icon: <Twitter />, 
+      color: '#1DA1F2', 
+      url: 'https://twitter.com/',
+      label: 'Twitter'
+    },
+    { 
+      icon: <Reddit />, 
+      color: '#FF5700', 
+      url: 'https://reddit.com/',
+      label: 'Reddit'
+    }
+    /* ,
+    { 
+      icon: <Facebook />, 
+      color: '#1877F2', 
+      url: 'https://facebook.com/PuzzleLogicHub',
+      label: 'Facebook'
+    },
+    { 
+      icon: <Instagram />, 
+      color: '#E4405F', 
+      url: 'https://instagram.com/PuzzleLogicHub',
+      label: 'Instagram'
+    },
+    { 
+      icon: <GitHub />, 
+      color: '#181717', 
+      url: 'https://github.com/PuzzleLogicHub',
+      label: 'GitHub'
+    },
+    { 
+      icon: <Telegram />, 
+      color: '#26A5E4', 
+      url: 'https://t.me/PuzzleLogicHub',
+      label: 'Telegram'
+    }
+      */
+  ];
+
   return (
     <Box
       component="footer"
@@ -74,6 +134,41 @@ export default function Footer() {
             <Typography variant="body1" sx={{ opacity: 0.8, fontSize: '0.95rem' }}>
               Your daily source for logic puzzle solutions and brain teasers.
             </Typography>
+
+            {/* Social Links - Mobile View */}
+            <Box sx={{ mt: 3, display: { xs: 'block', md: 'none' } }}>
+              <Typography variant="body1" sx={{ 
+                mb: 1.5,
+                fontSize: '0.95rem',
+                opacity: 0.8
+              }}>
+                Connect with us:
+              </Typography>
+              <Stack direction="row" spacing={1} flexWrap="wrap">
+                {socialLinks.slice(0, 4).map((social, index) => (
+                  <Tooltip key={index} title={social.label} arrow>
+                    <IconButton
+                      component="a"
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{
+                        backgroundColor: 'rgba(255,255,255,0.1)',
+                        color: 'common.white',
+                        '&:hover': {
+                          backgroundColor: social.color,
+                          transform: 'scale(1.1)',
+                        },
+                        transition: 'all 0.3s ease'
+                      }}
+                      aria-label={social.label}
+                    >
+                      {social.icon}
+                    </IconButton>
+                  </Tooltip>
+                ))}
+              </Stack>
+            </Box>
           </Box>
 
           <Box sx={{ 
@@ -205,35 +300,36 @@ export default function Footer() {
               </Button>
             </Stack>
             
-            <Box>
+            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
               <Typography variant="body1" sx={{ 
                 mb: 1.5,
                 fontSize: '0.95rem',
                 opacity: 0.8
               }}>
-                Follow us:
+                Connect with us:
               </Typography>
-              <Stack direction="row" spacing={1}>
-                {[
-                  { icon: <YouTube />, color: '#FF0000' },
-                  { icon: <LinkedIn />, color: '#0077B5' },
-                  { icon: <Twitter />, color: '#1DA1F2' },
-                  { icon: <Reddit />, color: '#FF5700' },
-                ].map((social, index) => (
-                  <IconButton
-                    key={index}
-                    sx={{
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                      color: 'common.white',
-                      '&:hover': {
-                        backgroundColor: social.color,
-                        transform: 'scale(1.1)',
-                      },
-                      transition: 'all 0.3s ease'
-                    }}
-                  >
-                    {social.icon}
-                  </IconButton>
+              <Stack direction="row" spacing={1} flexWrap="wrap">
+                {socialLinks.map((social, index) => (
+                  <Tooltip key={index} title={social.label} arrow>
+                    <IconButton
+                      component="a"
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{
+                        backgroundColor: 'rgba(255,255,255,0.1)',
+                        color: 'common.white',
+                        '&:hover': {
+                          backgroundColor: social.color,
+                          transform: 'scale(1.1)',
+                        },
+                        transition: 'all 0.3s ease'
+                      }}
+                      aria-label={social.label}
+                    >
+                      {social.icon}
+                    </IconButton>
+                  </Tooltip>
                 ))}
               </Stack>
             </Box>
@@ -257,7 +353,7 @@ export default function Footer() {
             opacity: 0.7,
             fontSize: '0.9rem'
           }}>
-            © 2025 PuzzleLogicHub. All rights reserved.
+            © {new Date().getFullYear()} PuzzleLogicHub. All rights reserved.
           </Typography>
           <Typography variant="body1" sx={{ 
             opacity: 0.7,

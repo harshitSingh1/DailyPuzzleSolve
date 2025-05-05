@@ -12,7 +12,6 @@ import {
   AccordionDetails, 
   Button,
   useTheme,
-  Fade,
   Alert
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -20,15 +19,30 @@ import dynamic from 'next/dynamic';
 import Puzzle from '@/models/Puzzle';
 import dbConnect from '@/utils/dbConnect';
 
-// Lazy load heavy components
 const YouTube = dynamic(() => import('react-youtube'), { 
   ssr: false,
-  loading: () => <div style={{ height: '400px', background: '#f5f5f5' }} />
+  loading: () => (
+    <div style={{ 
+      height: '400px', 
+      background: '#f5f5f5',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <Typography>Loading video player...</Typography>
+    </div>
+  )
 });
 
 const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), { 
   ssr: false,
-  loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
+  loading: () => (
+    <div style={{ 
+      height: '90px', 
+      background: '#f5f5f5',
+      margin: '16px 0'
+    }} />
+  )
 });
 
 interface SolutionPageProps {
@@ -49,12 +63,11 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
   const [viewMode, setViewMode] = useState<'video' | 'images'>('images');
   const [expandedAccordion, setExpandedAccordion] = useState<string | false>(solutions[0]?._id || false);
 
-  // Format game name for display
   const formattedGameName = game
     .replace(/([A-Z])/g, ' $1')
     .replace(/^./, str => str.toUpperCase())
+    .replace('Linkedin', 'LinkedIn');
 
-  // Extract video ID from YouTube URL
   const getVideoId = (url: string) => {
     if (!url) return null;
     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
@@ -65,9 +78,8 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
     setExpandedAccordion(isExpanded ? panel : false);
   };
 
-  // SEO Metadata
   const pageTitle = `${formattedGameName} Puzzle Solutions - Step by Step Guides | LogicPuzzleHub`;
-  const pageDescription = `Comprehensive ${formattedGameName} puzzle solutions with detailed step-by-step guides. Get step-by-step solutions for Todays LinkedIn Pinpoint Answer, Todays Linkedin Queens Answer, Todays Linkedin Tango Answer, Todays Linkedin Crossclimb Answer, and Todays Linkedin Zip puzzles Answer.`;
+  const pageDescription = `Comprehensive ${formattedGameName} puzzle solutions with detailed step-by-step guides. Get answers for today's puzzle with clear explanations.`;
   const canonicalUrl = `https://daily-puzzle-solve.vercel.app/solutions/${game.toLowerCase()}`;
   const featuredImage = solutions.length > 0 ? solutions[0].screenshots[0] : 'https://daily-puzzle-solve.vercel.app/default-puzzle-solution.jpg';
 
@@ -96,11 +108,10 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
         <meta property="og:image:height" content="630" />
 
         {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={canonicalUrl} />
-        <meta property="twitter:title" content={pageTitle} />
-        <meta property="twitter:description" content={pageDescription} />
-        <meta property="twitter:image" content={featuredImage} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content={featuredImage} />
 
         {/* Schema.org */}
         <script type="application/ld+json">
@@ -138,38 +149,36 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
       
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {/* Page Header */}
-        <Fade in={true} timeout={500}>
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography 
-              variant="h1" 
-              component="h1" 
-              sx={{ 
-                fontWeight: 800,
-                mb: 2,
-                color: 'common.black',
-                fontSize: '2.5rem',
-                [theme.breakpoints.down('md')]: {
-                  fontSize: '2rem'
-                }
-              }}
-            >
-              {formattedGameName} Puzzle Solutions
-            </Typography>
-            <Typography 
-              variant="h2" 
-              component="h2" 
-              sx={{ 
-                color: 'text.secondary',
-                maxWidth: '700px',
-                mx: 'auto',
-                fontSize: '1.25rem',
-                fontWeight: 500
-              }}
-            >
-              Step-by-step guides to master {formattedGameName.toLowerCase()} puzzle game solutions including Todays Answers with Explanation
-            </Typography>
-          </Box>
-        </Fade>
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography 
+            variant="h1" 
+            component="h1" 
+            sx={{ 
+              fontWeight: 800,
+              mb: 2,
+              color: 'common.black',
+              fontSize: '2.5rem',
+              [theme.breakpoints.down('md')]: {
+                fontSize: '2rem'
+              }
+            }}
+          >
+            {formattedGameName} Puzzle Solutions
+          </Typography>
+          <Typography 
+            variant="h2" 
+            component="h2" 
+            sx={{ 
+              color: 'text.secondary',
+              maxWidth: '700px',
+              mx: 'auto',
+              fontSize: '1.25rem',
+              fontWeight: 500
+            }}
+          >
+            Step-by-step guides to master {formattedGameName.toLowerCase()} puzzle game solutions
+          </Typography>
+        </Box>
 
         {/* Ad Banner */}
         <Box sx={{ mb: 6 }}>
@@ -235,7 +244,9 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
                       borderRadius: '50px',
                       px: 3,
                       fontWeight: 600,
-                      textTransform: 'none'
+                      textTransform: 'none',
+                      minHeight: '44px',
+                      minWidth: '120px'
                     }
                   }}>
                     <Button
@@ -268,27 +279,26 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
                       <meta itemProp="description" content={`Video solution for ${solution.heading}`} />
                       <meta itemProp="thumbnailUrl" content={`https://img.youtube.com/vi/${getVideoId(solution.ytVideo)}/hqdefault.jpg`} />
                       <meta itemProp="embedUrl" content={`https://www.youtube.com/embed/${getVideoId(solution.ytVideo)}`} />
-                      {YouTube && (
-                        <YouTube
-                          videoId={getVideoId(solution.ytVideo) || ''}
-                          opts={{
-                            width: '100%',
-                            height: '100%',
-                            playerVars: {
-                              autoplay: 0,
-                              modestbranding: 1,
-                              rel: 0
-                            }
-                          }}
-                          style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%'
-                          }}
-                        />
-                      )}
+                      <YouTube
+                        videoId={getVideoId(solution.ytVideo) || ''}
+                        opts={{
+                          width: '100%',
+                          height: '100%',
+                          playerVars: {
+                            autoplay: 0,
+                            modestbranding: 1,
+                            rel: 0
+                          }
+                        }}
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%'
+                        }}
+                        title={`${solution.heading} video solution`}
+                      />
                     </Box>
                   )}
 
@@ -351,7 +361,8 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
                       sx={{
                         borderRadius: '50px',
                         px: 3,
-                        fontWeight: 600
+                        fontWeight: 600,
+                        minHeight: '44px'
                       }}
                       aria-label="Report a problem with this solution"
                     >
@@ -366,7 +377,8 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
                       sx={{
                         borderRadius: '50px',
                         px: 3,
-                        fontWeight: 600
+                        fontWeight: 600,
+                        minHeight: '44px'
                       }}
                       aria-label="Play the game on LinkedIn"
                     >
@@ -379,10 +391,11 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
                         alert('Link copied to clipboard!');
                       }}
                       sx={{
-                        borderRadius: '50px',
+                        borderRadius: '5050px',
                         px: 3,
                         fontWeight: 600,
-                        ml: 'auto'
+                        ml: 'auto',
+                        minHeight: '44px'
                       }}
                       aria-label="Share this solution"
                     >
@@ -393,38 +406,57 @@ export default function SolutionPage({ solutions, game, error }: SolutionPagePro
               </Accordion>
             ))}
 
-            {/* Additional Content for SEO */}
+            {/* SEO Content Section */}
             <Box sx={{ mt: 4, p: 3, backgroundColor: 'background.paper', borderRadius: '8px' }}>
               <Typography variant="h2" component="h2" sx={{ mb: 2, fontSize: '1.5rem' }}>
-                Mastering {formattedGameName} Puzzles
+                How to Solve {formattedGameName} Puzzles
               </Typography>
               <Typography variant="body1" sx={{ mb: 2 }}>
-                Our comprehensive {formattedGameName.toLowerCase()} puzzle solutions are designed to help you understand the underlying patterns and strategies. Each solution is carefully crafted to provide clear, step-by-step guidance whether you&apos;re a beginner or an experienced puzzle solver.
-              </Typography>
-              <Typography variant="h3" component="h3" sx={{ mb: 2, fontSize: '1.25rem' }}>
-                Why Use Our {formattedGameName} Solutions?
+                Mastering {formattedGameName.toLowerCase()} puzzles requires understanding the core mechanics and patterns. Our solutions provide:
               </Typography>
               <ul style={{ paddingLeft: '24px', marginBottom: '16px' }}>
-                <li style={{ marginBottom: '8px' }}>Visual step-by-step explanations</li>
-                <li style={{ marginBottom: '8px' }}>Multiple solution approaches</li>
-                <li style={{ marginBottom: '8px' }}>Video and image formats for different learning styles</li>
-                <li>Detailed strategy explanations</li>
+                <li style={{ marginBottom: '8px' }}>Clear visual explanations for each step</li>
+                <li style={{ marginBottom: '8px' }}>Multiple approaches to solving each puzzle</li>
+                <li style={{ marginBottom: '8px' }}>Video walkthroughs for visual learners</li>
+                <li>Detailed strategy breakdowns</li>
               </ul>
+              <Typography variant="h3" component="h3" sx={{ mb: 2, fontSize: '1.25rem' }}>
+                Frequently Asked Questions
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                <strong>Q: How often are new solutions added?</strong><br />
+                A: We update our solutions daily to match the latest puzzle challenges.
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                <strong>Q: Can I request a specific puzzle solution?</strong><br />
+                A: Yes! Contact us with your puzzle request and we&apos;ll prioritize creating a solution.
+              </Typography>
             </Box>
           </Box>
         ) : (
-          <Fade in={true}>
+          <Box sx={{ textAlign: 'center', py: 4 }}>
             <Typography 
               variant="body1" 
-              align="center" 
               sx={{ 
-                py: 4,
-                color: 'text.secondary'
+                color: 'text.secondary',
+                mb: 2
               }}
             >
-              No solutions available for {formattedGameName} yet. Check back soon!
+              No solutions available for {formattedGameName} yet.
             </Typography>
-          </Fade>
+            <Button
+              variant="contained"
+              onClick={() => router.reload()}
+              sx={{
+                borderRadius: '50px',
+                px: 3,
+                fontWeight: 600
+              }}
+              aria-label="Refresh page"
+            >
+              Check for New Solutions
+            </Button>
+          </Box>
         )}
 
         {/* Ad Banner */}
@@ -445,18 +477,19 @@ export const getServerSideProps: GetServerSideProps<SolutionPageProps> = async (
   const { game } = context.params as { game: string };
   
   try {
-    // Set cache headers
+    // Set aggressive caching headers
     context.res.setHeader(
       'Cache-Control',
       'public, s-maxage=86400, stale-while-revalidate=3600'
     );
-    context.res.setHeader('Expires', new Date(Date.now() + 86400000).toUTCString());
 
     await dbConnect();
     
-    const solutions = await Puzzle.find({ 
-      heading: { $regex: game, $options: 'i' }
-    })
+    // Optimized database query with projection
+    const solutions = await Puzzle.find(
+      { heading: { $regex: game, $options: 'i' } },
+      { _id: 1, heading: 1, ytVideo: 1, screenshots: 1, createdAt: 1 }
+    )
     .sort({ createdAt: -1 })
     .limit(10)
     .lean();

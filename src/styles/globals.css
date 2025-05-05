@@ -1,22 +1,33 @@
+:root {
+  --font-poppins: 'Poppins', sans-serif;
+  --font-open-sans: 'Open Sans', sans-serif;
+  --primary-color: #1976d2;
+  --primary-hover: #1565c0;
+  --text-color: #333;
+  --heading-color: #ffffff;
+  --scrollbar-track: #f1f1f1;
+  --shadow-color: rgba(0,0,0,0.1);
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  font-family: var(--font-open-sans), -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   line-height: 1.6;
   font-size: 16px;
-  color: #333;
+  color: var(--text-color);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--heading-color);
 }
 
 a {
-  color: #1976d2;
+  color: var(--primary-color);
   text-decoration: none;
 }
 
@@ -40,14 +51,14 @@ a {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--scrollbar-track);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1976d2;
+  background: var(--primary-color);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #1565c0;
+  background: var(--primary-hover);
 }
 
 /* Card hover effects */
@@ -56,9 +67,10 @@ a {
 }
 .card-hover:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 10px 20px var(--shadow-color) !important;
 }
 
+/* Ad styling classes */
 .ad-container {
   margin: 2rem auto;
   text-align: center;
@@ -73,16 +85,19 @@ a {
   margin: 2.5rem 0;
 }
 
-.about-ad, .contact-ad {
+.about-ad, 
+.contact-ad {
   margin: 2rem auto;
   max-width: 728px;
 }
 
-.privacy-ad, .terms-ad {
+.privacy-ad, 
+.terms-ad {
   margin: 1.5rem 0;
   padding: 0 1rem;
 }
 
+/* Hide unfilled ads */
 ins.adsbygoogle[data-ad-status="unfilled"] {
   display: none !important;
 }
@@ -90,5 +105,10 @@ ins.adsbygoogle[data-ad-status="unfilled"] {
 @media (max-width: 768px) {
   .ad-container {
     margin: 1.5rem 0;
+  }
+  
+  html,
+  body {
+    font-size: 15px;
   }
 }
