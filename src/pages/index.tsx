@@ -6,13 +6,17 @@ import {
   CardContent, 
   CardMedia, 
   Button,
-  Fade
+  Fade,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Link from 'next/link';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
+import { NextSeo } from 'next-seo';
 
-// Lazy load non-critical components
 const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
   ssr: false,
   loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
@@ -22,87 +26,168 @@ const puzzleGames = [
   {
     id: 'pinpoint',
     title: 'LinkedIn Pinpoint',
-    description: 'Word puzzle where you find the common connection between four given words',
+    description: 'Word puzzle where you find the common connection between four given words. Get daily solutions with detailed explanations.',
     image: '/images/pinpoint-game.png',
-    path: '/solutions/pinpoint'
+    path: '/solutions/pinpoint',
+    difficulty: 'Medium',
+    updatedAt: '2024-01-20'
   },
   {
     id: 'queens',
     title: 'LinkedIn Queens',
-    description: 'Logic puzzle where you place queens on a chessboard without them attacking each other',
+    description: 'Logic puzzle where you place queens on a chessboard without them attacking each other. Step-by-step daily solutions available.',
     image: '/images/queens-game.png',
-    path: '/solutions/queens'
+    path: '/solutions/queens',
+    difficulty: 'Hard',
+    updatedAt: '2024-01-20'
   },
   {
     id: 'tango',
     title: 'LinkedIn Tango',
-    description: 'Pattern-matching puzzle where you connect colored dots with non-crossing lines',
+    description: 'Pattern-matching puzzle where you connect colored dots with non-crossing lines. Get expert solutions daily.',
     image: '/images/tango-game.png',
-    path: '/solutions/tango'
+    path: '/solutions/tango',
+    difficulty: 'Medium',
+    updatedAt: '2024-01-20'
   },
   {
     id: 'crossclimb',
     title: 'LinkedIn Crossclimb',
-    description: 'Hybrid puzzle combining crossword clues with a ladder-style word progression',
+    description: 'Hybrid puzzle combining crossword clues with a ladder-style word progression. Daily solutions with explanations.',
     image: '/images/crossclimb-game.png',
-    path: '/solutions/crossclimb'
+    path: '/solutions/crossclimb',
+    difficulty: 'Hard',
+    updatedAt: '2024-01-20'
   },
   {
     id: 'zip',
     title: 'LinkedIn Zip',
-    description: 'Number sequence puzzle where you find the missing number in an interlocking pattern',
+    description: 'Number sequence puzzle where you find the missing number in an interlocking pattern. Daily solutions available.',
     image: '/images/zip-game.png',
-    path: '/solutions/zip'
+    path: '/solutions/zip',
+    difficulty: 'Easy',
+    updatedAt: '2024-01-20'
+  }
+];
+
+const faqData = [
+  {
+    question: "How often are puzzle solutions updated?",
+    answer: "Solutions are updated daily with in 30 minutes for all LinkedIn puzzle games including Pinpoint, Queens, Tango, Crossclimb, and Zip. You can also request solution for other puzzle games"
+  },
+  {
+    question: "Are the solutions free to access?",
+    answer: "Yes, all puzzle solutions are completely free to access. We believe in making puzzle-solving resources available to everyone."
+  },
+  {
+    question: "How detailed are the solutions?",
+    answer: "Each solution includes step-by-step explanations, screenshots, and video walkthroughs when available. We ensure every step is clearly explained."
+  },
+  {
+    question: "Can I request help for a specific puzzle?",
+    answer: "Yes! You can contact us through our support page, and we'll help you with any specific puzzle you're struggling with."
+  },
+  {
+    question: "Can you tell me more about PuzzleLogicHub?",
+    answer: "LogicPuzzleHub is your premier destination for comprehensive LinkedIn puzzle solutions. We provide daily updated solutions for Pinpoint, Queens, Tango, Crossclimb, and Zip puzzles, helping you master these challenging games with detailed explanations and expert strategies. Whether you're stuck on today's puzzle or looking to improve your solving techniques, our step-by-step guides and video walkthroughs make puzzle-solving accessible and enjoyable."
   }
 ];
 
 export default function Home() {
-  const pageTitle = "Daily Puzzle Solutions & Walkthroughs | LogicPuzzleHub";
-  const pageDescription = "Get step-by-step solutions for Todays LinkedIn Pinpoint Answer, Todays Linkedin Queens Answer, Todays Linkedin Tango Answer, Todays Linkedin Crossclimb Answer, and Todays Linkedin Zip puzzles Answer.";
+  const pageTitle = "Today's LinkedIn Puzzle Solutions & Walkthroughs | LogicPuzzleHub";
+  const pageDescription = "Get instant access to today's LinkedIn puzzle solutions: Pinpoint, Queens, Tango, Crossclimb, and Zip. Step-by-step explanations, video guides, and expert tips updated daily. Master LinkedIn puzzles with our comprehensive walkthroughs.";
   const canonicalUrl = "https://daily-puzzle-solve.vercel.app";
   const featuredImage = "https://daily-puzzle-solve.vercel.app/hero.jpeg";
+  const currentDate = new Date().toISOString();
 
   return (
     <>
+      <NextSeo
+        title={pageTitle}
+        description={pageDescription}
+        canonical={canonicalUrl}
+        openGraph={{
+          type: 'website',
+          locale: 'en_US',
+          url: canonicalUrl,
+          site_name: 'LogicPuzzleHub',
+          title: pageTitle,
+          description: pageDescription,
+          images: [
+            {
+              url: featuredImage,
+              width: 1200,
+              height: 630,
+              alt: 'LogicPuzzleHub - LinkedIn Puzzle Solutions',
+            }
+          ]
+        }}
+        twitter={{
+          handle: '@LogicPuzzleHub',
+          site: '@LogicPuzzleHub',
+          cardType: 'summary_large_image',
+        }}
+      />
+
       <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <link rel="canonical" href={canonicalUrl} />
-
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:image" content={featuredImage} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-
-        {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={canonicalUrl} />
-        <meta property="twitter:title" content={pageTitle} />
-        <meta property="twitter:description" content={pageDescription} />
-        <meta property="twitter:image" content={featuredImage} />
-
-        {/* Schema.org */}
+        {/* Preload Critical Assets */}
+        <link rel="preload" href="/hero.jpeg" as="image" />
+        
+        {/* JSON-LD Structured Data */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": pageTitle,
-            "description": pageDescription,
+            "@type": "WebSite",
+            "name": "LogicPuzzleHub",
             "url": canonicalUrl,
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": `${canonicalUrl}?search={search_term_string}`,
-              "query-input": "required name=search_term_string"
+            "description": pageDescription,
+            "datePublished": "2024-01-01",
+            "dateModified": currentDate,
+            "publisher": {
+              "@type": "Organization",
+              "name": "LogicPuzzleHub",
+              "logo": {
+                "@type": "ImageObject",
+                "url": `${canonicalUrl}/logo.png`
+              }
+            },
+            "mainEntity": {
+              "@type": "ItemList",
+              "numberOfItems": puzzleGames.length,
+              "itemListElement": puzzleGames.map((game, index) => ({
+                "@type": "Game",
+                "position": index + 1,
+                "name": game.title,
+                "description": game.description,
+                "image": `${canonicalUrl}${game.image}`,
+                "url": `${canonicalUrl}${game.path}`,
+                "difficulty": game.difficulty,
+                "dateModified": game.updatedAt
+              }))
             }
+          })}
+        </script>
+
+        {/* FAQ Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqData.map(item => ({
+              "@type": "Question",
+              "name": item.question,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": item.answer
+              }
+            }))
           })}
         </script>
       </Head>
 
+      {/* Hero Section */}
       <Box
+        component="section"
         sx={{
           position: 'relative',
           py: 10,
@@ -127,8 +212,6 @@ export default function Home() {
             zIndex: -1
           }
         }}
-        itemScope
-        itemType="http://schema.org/WPHeader"
       >
         <Container maxWidth="lg">
           <Box sx={{ 
@@ -149,13 +232,11 @@ export default function Home() {
                 color: 'common.white',
                 textShadow: '0 2px 4px rgba(0,0,0,0.3)'
               }}
-              itemProp="headline"
             >
-              Master Logic Puzzles Like Never Before
+               Master Logic Puzzles Like Never Before
             </Typography>
             <Typography
               variant="h2"
-              component="h2"
               sx={{
                 fontWeight: 400,
                 mb: 4,
@@ -164,7 +245,7 @@ export default function Home() {
                 textShadow: '0 1px 2px rgba(0,0,0,0.2)'
               }}
             >
-              Daily solutions with step-by-step explanations and video walkthroughs.
+               Daily solutions with step-by-step explanations and video walkthroughs.
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
               <Link href="#puzzles" passHref legacyBehavior>
@@ -183,10 +264,8 @@ export default function Home() {
                       backgroundColor: 'rgba(255,255,255,0.9)',
                       transform: 'translateY(-2px)',
                       boxShadow: '0 6px 8px rgba(0, 0, 0, 0.15)',
-                    },
-                    transition: 'all 0.3s ease',
+                    }
                   }}
-                  aria-label="View puzzle solutions"
                 >
                   View Solutions
                 </Button>
@@ -206,10 +285,8 @@ export default function Home() {
                       backgroundColor: 'rgba(255,255,255,0.1)',
                       borderColor: 'white',
                       transform: 'translateY(-2px)',
-                    },
-                    transition: 'all 0.3s ease',
+                    }
                   }}
-                  aria-label="Explore more games"
                 >
                   More Games
                 </Button>
@@ -219,19 +296,22 @@ export default function Home() {
         </Container>
       </Box>
 
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Puzzle Games Grid */}
-        <Box id="puzzles" sx={{ 
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
-          gap: 4,
-          mb: 4
-        }}>
+      <Container maxWidth="lg" component="main">
+        {/* Puzzle Solutions Grid */}
+        <Box
+          id="puzzles"
+          component="section"
+          sx={{ 
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+            gap: 4,
+            mb: 6
+          }}
+        >
           {puzzleGames.map((game, index) => (
             <Fade in={true} key={game.id} timeout={index * 150}>
               <Card
                 sx={{
-                  width: '100%',
                   display: 'flex',
                   flexDirection: 'column',
                   transition: 'all 0.3s ease',
@@ -240,18 +320,13 @@ export default function Home() {
                     boxShadow: 3
                   }
                 }}
-                itemScope
-                itemType="http://schema.org/Game"
               >
                 <CardMedia
                   component="img"
                   height="180"
                   image={game.image}
-                  alt={game.title}
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority="low"
-                  itemProp="image"
+                  alt={`${game.title} - Daily Solutions and Walkthroughs`}
+                  loading={index < 3 ? "eager" : "lazy"}
                 />
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography 
@@ -289,12 +364,13 @@ export default function Home() {
                           backgroundColor: 'primary.dark',
                           transform: 'scale(1.02)'
                         },
-                        transition: 'all 0.2s ease'
+                        transition: 'all 0.2s ease',
+                        mt: 2
                       }}
                       aria-label={`View ${game.title} solutions`}
                       itemProp="url"
                     >
-                      View Solutions
+                      View Todays Solution
                     </Button>
                   </Link>
                 </CardContent>
@@ -303,21 +379,65 @@ export default function Home() {
           ))}
         </Box>
 
-        {/* About Section */}
-        <Box sx={{ mt: 6, mb: 6 }}>
-          <Typography variant="h4" component="h2" sx={{ mb: 3, textAlign: 'center', color: 'text.primary' }}>
-            About LogicPuzzleHub
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2, textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
-            LogicPuzzleHub is your ultimate resource for solving and mastering popular logic puzzles like linkedin pinpoint, linkedin queens, linkedin tango, linkedin crossclimb, linkedin zip. 
-            Our detailed walkthroughs and strategies help you understand the underlying patterns and 
-            techniques to solve puzzles efficiently. Whether you&apos;re a beginner or an experienced solver, 
-            our solutions will enhance your problem-solving skills.
-          </Typography>
+        {/* FAQ Section */}
+        <Box component="section" sx={{ my: 6 }}>
+        <Typography variant="h2" sx={{ mb: 4, textAlign: 'center', fontSize: '2rem', color: 'text.primary' }}>
+          Frequently Asked Questions
+        </Typography>
+        <Box sx={{ maxWidth: '800px', mx: 'auto' }}>
+          {faqData.map((faq, index) => (
+            <Accordion 
+              key={index} 
+              sx={{ 
+                mb: 2,
+                boxShadow: 'none',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: '8px !important',
+                '&:before': {
+                  display: 'none'
+                }
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`faq-${index}-content`}
+                id={`faq-${index}-header`}
+                sx={{
+                  backgroundColor: 'background.paper',
+                  borderRadius: '8px',
+                  '&.Mui-expanded': {
+                    borderBottomLeftRadius: 0,
+                    borderBottomRightRadius: 0,
+                    backgroundColor: 'action.hover'
+                  }
+                }}
+              >
+                <Typography variant="h3" sx={{ fontWeight: 600, fontSize: '1.1rem', color: "text.primary" }}>
+                  {faq.question}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails 
+                sx={{ 
+                  backgroundColor: 'background.default',
+                  borderTop: '1px solid',
+                  borderColor: 'divider',
+                  borderBottomLeftRadius: '8px',
+                  borderBottomRightRadius: '8px'
+                }}
+              >
+                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                  {faq.answer}
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          ))}
         </Box>
+      </Box>
 
-        {/* Ad Banner */}
-        <Box sx={{ mt: 6 }}>
+
+        {/* Ad Section */}
+        <Box component="section" sx={{ my: 6 }}>
           <AdSenseAd 
             slot="3923231851" 
             format="auto" 
