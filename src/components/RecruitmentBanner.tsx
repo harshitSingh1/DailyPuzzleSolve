@@ -31,7 +31,7 @@ const RecruitmentBanner = () => {
       gap: '16px'
     }}>
       <p style={{ margin: 0, fontSize: '16px', color: '#1a365d' }}>
-        We're looking for contributors to help grow this open-source project!
+        We&apos;re looking for contributors to help grow this open-source project!
       </p>
       
       <Button
