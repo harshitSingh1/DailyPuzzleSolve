@@ -86,7 +86,7 @@ export default function Navbar() {
           }}>
             <Image 
               src="/logo1.png" 
-              alt="LogicPuzzleMaster Logo" 
+              alt="PuzzleLogicHub Logo" 
               width={40} 
               height={40}
               style={{ marginRight: '10px' }}

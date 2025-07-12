@@ -24,7 +24,7 @@ export default function HeadSEO({
   keywords,
   publishedTime,
   modifiedTime,
-  author = 'LogicPuzzleMaster',
+  author = 'PuzzleLogicHub',
   type = 'website',
   noindex = false,
   alternateLanguages
@@ -37,7 +37,7 @@ export default function HeadSEO({
     <>
       <NextSeo
         title={title}
-        titleTemplate="%s | LogicPuzzleMaster - Daily LinkedIn Puzzle Solutions"
+        titleTemplate="%s | PuzzleLogicHub - Daily LinkedIn Puzzle Solutions"
         description={description}
         canonical={canonicalUrl}
         openGraph={{
@@ -53,7 +53,7 @@ export default function HeadSEO({
               alt: title,
             },
           ],
-          site_name: 'LogicPuzzleMaster',
+          site_name: 'PuzzleLogicHub',
           ...(publishedTime && {
             article: {
               publishedTime: publishedTime,
@@ -63,8 +63,8 @@ export default function HeadSEO({
           }),
         }}
         twitter={{
-          handle: '@LogicPuzzleMaster',
-          site: '@LogicPuzzleMaster',
+          handle: '@PuzzleLogicHub',
+          site: '@PuzzleLogicHub',
           cardType: 'summary_large_image',
         }}
         languageAlternates={
@@ -109,7 +109,7 @@ export default function HeadSEO({
           dateModified={modifiedTime || publishedTime}
           authorName={author}
           description={description}
-          publisherName="LogicPuzzleMaster"
+          publisherName="PuzzleLogicHub"
           publisherLogo="/images/logo.png"
         />
       )}

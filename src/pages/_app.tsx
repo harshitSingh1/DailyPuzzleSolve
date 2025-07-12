@@ -4,6 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Head from 'next/head';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import RecruitmentBanner from '@/components/RecruitmentBanner';
 import { Poppins, Open_Sans } from 'next/font/google';
 import '@/styles/globals.css';
 
@@ -87,6 +88,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <meta name="viewport" content="initial-scale=1, width=device-width" />
         </Head>
         <CssBaseline />
+        <RecruitmentBanner />
         <Navbar />
         <Component {...pageProps} />
         <Footer />
