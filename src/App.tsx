@@ -9,21 +9,21 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import RecruitmentBanner from "@/components/RecruitmentBanner";
 
-import Index from "./pages/Index";
+import Index from "./pages/index";
 
 // Lazy-loaded pages, only loaded when navigated to
-const Solutions = lazy(() => import("./pages/Solutions"));
-const SolutionDetail = lazy(() => import("./pages/SolutionDetail"));
-const Contact = lazy(() => import("./pages/Contact"));
-const About = lazy(() => import("./pages/About"));
-const Privacy = lazy(() => import("./pages/Privacy"));
-const Terms = lazy(() => import("./pages/Terms"));
-const Blog = lazy(() => import("./pages/Blog"));
-const Games = lazy(() => import("./pages/Games"));
-const Memes = lazy(() => import("./pages/Memes"));
-const Shop = lazy(() => import("./pages/Shop"));
-const Tools = lazy(() => import("./pages/Tools"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+const Solutions = lazy(() => import("./pages/solutions"));
+const SolutionDetail = lazy(() => import("./pages/solutiondetail"));
+const Contact = lazy(() => import("./pages/contact"));
+const About = lazy(() => import("./pages/about"));
+const Privacy = lazy(() => import("./pages/privacy"));
+const Terms = lazy(() => import("./pages/terms"));
+const Blog = lazy(() => import("./pages/blog"));
+const Games = lazy(() => import("./pages/games"));
+const Memes = lazy(() => import("./pages/memes"));
+const Shop = lazy(() => import("./pages/shop"));
+const Tools = lazy(() => import("./pages/tools"));
+const NotFound = lazy(() => import("./pages/notfound"));
 
 // Lazy-loaded heavy ad components
 const StickyMobileAd = lazy(() => import("./components/ads/StickyMobileAd"));
