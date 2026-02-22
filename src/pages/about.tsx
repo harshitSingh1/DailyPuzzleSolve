@@ -1,201 +1,90 @@
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  useTheme
-} from '@mui/material';
-import Head from 'next/head';
-import dynamic from 'next/dynamic';
+import { motion } from "framer-motion";
+import SEOHead from "@/components/SEOHead";
+import AdSenseAd from "@/components/AdSenseAd";
+import { SITE_URL, SITE_NAME } from "@/lib/constants";
 
-const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
-  ssr: false,
-  loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
-});
-
-export default function AboutPage() {
-  const theme = useTheme();
-
-  const pageTitle = "About PuzzleLogicHub | Puzzle Solutions & Learning Resources";
-  const pageDescription = "Discover PuzzleLogicHub's mission to provide high-quality puzzle solutions, tutorials, and tools for enthusiasts of all skill levels.";
-  const canonicalUrl = "https://daily-puzzle-solve.vercel.app/about";
-  const featuredImage = "https://daily-puzzle-solve.vercel.app/images/about-banner.jpg";
+const About = () => {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: `About ${SITE_NAME}`,
+    description: "Discover PuzzleLogicHub's mission to provide high-quality puzzle solutions, tutorials, and tools.",
+    url: `${SITE_URL}/about`,
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png` },
+    },
+  };
 
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <link rel="canonical" href={canonicalUrl} />
-        <meta name="keywords" content="about PuzzleLogicHub, puzzle solutions, brain games, logic puzzles, about us" />
+      <SEOHead
+        title="About PuzzleLogicHub"
+        description="Discover PuzzleLogicHub's mission to provide high-quality puzzle solutions, tutorials, and tools for enthusiasts of all skill levels."
+        path="/about"
+        jsonLd={jsonLd}
+      />
+      <main className="pt-6 pb-12">
+        <div className="container max-w-4xl">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            {/* Header */}
+            <div className="mb-10 text-center">
+              <h1 className="mb-3 font-display text-3xl font-extrabold text-foreground sm:text-4xl">
+                About {SITE_NAME}
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Empowering puzzle enthusiasts with comprehensive solutions and learning resources
+              </p>
+            </div>
 
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:image" content={featuredImage} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+            <AdSenseAd slot="about-top" />
 
-        {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={canonicalUrl} />
-        <meta property="twitter:title" content={pageTitle} />
-        <meta property="twitter:description" content={pageDescription} />
-        <meta property="twitter:image" content={featuredImage} />
+            {/* Sections */}
+            <div className="space-y-8">
+              <Section title="Who We Are">
+                PuzzleLogicHub was founded in 2025 by a team of puzzle enthusiasts who wanted to create a comprehensive resource for puzzle solvers of all levels. We&apos;re dedicated to providing high-quality solutions, strategies, and tools to help you master logic puzzles.
+              </Section>
 
-        {/* Schema.org */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "AboutPage",
-            "name": pageTitle,
-            "description": pageDescription,
-            "url": canonicalUrl,
-            "publisher": {
-              "@type": "Organization",
-              "name": "PuzzleLogicHub",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "https://daily-puzzle-solve.vercel.app/logo.png"
-              }
-            }
-          })}
-        </script>
-      </Head>
-      
-      <Container maxWidth="lg" sx={{ py: 4 }} itemScope itemType="http://schema.org/AboutPage">
-        {/* Page Header */}
-        <Box sx={{ textAlign: 'center', mb: 6 }}>
-          <Typography 
-            variant="h1" 
-            component="h1" 
-            sx={{ 
-              fontWeight: 800,
-              mb: 2,
-              color: 'common.black',
-              fontSize: '2.5rem',
-              [theme.breakpoints.down('md')]: {
-                fontSize: '2rem'
-              }
-            }}
-            itemProp="headline"
-          >
-            About PuzzleLogicHub
-          </Typography>
-          <Typography 
-            variant="h2" 
-            component="h2" 
-            sx={{ 
-              color: 'text.secondary',
-              maxWidth: '700px',
-              mx: 'auto',
-              fontSize: '1.5rem',
-              [theme.breakpoints.down('md')]: {
-                fontSize: '1.25rem'
-              }
-            }}
-          >
-            Empowering puzzle enthusiasts with comprehensive solutions and learning resources
-          </Typography>
-        </Box>
+              <Section title="Our Mission">
+                Our mission is to make puzzle-solving accessible and enjoyable for everyone. We believe that regular mental exercise through puzzles can improve cognitive function, problem-solving skills, and overall mental well-being.
+              </Section>
 
-        {/* Ad Banner */}
-        <Box sx={{ mb: 6 }}>
-          <AdSenseAd
-            slot="3923231851"
-            format="auto"
-            style={{ display: 'block' }}
-            className="about-ad"
-          />
-        </Box>
+              <Section title="What We Offer">
+                <ul className="mt-2 space-y-2 text-muted-foreground">
+                  <li>📸 <strong>Daily Puzzle Solutions:</strong> Step-by-step explanations for popular puzzles</li>
+                  <li>🎬 <strong>Video Tutorials:</strong> Visual guides for complex puzzles</li>
+                  <li>📝 <strong>Strategy Guides:</strong> Tips to improve your solving skills</li>
+                  <li>🔧 <strong>Tool Recommendations:</strong> Curated list of helpful puzzle-solving tools</li>
+                </ul>
+              </Section>
 
-        {/* Content Sections */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <Box itemScope itemType="http://schema.org/Organization">
-            <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-              Who We Are
-            </Typography>
-            <Typography variant="body1" paragraph>
-              <span itemProp="name">PuzzleLogicHub</span> was founded in <span itemProp="foundingDate">2025</span> by a team of puzzle enthusiasts who wanted to create
-              a comprehensive resource for puzzle solvers of all levels. We&apos;re dedicated to providing
-              high-quality solutions, strategies, and tools to help you master logic puzzles.
-            </Typography>
-          </Box>
+              <Section title="Our Team">
+                Our team consists of puzzle champions, software developers, and educators who are passionate about sharing their knowledge. We&apos;re constantly working to expand our library of resources and improve your puzzle-solving experience.
+              </Section>
 
-          <Box>
-            <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-              Our Mission
-            </Typography>
-            <Typography variant="body1" paragraph>
-              Our mission is to make puzzle-solving accessible and enjoyable for everyone. We believe that
-              regular mental exercise through puzzles can improve cognitive function, problem-solving skills,
-              and overall mental well-being.
-            </Typography>
-          </Box>
+              {/* SEO content */}
+              <div className="rounded-xl border border-border bg-muted/30 p-6">
+                <h2 className="mb-2 font-display text-xl font-bold text-foreground">Why Puzzles Matter</h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  Puzzles are more than just entertainment. They&apos;re powerful tools for cognitive development. Regular puzzle-solving can enhance memory, improve problem-solving skills, and even reduce stress. At PuzzleLogicHub, we&apos;re committed to helping you reap these benefits through our carefully curated content.
+                </p>
+              </div>
+            </div>
 
-          <Box>
-            <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-              What We Offer
-            </Typography>
-            <Box component="ul" sx={{ pl: 3 }}>
-              <li itemScope itemType="http://schema.org/Service">
-                <Typography variant="body1" paragraph>
-                  <strong itemProp="name">Daily Puzzle Solutions:</strong> <span itemProp="description">Step-by-step explanations for popular puzzles</span>
-                </Typography>
-              </li>
-              <li itemScope itemType="http://schema.org/Service">
-                <Typography variant="body1" paragraph>
-                  <strong itemProp="name">Video Tutorials:</strong> <span itemProp="description">Visual guides for complex puzzles</span>
-                </Typography>
-              </li>
-              <li itemScope itemType="http://schema.org/Service">
-                <Typography variant="body1" paragraph>
-                  <strong itemProp="name">Strategy Guides:</strong> <span itemProp="description">Tips to improve your solving skills</span>
-                </Typography>
-              </li>
-              <li itemScope itemType="http://schema.org/Service">
-                <Typography variant="body1" paragraph>
-                  <strong itemProp="name">Tool Recommendations:</strong> <span itemProp="description">Curated list of helpful puzzle-solving tools</span>
-                </Typography>
-              </li>
-            </Box>
-          </Box>
-
-          <Box>
-            <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-              Our Team
-            </Typography>
-            <Typography variant="body1" paragraph>
-              Our team consists of puzzle champions, software developers, and educators who are passionate
-              about sharing their knowledge. We&apos;re constantly working to expand our library of resources
-              and improve your puzzle-solving experience.
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Additional Content for SEO */}
-        <Box sx={{ mt: 6 }}>
-          <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-            Why Puzzles Matter
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Puzzles are more than just entertainment - they&apos;re powerful tools for cognitive development. 
-            Regular puzzle-solving can enhance memory, improve problem-solving skills, and even reduce stress. 
-            At PuzzleLogicHub, we&apos;re committed to helping you reap these benefits through our carefully curated content.
-          </Typography>
-        </Box>
-
-        {/* Ad Banner */}
-        <Box sx={{ mt: 6 }}>
-          <AdSenseAd
-            slot="3923231851"
-            format="auto"
-            style={{ display: 'block' }}
-            className="about-ad"
-          />
-        </Box>
-      </Container>
+            <AdSenseAd slot="about-bottom" className="mt-8" />
+          </motion.div>
+        </div>
+      </main>
     </>
   );
-}
+};
+
+const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
+    <h2 className="mb-2 font-display text-xl font-bold text-foreground">{title}</h2>
+    <div className="text-muted-foreground leading-relaxed">{children}</div>
+  </section>
+);
+
+export default About;

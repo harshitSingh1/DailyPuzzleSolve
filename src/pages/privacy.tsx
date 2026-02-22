@@ -1,218 +1,143 @@
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  useTheme
-} from '@mui/material';
-import Head from 'next/head';
-import dynamic from 'next/dynamic';
+import { motion } from "framer-motion";
+import SEOHead from "@/components/SEOHead";
+import AdSenseAd from "@/components/AdSenseAd";
 
-// Lazy load non-critical components
-const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
-  ssr: false,
-  loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
-});
+const sections = [
+  {
+    title: "Introduction",
+    content:
+      "At PuzzleLogicHub, we respect your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you use our website and services.",
+  },
+  {
+    title: "Information We Collect",
+    content:
+      "We may collect the following types of information:",
+    list: [
+      "Personal Information: Name, email address when you contact us",
+      "Usage Data: Pages visited, time spent, referring website",
+      "Cookies: To improve your browsing experience",
+    ],
+  },
+  {
+    title: "How We Use Your Information",
+    content: "We use the information we collect to:",
+    list: [
+      "Provide and maintain our service",
+      "Improve user experience",
+      "Respond to inquiries and support requests",
+      "Analyze usage patterns",
+      "Prevent fraudulent activity",
+    ],
+  },
+  {
+    title: "Google AdSense",
+    content:
+      'We use Google AdSense to display advertisements. Google may use cookies and web beacons to serve ads based on your prior visits to our website and other sites. You can opt out of personalized advertising by visiting Google Ads Settings.',
+  },
+  {
+    title: "Data Security",
+    content:
+      "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, or destruction.",
+  },
+  {
+    title: "Your Rights Under GDPR",
+    content:
+      "If you are a resident of the European Economic Area (EEA), you have certain data protection rights:",
+    list: [
+      "The right to access, update or delete your information",
+      "The right of rectification",
+      "The right to object",
+      "The right of restriction",
+      "The right to data portability",
+      "The right to withdraw consent",
+    ],
+  },
+  {
+    title: "Changes to This Policy",
+    content:
+      'We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.',
+  },
+  {
+    title: "Contact Us",
+    content:
+      "If you have any questions about this Privacy Policy, please contact us through our Contact page.",
+    link: "/contact",
+  },
+];
 
-export default function PrivacyPage() {
-  const theme = useTheme();
+const lastUpdated = "2026-02-16";
 
-  const pageTitle = "Privacy Policy | PuzzleLogicHub - Your Data Protection";
-  const pageDescription = "Learn how PuzzleLogicHub collects, uses, and protects your personal information. Read our comprehensive privacy policy.";
-  const canonicalUrl = "https://daily-puzzle-solve.vercel.app/privacy";
-  const lastUpdated = new Date().toISOString().split('T')[0];
-
-  return (
-    <>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <link rel="canonical" href={canonicalUrl} />
-        <meta name="keywords" content="privacy policy, data protection, personal information, cookies" />
-
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:image" content="https://daily-puzzle-solve.vercel.app/images/privacy-banner.jpg" />
-
-        {/* Twitter */}
-        <meta property="twitter:card" content="summary" />
-        <meta property="twitter:url" content={canonicalUrl} />
-        <meta property="twitter:title" content={pageTitle} />
-        <meta property="twitter:description" content={pageDescription} />
-
-        {/* Schema.org */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": pageTitle,
-            "description": pageDescription,
-            "url": canonicalUrl,
-            "datePublished": "2025-01-01",
-            "dateModified": lastUpdated
-          })}
-        </script>
-      </Head>
-      
-      <Container maxWidth="lg" sx={{ py: 4 }} itemScope itemType="http://schema.org/WebPage">
-        {/* Page Header */}
-        <Box sx={{ textAlign: 'center', mb: 6 }}>
-          <Typography 
-            variant="h1" 
-            component="h1" 
-            sx={{ 
-              fontWeight: 800,
-              mb: 2,
-              color: 'common.black',
-              fontSize: '2.5rem',
-              [theme.breakpoints.down('md')]: {
-                fontSize: '2rem'
-              }
-            }}
-            itemProp="headline"
-          >
+const Privacy = () => (
+  <>
+    <SEOHead
+      title="Privacy Policy"
+      description="Learn how PuzzleLogicHub collects, uses, and protects your personal information. Read our comprehensive privacy policy."
+      path="/privacy"
+      robots="noindex, follow"
+      jsonLd={{
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Privacy Policy | PuzzleLogicHub",
+        description: "Learn how PuzzleLogicHub collects, uses, and protects your personal information.",
+        url: "https://dailypuzzlesolve.com/privacy",
+        datePublished: "2025-01-01",
+        dateModified: lastUpdated,
+      }}
+    />
+    <main className="pt-6 pb-12">
+      <div className="container max-w-3xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-10"
+        >
+          <h1 className="font-display text-3xl sm:text-4xl font-extrabold mb-2">
             Privacy Policy
-          </Typography>
-          <Typography 
-            variant="h2" 
-            component="h2" 
-            sx={{ 
-              color: 'text.secondary',
-              maxWidth: '700px',
-              mx: 'auto',
-              fontSize: '1.25rem'
-            }}
-          >
-            Last Updated: <time itemProp="dateModified" dateTime={lastUpdated}>{lastUpdated}</time>
-          </Typography>
-        </Box>
+          </h1>
+          <p className="text-muted-foreground">
+            Last Updated:{" "}
+            <time dateTime={lastUpdated}>{lastUpdated}</time>
+          </p>
+        </motion.div>
 
-        {/* Ad Banner */}
-        <Box sx={{ mb: 6 }}>
-          <AdSenseAd
-            slot="4661598458"
-            format="autorelaxed"
-            style={{ display: 'block' }}
-            className="privacy-ad"
-          />
-        </Box>
+        <AdSenseAd slot="4661598458" className="mb-8" />
 
-        {/* Content Sections */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <Box itemScope itemType="http://schema.org/PrivacyPolicy">
-            <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-              Introduction
-            </Typography>
-            <Typography variant="body1" paragraph itemProp="about">
-              At PuzzleLogicHub, we respect your privacy and are committed to protecting your personal
-              information. This Privacy Policy explains how we collect, use, and safeguard your data when
-              you use our website and services.
-            </Typography>
-          </Box>
+        {/* Sections */}
+        <div className="space-y-8">
+          {sections.map((s, i) => (
+            <motion.section
+              key={s.title}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 * i }}
+              className="rounded-xl border border-border bg-card p-6"
+            >
+              <h2 className="font-display text-xl font-bold mb-3">{s.title}</h2>
+              <p className="text-muted-foreground leading-relaxed">{s.content}</p>
+              {s.list && (
+                <ul className="mt-3 list-disc pl-5 space-y-1 text-muted-foreground">
+                  {s.list.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              )}
+              {s.link && (
+                <a
+                  href={s.link}
+                  className="mt-2 inline-block text-primary font-medium hover:underline"
+                >
+                  Go to Contact Page →
+                </a>
+              )}
+            </motion.section>
+          ))}
+        </div>
 
-          <Box>
-            <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-              Information We Collect
-            </Typography>
-            <Typography variant="body1" paragraph>
-              We may collect the following types of information:
-            </Typography>
-            <Box component="ul" sx={{ pl: 3 }}>
-              <li itemProp="acquires">
-                <Typography variant="body1" paragraph>
-                  <strong>Personal Information:</strong> Name, email address when you contact us
-                </Typography>
-              </li>
-              <li itemProp="acquires">
-                <Typography variant="body1" paragraph>
-                  <strong>Usage Data:</strong> Pages visited, time spent, referring website
-                </Typography>
-              </li>
-              <li itemProp="acquires">
-                <Typography variant="body1" paragraph>
-                  <strong>Cookies:</strong> To improve your browsing experience
-                </Typography>
-              </li>
-            </Box>
-          </Box>
+        <AdSenseAd slot="4661598458" className="mt-8" />
+      </div>
+    </main>
+  </>
+);
 
-          <Box>
-            <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-              How We Use Your Information
-            </Typography>
-            <Typography variant="body1" paragraph>
-              We use the information we collect to:
-            </Typography>
-            <Box component="ul" sx={{ pl: 3 }}>
-              <li>Provide and maintain our service</li>
-              <li>Improve user experience</li>
-              <li>Respond to inquiries and support requests</li>
-              <li>Analyze usage patterns</li>
-              <li>Prevent fraudulent activity</li>
-            </Box>
-          </Box>
-
-          <Box>
-            <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-              Data Security
-            </Typography>
-            <Typography variant="body1" paragraph>
-              We implement appropriate technical and organizational measures to protect your personal
-              information against unauthorized access, alteration, or destruction.
-            </Typography>
-          </Box>
-
-          <Box>
-            <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-              Changes to This Policy
-            </Typography>
-            <Typography variant="body1" paragraph>
-              We may update our Privacy Policy from time to time. We will notify you of any changes by
-              posting the new Privacy Policy on this page and updating the &quot;Last Updated&quot; date.
-            </Typography>
-          </Box>
-
-          <Box>
-            <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-              Contact Us
-            </Typography>
-            <Typography variant="body1" paragraph>
-              If you have any questions about this Privacy Policy, please contact us through our
-              Contact page.
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Additional GDPR Compliance Section */}
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h2" component="h2" sx={{ fontWeight: 700, mb: 2, fontSize: '1.8rem' }}>
-            Your Rights Under GDPR
-          </Typography>
-          <Typography variant="body1" paragraph>
-            If you are a resident of the European Economic Area (EEA), you have certain data protection rights:
-          </Typography>
-          <Box component="ul" sx={{ pl: 3 }}>
-            <li>The right to access, update or delete your information</li>
-            <li>The right of rectification</li>
-            <li>The right to object</li>
-            <li>The right of restriction</li>
-            <li>The right to data portability</li>
-            <li>The right to withdraw consent</li>
-          </Box>
-        </Box>
-
-        {/* Ad Banner */}
-        <Box sx={{ mt: 6 }}>
-          <AdSenseAd
-            slot="4661598458"
-            format="autorelaxed"
-            style={{ display: 'block' }}
-            className="privacy-ad"
-          />
-        </Box>
-      </Container>
-    </>
-  );
-}
+export default Privacy;

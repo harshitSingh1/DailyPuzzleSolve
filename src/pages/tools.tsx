@@ -1,441 +1,179 @@
-import { useState, useMemo } from 'react';
-import { GetServerSideProps } from 'next';
-import dynamic from 'next/dynamic';
-import Head from 'next/head';
-import {
-  Box,
-  Container,
-  Typography,
-  TextField,
-  InputAdornment,
-  Card,
-  CardContent,
-  CardMedia,
-  Button,
-  Chip,
-  useTheme,
-  useMediaQuery
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import LaunchIcon from '@mui/icons-material/Launch';
-import { Tool } from '@/types/types';
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Search, ExternalLink } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import SEOHead from "@/components/SEOHead";
+import AdBlock from "@/components/ads/AdBlock";
+import { fetchTools } from "@/lib/api";
+import { SITE_URL, SITE_NAME } from "@/lib/constants";
+import type { Tool } from "@/lib/types";
 
-// Lazy load non-critical components with optimized loading
-const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
-  ssr: false,
-  loading: () => <div style={{ 
-    height: '90px', 
-    background: '#f5f5f5',
-    margin: '16px 0',
-    borderRadius: '4px'
-  }} />
-});
-
-interface ToolsProps {
-  preprocessedTools?: {
-    cleanDesc: string;
-    tags: string[];
-    tool: Tool;
-  }[];
-  error?: string;
+function parseTool(tool: Tool) {
+  const tagRegex = /#(\w+)/g;
+  const tags: string[] = [];
+  const cleanDesc = (tool.subheading || "").replace(tagRegex, (_, tag) => {
+    tags.push(tag);
+    return "";
+  }).trim();
+  return { cleanDesc, tags };
 }
 
-// Pre-process data on server to reduce client-side work
-function preprocessTools(tools: Tool[]) {
-  return tools.map(tool => {
-    const tagRegex = /#(\w+)/g;
-    const tags: string[] = [];
-    const cleanDesc = (tool.subheading || '').replace(tagRegex, (match, tag) => {
-      tags.push(tag);
-      return '';
-    }).trim();
-    
-    return { cleanDesc, tags, tool };
+const today = new Date().toISOString().split("T")[0];
+
+const Tools = () => {
+  const [search, setSearch] = useState("");
+  const { data: tools = [], isLoading, error } = useQuery({
+    queryKey: ["tools"],
+    queryFn: fetchTools,
   });
-}
 
-export default function Tools({ preprocessedTools = [], error }: ToolsProps) {
-  const theme = useTheme();
-  const [searchTerm, setSearchTerm] = useState('');
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const processed = useMemo(() => tools.map((t) => ({ tool: t, ...parseTool(t) })), [tools]);
 
-  // Memoize filtered tools
-  const filteredTools = useMemo(() => {
-    if (!searchTerm) return preprocessedTools;
-
-    const searchWords = searchTerm.toLowerCase().split(' ');
-    return preprocessedTools.filter(({ tool, cleanDesc, tags }) => {
-      const searchContent = `${tool.title.toLowerCase()} ${cleanDesc.toLowerCase()} ${tags.join(' ').toLowerCase()}`;
-      return searchWords.some(word => searchContent.includes(word));
+  const filtered = useMemo(() => {
+    if (!search) return processed;
+    const words = search.toLowerCase().split(" ");
+    return processed.filter(({ tool, cleanDesc, tags }) => {
+      const hay = `${tool.title} ${cleanDesc} ${tags.join(" ")}`.toLowerCase();
+      return words.some((w) => hay.includes(w));
     });
-  }, [searchTerm, preprocessedTools]);
-
-  // Responsive layout
-  const gridTemplateColumns = useMemo(() => {
-    if (isSmallScreen) return 'repeat(auto-fill, minmax(280px, 1fr))';
-    if (isMediumScreen) return 'repeat(auto-fill, minmax(320px, 1fr))';
-    return 'repeat(auto-fill, minmax(350px, 1fr))';
-  }, [isSmallScreen, isMediumScreen]);
-
-  // SEO metadata
-  const pageTitle = "Essential Developer Tools for Puzzle Solvers | LogicPuzzleMaster";
-  const pageDescription = "Discover the best technology tools and resources for puzzle enthusiasts. Enhance your problem-solving skills with our curated collection.";
-  const canonicalUrl = "https://daily-puzzle-solve.vercel.app/tools";
-  const featuredImage = preprocessedTools[0]?.tool.image || "/default-tools-image.jpg";
-
-  if (error) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Typography color="error">{error}</Typography>
-      </Container>
-    );
-  }
+  }, [search, processed]);
 
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <link rel="canonical" href={canonicalUrl} />
+      <SEOHead
+        title="Essential Developer & Puzzle Tools – Free Online Resources"
+        description="Discover the best free developer tools and resources for puzzle enthusiasts. Enhance your problem-solving and coding workflow with our curated collection."
+        path="/tools"
+        dateModified={today}
+        breadcrumbs={[{ name: "Tools", url: `${SITE_URL}/tools` }]}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Developer & Puzzle Tools Collection",
+          url: `${SITE_URL}/tools`,
+          dateModified: today,
+          publisher: { "@type": "Organization", name: SITE_NAME },
+          numberOfItems: tools.length,
+        }}
+      />
+      <main className="pt-6 pb-12">
+        <div className="container">
+          {/* Header */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 text-center">
+            <h1 className="font-display text-3xl font-extrabold sm:text-4xl mb-2">Essential Developer Tools</h1>
+            <p className="mx-auto max-w-lg text-muted-foreground">
+              Boost your puzzle-solving and coding skills with these hand-picked tools
+            </p>
+          </motion.div>
 
-        {/* Open Graph */}
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content={featuredImage} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+          {/* Search */}
+          <div className="mx-auto mb-8 max-w-md relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search tools..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 rounded-full"
+            />
+          </div>
 
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta name="twitter:description" content={pageDescription} />
-        <meta name="twitter:image" content={featuredImage} />
+          {/* Top leaderboard */}
+          <AdBlock slot="5934836566" format="leaderboard" lazy={false} minHeight={90} className="mb-8" />
 
-        {/* Schema.org */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "name": "Developer Tools Collection",
-            "description": pageDescription,
-            "url": canonicalUrl,
-            "numberOfItems": preprocessedTools.length,
-            "itemListElement": preprocessedTools.slice(0, 5).map(({ tool }, index) => ({
-              "@type": "ListItem",
-              "position": index + 1,
-              "item": {
-                "@type": "SoftwareApplication",
-                "name": tool.title,
-                "description": tool.subheading,
-                "url": tool.url,
-                "applicationCategory": "DeveloperTool"
-              }
-            }))
-          })}
-        </script>
-      </Head>
-
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Page Header */}
-        <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <Typography
-            variant="h3"
-              component="h1"
-            sx={{
-              fontWeight: 800,
-              mb: 2,
-              color: 'common.black',
-              letterSpacing: '-0.5px',
-              fontSize: { xs: '2rem', md: '2.5rem' }
-            }}
-          >
-            Essential Developer Tools
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ 
-              color: 'text.secondary',
-              maxWidth: '700px',
-              mx: 'auto',
-              mb: 3
-            }}
-          >
-            Boost your puzzle-solving skills with these carefully selected tools
-          </Typography>
-        </Box>
-
-        {/* Search Bar */}
-        <Box component="section" sx={{ mb: 6 }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Search tools..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon color="primary" />
-                </InputAdornment>
-              ),
-              sx: {
-                borderRadius: '50px',
-                backgroundColor: 'background.paper',
-                boxShadow: theme.shadows[1],
-                '&:hover': {
-                  boxShadow: theme.shadows[3]
-                },
-                transition: 'all 0.3s ease',
-                height: '56px'
-              },
-              'aria-label': 'Search developer tools'
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: 'transparent'
-                },
-                '&:hover fieldset': {
-                  borderColor: 'transparent'
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: 'primary.main',
-                  boxShadow: `0 0 0 2px ${theme.palette.primary.light}`
-                }
-              }
-            }}
-          />
-        </Box>
-
-        {/* Ad Banner */}
-        <Box component="section">
-          <AdSenseAd 
-            slot="4661598458" 
-            format="autorelaxed" 
-            style={{ display: 'block' }}
-            aria-label="Advertisement"
-          />
-        </Box>
-
-        {/* Tools Grid */}
-        <Box 
-          component="section"
-          sx={{ 
-            display: 'grid',
-            gridTemplateColumns,
-            gap: 4,
-            my: 4
-          }}
-        >
-          {filteredTools.length > 0 ? (
-            filteredTools.map(({ tool, cleanDesc, tags }) => (
-              <Card 
-                key={tool._id}
-                sx={{ 
-                  display: 'flex',
-                  flexDirection: 'column',
-                  position: 'relative',
-                  transition: 'transform 0.3s, box-shadow 0.3s',
-                  '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: theme.shadows[6]
-                  }
-                }}
-                itemScope
-                itemType="http://schema.org/SoftwareApplication"
-              >
-                {/* Tool Image and Title */}
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  p: 3,
-                  pb: 0
-                }}>
-                  <CardMedia
-                    component="img"
-                    image={tool.image || '/tool-placeholder.png'}
-                    alt={`${tool.title} logo`}
-                    sx={{ 
-                      width: 60, 
-                      height: 60, 
-                      objectFit: 'contain',
-                      mr: 2,
-                      borderRadius: '8px'
-                    }}
-                    loading="lazy"
-                    decoding="async"
-                    fetchPriority="low"
-                    itemProp="image"
-                  />
-                  <Typography 
-                    variant="h3"
-                    sx={{ 
-                      fontWeight: 600,
-                      flexGrow: 1,
-                      color: 'text.primary',
-                      fontSize: '1.1rem'
-                    }}
-                    itemProp="name"
-                  >
-                    {tool.title}
-                  </Typography>
-                </Box>
-
-                {/* Tool Description */}
-                <CardContent sx={{ pt: 2, pb: '16px !important' }}>
-                  <Typography
-                    variant="body2" 
-                    color="text.secondary"
-                    sx={{ 
-                      mb: 2,
-                      minHeight: '4em'
-                    }}
-                    itemProp="description"
-                  >
-                    {cleanDesc}
-                  </Typography>
-
-                  {/* Tags */}
-                  {tags.length > 0 && (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-                      {tags.map((tag, i) => (
-                        <Chip
-                          key={i}
-                          label={`#${tag}`}
-                          size="small"
-                          sx={{ 
-                            backgroundColor: 'primary.light',
-                            color: 'white',
-                            fontSize: '0.7rem',
-                            height: '24px'
-                          }}
-                          itemProp="keywords"
-                        />
-                      ))}
-                    </Box>
-                  )}
-
-                  {/* Visit Button */}
-                  <Button
-                    variant="contained"
-                    href={tool.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    endIcon={<LaunchIcon />}
-                    sx={{
-                      width: '100%',
-                      fontWeight: 600,
-                      borderRadius: '8px',
-                      '&:hover': {
-                        backgroundColor: 'primary.dark'
-                      },
-                      minHeight: '44px'
-                    }}
-                    aria-label={`Visit ${tool.title}`}
-                    itemProp="url"
-                  >
-                    Visit Tool
-                  </Button>
-                </CardContent>
-              </Card>
-            ))
+          {/* Tools grid */}
+          {isLoading ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="flex flex-col rounded-xl border border-border bg-card">
+                  <div className="flex items-center gap-3 p-4 pb-0">
+                    <Skeleton className="h-14 w-14 rounded-lg" />
+                    <Skeleton className="h-5 w-2/3" />
+                  </div>
+                  <div className="flex flex-col gap-3 p-4 pt-2">
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-4 w-1/2" />
+                    <Skeleton className="h-9 w-full mt-1" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="flex flex-col items-center gap-3 py-12 text-center">
+              <p className="text-muted-foreground">Server is waking up, retrying...</p>
+              <Button variant="outline" size="sm" onClick={() => window.location.reload()}>Try Again</Button>
+            </div>
+          ) : filtered.length === 0 ? (
+            <p className="text-center text-muted-foreground py-12">
+              {search ? `No tools found matching "${search}"` : "No tools available at the moment."}
+            </p>
           ) : (
-            <Typography 
-              variant="body1" 
-              align="center" 
-              sx={{ 
-                py: 4,
-                color: 'text.secondary',
-                gridColumn: '1 / -1'
-              }}
-            >
-              {searchTerm 
-                ? `No tools found matching "${searchTerm}"` 
-                : 'No tools available at the moment.'}
-            </Typography>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {filtered.map(({ tool, cleanDesc, tags }, i) => (
+                <motion.div
+                  key={tool._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.03 * i }}
+                  className="group flex flex-col rounded-xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <div className="flex items-center gap-3 p-4 pb-0">
+                    <img
+                      src={tool.image || "/placeholder.svg"}
+                      alt={`${tool.title} logo`}
+                      className="h-14 w-14 rounded-lg object-contain"
+                      loading="lazy"
+                    />
+                    <h2 className="font-display text-lg font-bold">{tool.title}</h2>
+                  </div>
+                  <div className="flex flex-1 flex-col p-4 pt-2">
+                    <p className="mb-3 flex-1 text-sm text-muted-foreground line-clamp-3">{cleanDesc}</p>
+                    {tags.length > 0 && (
+                      <div className="mb-3 flex flex-wrap gap-1">
+                        {tags.map((tag) => (
+                          <Badge key={tag} variant="secondary" className="text-xs">
+                            #{tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                    <Button asChild className="w-full gap-1.5">
+                      <a href={tool.url} target="_blank" rel="noopener noreferrer">
+                        Visit Tool <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </Button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           )}
-        </Box>
 
-        {/* Informational Section */}
-        <Box component="section" sx={{ mt: 6, mb: 4 }}>
-          <Typography variant="h2" component="h2" sx={{ 
-            mb: 2, 
-            fontSize: '1.5rem', 
-            textAlign: 'center',
-            color: 'common.black'
-          }}>
-            About Our Developer Tools Collection
-          </Typography>
-          <Typography variant="body1" sx={{ 
-            mb: 2, 
-            textAlign: 'center', 
-            maxWidth: '800px', 
-            mx: 'auto'
-          }}>
-            Our carefully curated selection of developer tools is designed to enhance your puzzle-solving workflow. 
-            Each tool has been selected for its reliability, performance, and relevance to puzzle enthusiasts and 
-            competitive programmers. We regularly update this collection with new, high-quality tools that can help 
-            you work more efficiently.
-          </Typography>
-        </Box>
+          {/* Ad before SEO blurb */}
+          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
 
-        {/* Bottom Ad */}
-        <Box component="section">
-          <AdSenseAd 
-            slot="4661598458" 
-            format="autorelaxed" 
-            style={{ display: 'block' }}
-            aria-label="Advertisement"
-          />
-        </Box>
-      </Container>
+          {/* SEO blurb */}
+          <div className="mx-auto mt-8 max-w-2xl rounded-xl border border-border bg-muted/30 p-6 text-center">
+            <h2 className="font-display text-xl font-bold mb-2">About Our Developer Tools Collection</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Our hand-picked developer tools enhance your puzzle-solving and coding workflow.
+              Each tool is selected for reliability, performance, and real-world usefulness for puzzle enthusiasts and competitive programmers.
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              {["free developer tools", "coding tools online", "puzzle solving tools", "programmer utilities", "productivity tools for developers"].map((q) => (
+                <span key={q} className="rounded-full bg-background border border-border px-3 py-1 text-xs text-muted-foreground">{q}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom rectangle */}
+          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-4" />
+        </div>
+      </main>
     </>
   );
-}
-
-export const getServerSideProps: GetServerSideProps<ToolsProps> = async ({ res }) => {
-  try {
-    // Set aggressive caching headers
-    res.setHeader(
-      'Cache-Control',
-      'public, s-maxage=86400, stale-while-revalidate=3600'
-    );
-
-    const apiUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://daily-puzzle-solve.vercel.app/api/tools' 
-      : 'http://localhost:3000/api/tools';
-
-    const response = await fetch(apiUrl, {
-      headers: {
-        'Cache-Control': 'no-cache'
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch tools');
-    }
-    
-    const { data } = await response.json();
-    
-    // Pre-process data on server
-    const preprocessedTools = preprocessTools(data || []);
-
-    return {
-      props: {
-        preprocessedTools,
-      },
-    };
-  } catch (error) {
-    console.error('Error in getServerSideProps:', error);
-    return {
-      props: {
-        error: error instanceof Error ? error.message : 'Failed to load tools',
-        preprocessedTools: []
-      },
-    };
-  }
 };
+
+export default Tools;

@@ -1,29 +1,21 @@
-import { useState, useEffect, useMemo } from 'react';
-import { GetServerSideProps } from 'next';
-import dynamic from 'next/dynamic';
-import Head from 'next/head';
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Box,
-  Container,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-  Avatar,
-  Chip,
   Pagination,
-  useMediaQuery,
-  useTheme,
-  Skeleton
-} from '@mui/material';
-import LaunchIcon from '@mui/icons-material/Launch';
-import Image from 'next/image';
-
-// Lazy load non-critical components
-const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), {
-  ssr: false,
-  loading: () => <div style={{ height: '90px', background: '#f5f5f5' }} />
-});
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import SEOHead from "@/components/SEOHead";
+import AdBlock from "@/components/ads/AdBlock";
+import InContentAd from "@/components/ads/InContentAd";
+import { SITE_URL, SITE_NAME } from "@/lib/constants";
 
 interface BlogPost {
   id: number;
@@ -34,501 +26,254 @@ interface BlogPost {
   cover_image: string;
   reading_time_minutes: number;
   tag_list: string[];
-  user: {
-    name: string;
-    profile_image: string;
-  };
+  user: { name: string; profile_image: string };
 }
 
-interface BlogProps {
-  featuredPost: BlogPost | null;
-  blogPosts: BlogPost[];
-  error?: string;
+async function fetchBlogPosts(): Promise<BlogPost[]> {
+  const res = await fetch(
+    "https://dev.to/api/articles?tags=technology,job,programming,coding&top=7"
+  );
+  if (!res.ok) throw new Error("Failed to fetch blog posts");
+  return res.json();
 }
 
-export default function BlogPage({ featuredPost, blogPosts, error }: BlogProps) {
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [loading, setLoading] = useState(!featuredPost);
+const POSTS_PER_PAGE = 6;
+const today = new Date().toISOString().split("T")[0];
+
+const Blog = () => {
   const [page, setPage] = useState(1);
-  const postsPerPage = 6;
 
-  // Memoize filtered posts
-  const filteredPosts = useMemo(() => blogPosts, [blogPosts]);
+  const { data: posts = [], isLoading, error } = useQuery({
+    queryKey: ["blog-posts"],
+    queryFn: fetchBlogPosts,
+    staleTime: 1000 * 60 * 30,
+  });
 
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
-  const currentPosts = useMemo(() => (
-    filteredPosts.slice((page - 1) * postsPerPage, page * postsPerPage)
-  ), [filteredPosts, page, postsPerPage]);
+  const featuredPost = posts[0] ?? null;
+  const remainingPosts = posts.slice(1);
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const totalPages = Math.ceil(remainingPosts.length / POSTS_PER_PAGE);
+  const currentPosts = useMemo(
+    () => remainingPosts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE),
+    [remainingPosts, page]
+  );
 
-  useEffect(() => {
-    if (featuredPost) {
-      setLoading(false);
-    }
-  }, [featuredPost]);
-
-  if (error) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Typography color="error">{error}</Typography>
-      </Container>
-    );
-  }
-
-  const pageTitle = "Tech Blog & Programming Articles | LogicPuzzleMaster";
-  const pageDescription = "Stay updated with the latest technology trends, programming tips, and coding articles from the DEV community. Latest Technical Blogs and articles";
-  const canonicalUrl = "https://daily-puzzle-solve.vercel.app/blog";
-  const featuredImage = featuredPost?.cover_image || "https://daily-puzzle-solve.vercel.app/default-blog-image.jpg";
+  const articleSchema = featuredPost
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: featuredPost.title,
+        description: featuredPost.description,
+        url: featuredPost.url,
+        datePublished: featuredPost.readable_publish_date,
+        dateModified: today,
+        author: { "@type": "Person", name: featuredPost.user.name },
+        publisher: { "@type": "Organization", name: SITE_NAME, logo: { "@type": "ImageObject", url: `${SITE_URL}/images/logo1.png` } },
+        image: featuredPost.cover_image || `${SITE_URL}/images/hero.jpeg`,
+      }
+    : undefined;
 
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <link rel="canonical" href={canonicalUrl} />
+      <SEOHead
+        title="Tech & Programming Blog – Trending Articles for Developers"
+        description="Stay updated with the latest technology trends, programming tutorials, and coding articles curated for puzzle enthusiasts and developers."
+        path="/blog"
+        type="website"
+        dateModified={today}
+        breadcrumbs={[{ name: "Blog", url: `${SITE_URL}/blog` }]}
+        jsonLd={articleSchema}
+      />
 
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:image" content={featuredImage} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+      <main className="pt-6 pb-12">
+        <div className="container max-w-5xl">
+          <h1 className="mb-2 text-center font-display text-3xl font-extrabold text-foreground sm:text-4xl">
+            Trending Tech Articles
+          </h1>
+          <p className="mb-8 text-center text-sm text-muted-foreground">
+            Curated programming & technology content, updated regularly
+          </p>
 
-        {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={canonicalUrl} />
-        <meta property="twitter:title" content={pageTitle} />
-        <meta property="twitter:description" content={pageDescription} />
-        <meta property="twitter:image" content={featuredImage} />
-
-        {/* Schema.org */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Blog",
-            "name": pageTitle,
-            "description": pageDescription,
-            "url": canonicalUrl,
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": `${canonicalUrl}?search={search_term_string}`,
-              "query-input": "required name=search_term_string"
-            }
-          })}
-        </script>
-      </Head>
-
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Typography 
-          variant="h3" 
-          component="h1" 
-          sx={{ 
-            fontWeight: 800,
-            mb: 4,
-            color: 'common.black',
-            textAlign: 'center',
-            [theme.breakpoints.down('md')]: {
-              fontSize: '2rem'
-            }
-          }}
-        >
-          Trending Tech Articles
-        </Typography>
-
-        {loading ? (
-          <Skeleton variant="rectangular" width="100%" height={300} sx={{ mb: 4 }} />
-        ) : featuredPost && (
-          <Card
-            sx={{
-              display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              mb: 6,
-              boxShadow: 3,
-              '&:hover': {
-                transform: 'translateY(-3px)',
-                boxShadow: 6
-              },
-              transition: 'all 0.3s ease'
-            }}
-            itemScope
-            itemType="http://schema.org/BlogPosting"
-          >
-            {featuredPost.cover_image && (
-              <Box
-                sx={{
-                  width: { xs: '100%', md: '40%' },
-                  height: { xs: 200, md: 'auto' },
-                  overflow: 'hidden',
-                  position: 'relative'
-                }}
-              >
-                <Image
+          {/* Featured post */}
+          {isLoading ? (
+            <Skeleton className="mb-8 h-80 w-full rounded-xl" />
+          ) : featuredPost ? (
+            <motion.article
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8 overflow-hidden rounded-xl border border-border bg-card shadow-sm md:flex"
+              itemScope
+              itemType="https://schema.org/Article"
+            >
+              {featuredPost.cover_image && (
+                <img
                   src={featuredPost.cover_image}
                   alt={featuredPost.title}
-                  fill
-                  sizes="(max-width: 900px) 100vw, 40vw"
-                  style={{
-                    objectFit: 'cover'
-                  }}
-                  priority
+                  className="h-56 w-full object-cover md:h-auto md:w-2/5"
+                  loading="eager"
                   itemProp="image"
                 />
-              </Box>
-            )}
-            <CardContent
-              sx={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                p: 4
-              }}
-            >
-              <Chip
-                label="Today's Trending"
-                size="small"
-                sx={{
-                  backgroundColor: 'primary.light',
-                  color: 'white',
-                  mb: 2,
-                  alignSelf: 'flex-start'
-                }}
-              />
-              <Typography
-                variant="h4"
-                component="h2"
-                sx={{
-                  fontWeight: 700,
-                  mb: 2,
-                  color: 'text.primary'
-                }}
-                itemProp="headline"
-              >
-                {featuredPost.title}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  mb: 3,
-                  color: 'text.secondary',
-                  flexGrow: 1
-                }}
-                itemProp="description"
-              >
-                {featuredPost.description}
-              </Typography>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  mt: 'auto',
-                  flexDirection: { xs: 'column', sm: 'row' },
-                  gap: 2
-                }}
-                itemProp="author"
-                itemScope
-                itemType="http://schema.org/Person"
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar
-                    src={featuredPost.user.profile_image}
-                    alt={featuredPost.user.name}
-                    sx={{ width: 40, height: 40, mr: 2 }}
-                    itemProp="image"
-                  />
-                  <Box>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }} itemProp="name">
-                      {featuredPost.user.name}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }} itemProp="datePublished">
-                      {featuredPost.readable_publish_date} · {featuredPost.reading_time_minutes} min read
-                    </Typography>
-                  </Box>
-                </Box>
-                <Button
-                  variant="contained"
-                  href={featuredPost.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  endIcon={<LaunchIcon />}
-                  sx={{
-                    borderRadius: '50px',
-                    px: 3,
-                    fontWeight: 600,
-                    width: { xs: '100%', sm: 'auto' }
-                  }}
-                  aria-label={`Read article: ${featuredPost.title}`}
-                  itemProp="url"
-                >
-                  Read Article
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        )}
-
-        <Box sx={{ mb: 6 }}>
-          <AdSenseAd
-            slot="9391098809"
-            format="fluid"
-            layout="in-article"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
-        </Box>
-
-
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
-            gap: 4,
-            mb: 4
-          }}
-          itemScope
-          itemType="http://schema.org/ItemList"
-        >
-          {loading ? (
-            Array.from(new Array(6)).map((_, index) => (
-              <Card key={index} sx={{ width: '100%', mb: 2 }}>
-                <Skeleton variant="rectangular" height={140} />
-                <CardContent>
-                  <Skeleton width="60%" height={24} />
-                  <Skeleton width="100%" height={72} sx={{ my: 1 }} />
-                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <Skeleton variant="circular" width={40} height={40} />
-                    <Box sx={{ ml: 2, flexGrow: 1 }}>
-                      <Skeleton width="80%" height={20} />
-                      <Skeleton width="60%" height={16} sx={{ mt: 0.5 }} />
-                    </Box>
-                  </Box>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-            currentPosts.map((post, index) => (
-              <div key={post.id} itemProp="itemListElement" itemScope itemType="http://schema.org/ListItem">
-                <meta itemProp="position" content={String(index + 1)} />
-                <Card
-                  sx={{
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    '&:hover': {
-                      transform: 'translateY(-5px)',
-                      boxShadow: 3
-                    },
-                    transition: 'all 0.3s ease'
-                  }}
-                  itemScope
-                  itemType="http://schema.org/BlogPosting"
-                >
-                  {post.cover_image && (
-                    <Box sx={{ 
-                      height: 140, 
-                      overflow: 'hidden',
-                      position: 'relative'
-                    }}>
-                      <Image
-                        src={post.cover_image}
-                        alt={post.title}
-                        fill
-                        sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
-                        style={{
-                          objectFit: 'cover'
-                        }}
-                        priority={index < 3}
-                        itemProp="image"
-                      />
-                    </Box>
-                  )}
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography
-                      variant="h6"
-                      component="h3"
-                      sx={{
-                        fontWeight: 600,
-                        mb: 1,
-                        color: 'text.primary',
-                        minHeight: '3em',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
-                      }}
-                      itemProp="headline"
-                    >
-                      {post.title}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        mb: 2,
-                        color: 'text.secondary',
-                        minHeight: '4em',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
-                      }}
-                      itemProp="description"
-                    >
-                      {post.description}
-                    </Typography>
-                    {post.tag_list.length > 0 && (
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-                        {post.tag_list.slice(0, 3).map((tag) => (
-                          <Chip
-                            key={tag}
-                            label={tag}
-                            size="small"
-                            sx={{
-                              backgroundColor: 'grey.200',
-                              color: 'text.secondary',
-                              fontSize: '0.7rem'
-                            }}
-                            itemProp="keywords"
-                          />
-                        ))}
-                      </Box>
-                    )}
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        mt: 'auto'
-                      }}
-                      itemProp="author"
-                      itemScope
-                      itemType="http://schema.org/Person"
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar
-                          src={post.user.profile_image}
-                          alt={post.user.name}
-                          sx={{ width: 32, height: 32, mr: 1 }}
-                          itemProp="image"
-                        />
-                        <Typography variant="body2" sx={{ fontWeight: 500 }} itemProp="name">
-                          {post.user.name}
-                        </Typography>
-                      </Box>
-                      <Typography variant="caption" sx={{ color: 'text.secondary' }} itemProp="datePublished">
-                        {post.readable_publish_date}
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                  <Box sx={{ p: 2, pt: 0 }}>
-                    <Button
-                      variant="outlined"
-                      href={post.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      endIcon={<LaunchIcon />}
-                      fullWidth
-                      sx={{
-                        borderRadius: '50px',
-                        fontWeight: 600
-                      }}
-                      aria-label={`Read article: ${post.title}`}
-                      itemProp="url"
-                    >
-                      Read ({post.reading_time_minutes} min)
-                    </Button>
-                  </Box>
-                </Card>
+              )}
+              <div className="flex flex-1 flex-col justify-between p-6">
+                <div>
+                  <span className="mb-2 inline-block rounded-full bg-primary/10 px-3 py-0.5 text-xs font-semibold text-primary">
+                    Featured
+                  </span>
+                  <h2 className="mb-2 font-display text-xl font-bold text-foreground line-clamp-2" itemProp="headline">
+                    {featuredPost.title}
+                  </h2>
+                  <p className="mb-4 text-sm text-muted-foreground line-clamp-3" itemProp="description">
+                    {featuredPost.description}
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <img
+                      src={featuredPost.user.profile_image}
+                      alt={featuredPost.user.name}
+                      className="h-8 w-8 rounded-full"
+                    />
+                    <div className="text-xs">
+                      <p className="font-semibold text-foreground" itemProp="author">{featuredPost.user.name}</p>
+                      <p className="text-muted-foreground">
+                        {featuredPost.readable_publish_date} · {featuredPost.reading_time_minutes} min read
+                      </p>
+                    </div>
+                  </div>
+                  <Button asChild className="gap-2 rounded-full font-display font-semibold">
+                    <a href={featuredPost.url} target="_blank" rel="noopener noreferrer">
+                      Read Article <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
               </div>
-            ))
+            </motion.article>
+          ) : null}
+
+          {/* In-article ad after featured post */}
+          <InContentAd className="mb-6" />
+
+          {/* Posts grid */}
+          {error ? (
+            <p className="py-12 text-center text-muted-foreground">
+              Failed to load articles. Please try again later.
+            </p>
+          ) : (
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {isLoading
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="space-y-3">
+                      <Skeleton className="h-40 w-full rounded-xl" />
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                    </div>
+                  ))
+                : currentPosts.map((post, i) => (
+                    <motion.article
+                      key={post.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      className="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+                    >
+                      {post.cover_image && (
+                        <img
+                          src={post.cover_image}
+                          alt={post.title}
+                          className="h-40 w-full object-cover"
+                          loading="lazy"
+                        />
+                      )}
+                      <div className="flex flex-1 flex-col p-4">
+                        <h3 className="mb-1 font-display text-base font-bold text-foreground line-clamp-2">
+                          {post.title}
+                        </h3>
+                        <p className="mb-3 text-sm text-muted-foreground line-clamp-2">
+                          {post.description}
+                        </p>
+                        {post.tag_list.length > 0 && (
+                          <div className="mb-3 flex flex-wrap gap-1">
+                            {post.tag_list.slice(0, 3).map((tag) => (
+                              <span key={tag} className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                                #{tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        <div className="mt-auto flex items-center justify-between text-xs text-muted-foreground">
+                          <div className="flex items-center gap-1.5">
+                            <img src={post.user.profile_image} alt="" className="h-5 w-5 rounded-full" />
+                            <span>{post.user.name}</span>
+                          </div>
+                          <span>{post.readable_publish_date}</span>
+                        </div>
+                      </div>
+                      <div className="border-t border-border p-3">
+                        <Button asChild variant="outline" className="w-full gap-2 rounded-full font-display font-semibold">
+                          <a href={post.url} target="_blank" rel="noopener noreferrer">
+                            Read ({post.reading_time_minutes} min) <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        </Button>
+                      </div>
+                    </motion.article>
+                  ))}
+            </div>
           )}
-        </Box>
 
-        {!loading && filteredPosts.length > 0 && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handlePageChange}
-              color="primary"
-              size={isSmallScreen ? 'small' : 'medium'}
-              sx={{
-                '& .MuiPaginationItem-root': {
-                  fontWeight: 600
-                }
-              }}
-            />
-          </Box>
-        )}
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-8">
+              <Pagination>
+                <PaginationContent>
+                  {page > 1 && (
+                    <PaginationItem>
+                      <PaginationPrevious href="#" onClick={(e) => { e.preventDefault(); setPage(page - 1); window.scrollTo({ top: 0, behavior: "smooth" }); }} />
+                    </PaginationItem>
+                  )}
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <PaginationItem key={i}>
+                      <PaginationLink
+                        href="#"
+                        isActive={page === i + 1}
+                        onClick={(e) => { e.preventDefault(); setPage(i + 1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  {page < totalPages && (
+                    <PaginationItem>
+                      <PaginationNext href="#" onClick={(e) => { e.preventDefault(); setPage(page + 1); window.scrollTo({ top: 0, behavior: "smooth" }); }} />
+                    </PaginationItem>
+                  )}
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
 
-        <Box sx={{ mt: 6 }}>
-          <Typography variant="h2" component="h2" sx={{ mb: 2, fontSize: '1.5rem', textAlign: 'center',color: 'common.black' }}>
-            About Our Tech Blogs
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 4, textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
-            Our tech blog brings you the latest insights, tutorials, and trends in programming and technology. 
-            We curate content from top developers and industry experts to help you stay ahead in your coding journey. 
-            From beginner tips to advanced techniques, our articles cover a wide range of topics to support developers at all levels.
-          </Typography>
-        </Box>
+          {/* Ad before SEO content */}
+          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
 
-        <Box sx={{ mt: 6 }}>
-          <AdSenseAd
-            slot="9391098809"
-            format="fluid"
-            layout="in-article"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
-        </Box>
-      </Container>
+          {/* SEO content */}
+          <div className="mt-8 rounded-xl border border-border bg-muted/30 p-6">
+            <h2 className="mb-2 font-display text-xl font-bold text-foreground">About Our Tech & Programming Blog</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              Our blog curates the latest insights, tutorials, and trends in programming, technology, and software development.
+              We source top articles from leading developers to help puzzle enthusiasts and coders stay ahead of the curve.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {["programming tutorials", "technology trends", "coding tips", "developer tools", "software engineering"].map((q) => (
+                <span key={q} className="rounded-full bg-background border border-border px-3 py-1 text-xs text-muted-foreground">{q}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom rectangle */}
+          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-4" />
+        </div>
+      </main>
     </>
   );
-}
-
-export const getServerSideProps: GetServerSideProps<BlogProps> = async ({ res }) => {
-  try {
-    // Set aggressive caching headers
-    res.setHeader(
-      'Cache-Control',
-      'public, s-maxage=3600, stale-while-revalidate=1800'
-    );
-    res.setHeader('Expires', new Date(Date.now() + 3600000).toUTCString());
-
-    const [featuredResponse, monthlyResponse] = await Promise.all([
-      fetch('https://dev.to/api/articles?tags=technology,job,programming,coding&top=1'),
-      fetch('https://dev.to/api/articles?tags=technology,job,programming,coding&top=7')
-    ]);
-
-    const [featuredData] = await featuredResponse.json();
-    const monthlyData = await monthlyResponse.json();
-
-    const filteredMonthly = monthlyData.filter((post: BlogPost) => 
-      post.id !== featuredData?.id
-    );
-    
-    const finalPosts = filteredMonthly.length < monthlyData.length
-      ? [...filteredMonthly, ...monthlyData.slice(30, 31)]
-      : filteredMonthly.slice(0, 30);
-
-    return {
-      props: {
-        featuredPost: featuredData || null,
-        blogPosts: finalPosts || []
-      },
-    };
-  } catch (error) {
-    console.error('Error in getServerSideProps:', error);
-    return {
-      props: {
-        featuredPost: null,
-        blogPosts: [],
-        error: error instanceof Error ? error.message : 'Failed to load blog posts'
-      },
-    };
-  }
 };
+
+export default Blog;

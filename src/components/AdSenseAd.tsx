@@ -1,70 +1,72 @@
-// components/AdSenseAd.tsx
-import Script from 'next/script';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
+
+const ADSENSE_ID = "ca-pub-5138062904998916";
 
 interface AdSenseAdProps {
   slot: string;
-  layout?: string;
   format?: string;
-  style?: React.CSSProperties;
+  layout?: string;
   layoutKey?: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export default function AdSenseAd({ 
-  slot, 
-  layout = '', 
-  format = 'auto', 
-  style = { display: 'block' },
-  layoutKey = '',
-  className = ''
-}: AdSenseAdProps) {
-  const adRef = useRef<HTMLDivElement>(null);
-  const adInitialized = useRef(false);
+declare global {
+  interface Window {
+    adsbygoogle: Record<string, unknown>[];
+  }
+}
+
+const AdSenseAd = ({
+  slot,
+  format = "auto",
+  layout = "",
+  layoutKey = "",
+  className = "",
+  style = { display: "block" },
+}: AdSenseAdProps) => {
+  const adRef = useRef<HTMLModElement>(null);
+  const initialized = useRef(false);
 
   useEffect(() => {
-    if (!adInitialized.current && adRef.current) {
+    // Load the AdSense script once
+    if (!document.querySelector(`script[src*="adsbygoogle"]`)) {
+      const script = document.createElement("script");
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`;
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      document.head.appendChild(script);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!initialized.current && adRef.current) {
       try {
-        const adElement = adRef.current.querySelector('.adsbygoogle');
-        if (adElement && !adElement.getAttribute('data-adsbygoogle-status')) {
+        if (!adRef.current.getAttribute("data-adsbygoogle-status")) {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
-          adInitialized.current = true;
+          initialized.current = true;
         }
       } catch (err) {
-        console.error('AdSense error:', err);
+        console.error("AdSense error:", err);
       }
     }
-
-    return () => {
-    };
   }, []);
 
   return (
-    <div 
-      ref={adRef}
-      className={`ad-container ${className}`} 
-      style={{ margin: '20px 0', ...style }}
-    >
-      <Script 
-        id={`adsense-script-${slot}`}
-        async 
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
-        crossOrigin="anonymous"
-        strategy="lazyOnload"
-        onError={(e) => {
-          console.error('AdSense script failed to load', e);
-        }}
-      />
+    <div className={`ad-container mx-auto my-6 text-center ${className}`}>
       <ins
+        ref={adRef}
         className="adsbygoogle"
         style={style}
-        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_ID}
+        data-ad-client={ADSENSE_ID}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive="true"
-        data-ad-layout={layout}
-        data-ad-layout-key={layoutKey}
+        {...(layout && { "data-ad-layout": layout })}
+        {...(layoutKey && { "data-ad-layout-key": layoutKey })}
       />
     </div>
   );
-}
+};
+
+export default AdSenseAd;

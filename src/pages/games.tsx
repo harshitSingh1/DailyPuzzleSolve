@@ -1,27 +1,11 @@
-import { useState, useRef } from 'react';
-import Head from 'next/head';
-import {
-  Box,
-  Container,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-  Chip,
-  useTheme,
-  IconButton
-} from '@mui/material';
-import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import dynamic from 'next/dynamic';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Image from 'next/image';
-
-// Lazy load AdSense component
-const AdSenseAd = dynamic(() => import('@/components/AdSenseAd'), { 
-  ssr: false,
-  loading: () => <div style={{ height: '100px', background: '#f5f5f5' }} />
-});
+import { useState, useRef } from "react";
+import { motion } from "framer-motion";
+import { Gamepad2, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import SEOHead from "@/components/SEOHead";
+import AdBlock from "@/components/ads/AdBlock";
+import { SITE_URL, SITE_NAME } from "@/lib/constants";
 
 interface Game {
   id: string;
@@ -32,439 +16,216 @@ interface Game {
   tags: string[];
 }
 
-export default function GamesPage() {
-  const theme = useTheme();
+const GAMES: Game[] = [
+  {
+    id: "1",
+    title: "Chess",
+    description: "Master the king of strategy games. Sharpen focus, foresight, and mental stamina in every move.",
+    image: "/images/chess.jpg",
+    url: "https://www.chess.com/",
+    tags: ["Strategy", "Puzzle", "Board"],
+  },
+  {
+    id: "2",
+    title: "Sudoku",
+    description: "Train your brain with numbers. Classic Sudoku boosts logic, patience, and pattern recognition.",
+    image: "/images/sudoku.jpeg",
+    url: "https://sudoku.com/",
+    tags: ["Focus", "Logic", "Puzzle"],
+  },
+  {
+    id: "3",
+    title: "Connect 4",
+    description: "Think ahead and block your rival. Connect 4 is a fun and fast-paced tactical duel of minds.",
+    image: "/images/connect-4.png",
+    url: "https://www.sudoku.com",
+    tags: ["Board", "Strategy", "Skill"],
+  },
+  {
+    id: "4",
+    title: "Checkers",
+    description: "Simple yet smart. Checkers trains strategic thinking and helps develop sharp decision-making skills.",
+    image: "/images/Checkers.png",
+    url: "https://www.247checkers.com/",
+    tags: ["Board", "Logic", "Strategy"],
+  },
+  {
+    id: "5",
+    title: "Minesweeper",
+    description: "Uncover the field without blowing up! A perfect logic test packed into a classic brain teaser.",
+    image: "/images/minesweepers.jpeg",
+    url: "https://minesweeper.online",
+    tags: ["Logic", "Focus", "Brain"],
+  },
+  {
+    id: "6",
+    title: "2048 Game",
+    description: "Swipe to win! Merge tiles, reach 2048, and test your tactical thinking under pressure.",
+    image: "/images/game2048.jpg",
+    url: "https://2048game.com/",
+    tags: ["Strategy", "Logic", "Brain"],
+  },
+];
+
+const ALL_TAGS = [...new Set(GAMES.flatMap((g) => g.tags))];
+const today = new Date().toISOString().split("T")[0];
+
+const Games = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const tagsContainerRef = useRef<HTMLDivElement>(null);
-  
-  const games: Game[] = [
-    {
-      id: '1',
-      title: 'Chess',
-      description: 'Master the king of strategy games—sharpen focus, foresight, and mental stamina in every move.',
-      image: '/images/chess.jpg',
-      url: 'https://www.chess.com/',
-      tags: ['Strategy', 'Puzzle', 'Board']
-    },
-    {
-      id: '2',
-      title: 'Sudoku',
-      description: 'Train your brain with numbers—classic Sudoku boosts logic, patience, and pattern recognition.',
-      image: '/images/sudoku.jpeg',
-      url: 'https://sudoku.com/',
-      tags: ['Focus', 'Logic', 'Puzzle']
-    },
-    {
-      id: '3',
-      title: 'Connect 4',
-      description: 'Think ahead and block your rival—Connect 4 is a fun and fast-paced tactical duel of minds',
-      image: '/images/connect-4.png',
-      url: 'https://www.sudoku.com',
-      tags: ['Board', 'Strategy', 'Skill']
-    },
-    {
-      id: '4',
-      title: 'Checkers',
-      description: 'Simple yet smart—checkers trains strategic thinking and helps develop sharp decision-making skills.',
-      image: '/images/Checkers.png',
-      url: 'https://www.247checkers.com/',
-      tags: ['Board', 'Logic', 'Strategy']
-    },
-    {
-      id: '5',
-      title: 'Minesweeper',
-      description: 'Uncover the field without blowing up! A perfect logic test packed into a classic brain teaser.',
-      image: '/images/minesweepers.jpeg',
-      url: 'https://minesweeper.online',
-      tags: ['Logic', 'Focus', 'Brain']
-    },
-    {
-      id: '6',
-      title: '2048 Game',
-      description: 'Swipe to win! Merge tiles, reach 2048, and test your tactical thinking under pressure.',
-      image: '/images/game2048.jpg',
-      url: 'https://2048game.com/',
-      tags: ['Strategy', 'Logic', 'Brain']
-    }
-  ];
+  const tagsRef = useRef<HTMLDivElement>(null);
 
-  const allTags = [...new Set(games.flatMap(game => game.tags))];
-  const filteredGames = selectedTags.length === 0 
-    ? games 
-    : games.filter(game => game.tags.some(tag => selectedTags.includes(tag)));
+  const filteredGames = selectedTags.length === 0
+    ? GAMES
+    : GAMES.filter((g) => g.tags.some((t) => selectedTags.includes(t)));
 
-  const handleTagClick = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    );
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
   };
 
-  const scrollTags = (direction: 'left' | 'right') => {
-    if (tagsContainerRef.current) {
-      const scrollAmount = direction === 'left' ? -200 : 200;
-      tagsContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
+  const scrollTags = (dir: "left" | "right") => {
+    tagsRef.current?.scrollBy({ left: dir === "left" ? -200 : 200, behavior: "smooth" });
   };
-
-  const pageTitle = "Brain Training Games Collection | PuzzleLogicHub";
-  const pageDescription = "Challenge your mind with our collection of the best puzzle games. Improve logic, strategy and problem-solving skills with these carefully selected brain games.";
-  const canonicalUrl = "https://daily-puzzle-solve.vercel.app/games";
-  const featuredImage = "https://daily-puzzle-solve.vercel.app/images/chess.jpg";
 
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <link rel="canonical" href={canonicalUrl} />
+      <SEOHead
+        title="Best Brain Training Puzzle Games – Play Free Online"
+        description="Challenge your mind with the best free puzzle and strategy games. Chess, Sudoku, Minesweeper, Connect 4, and more, curated to boost logic and problem-solving."
+        path="/games"
+        dateModified={today}
+        breadcrumbs={[{ name: "Games", url: `${SITE_URL}/games` }]}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Brain Training Puzzle Games",
+          description: "The best free puzzle and strategy games to improve logic and cognitive skills.",
+          dateModified: today,
+          publisher: { "@type": "Organization", name: SITE_NAME },
+          hasPart: GAMES.map((g) => ({
+            "@type": "Game",
+            name: g.title,
+            description: g.description,
+            url: g.url,
+            image: `${SITE_URL}${g.image}`,
+          })),
+        }}
+      />
+      <main className="pt-6 pb-12">
+        <div className="container">
+          {/* Header */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 text-center">
+            <h1 className="mb-3 font-display text-3xl font-extrabold sm:text-4xl">
+              <Gamepad2 className="mr-2 inline-block h-8 w-8 text-primary" />
+              Brain Training Puzzle Games
+            </h1>
+            <p className="text-muted-foreground">Challenge your mind and improve cognitive skills with our curated game collection</p>
 
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:image" content={featuredImage} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-
-        {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={canonicalUrl} />
-        <meta property="twitter:title" content={pageTitle} />
-        <meta property="twitter:description" content={pageDescription} />
-        <meta property="twitter:image" content={featuredImage} />
-
-        {/* Schema.org */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "CollectionPage",
-            "name": pageTitle,
-            "description": pageDescription,
-            "url": canonicalUrl,
-            "hasPart": games.map(game => ({
-              "@type": "Game",
-              "name": game.title,
-              "description": game.description,
-              "url": game.url,
-              "keywords": game.tags.join(", ")
-            }))
-          })}
-        </script>
-      </Head>
-      
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Page Header */}
-        <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <Typography 
-            variant="h3" 
-            component="h1" 
-            sx={{ 
-              fontWeight: 800,
-              mb: 3,
-              color: 'common.black',
-              [theme.breakpoints.down('md')]: {
-                fontSize: '2rem'
-              }
-            }}
-          >
-            Brain Training Games
-          </Typography>
-          
-          <Typography 
-            variant="h6" 
-            component="h2" 
-            sx={{ 
-              color: 'text.secondary',
-              maxWidth: '700px',
-              mx: 'auto',
-              mb: 4,
-              [theme.breakpoints.down('md')]: {
-                fontSize: '1rem'
-              }
-            }}
-          >
-            Challenge your mind and improve cognitive skills
-          </Typography>
-
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
-            <IconButton 
-              onClick={() => scrollTags('left')}
-              sx={{ 
-                mr: 1,
-                color: 'primary.main',
-                '&:hover': {
-                  backgroundColor: 'rgba(25, 118, 210, 0.1)'
-                }
-              }}
-              aria-label="Scroll tags left"
-            >
-              <ChevronLeftIcon />
-            </IconButton>
-            
-            <Box
-              ref={tagsContainerRef}
-              sx={{
-                display: 'flex',
-                gap: 1,
-                overflowX: 'auto',
-                scrollbarWidth: 'none',
-                '&::-webkit-scrollbar': {
-                  display: 'none'
-                },
-                py: 1,
-                px: 1
-              }}
-            >
-              {allTags.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  clickable
-                  onClick={() => handleTagClick(tag)}
-                  variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
-                  sx={{
-                    borderRadius: '50px',
-                    borderColor: 'primary.main',
-                    backgroundColor: selectedTags.includes(tag) 
-                      ? 'primary.main' 
-                      : 'transparent',
-                    color: selectedTags.includes(tag) 
-                      ? 'common.white' 
-                      : 'primary.main',
-                    fontWeight: 600,
-                    '&:hover': {
-                      backgroundColor: selectedTags.includes(tag)
-                        ? 'primary.dark'
-                        : 'rgba(25, 118, 210, 0.1)'
-                    },
-                    transition: 'all 0.2s ease',
-                    flexShrink: 0
-                  }}
-                  aria-label={`Filter by ${tag}`}
-                />
-              ))}
-            </Box>
-            
-            <IconButton 
-              onClick={() => scrollTags('right')}
-              sx={{ 
-                ml: 1,
-                color: 'primary.main',
-                '&:hover': {
-                  backgroundColor: 'rgba(25, 118, 210, 0.1)'
-                }
-              }}
-              aria-label="Scroll tags right"
-            >
-              <ChevronRightIcon />
-            </IconButton>
-          </Box>
-        </Box>
-        
-        {/* Ad Banner */}
-        <Box sx={{ mb: 6, height: '100px' }}>
-          <AdSenseAd 
-            slot="3955548106" 
-            format="fluid"
-            style={{ 
-              display: 'block',
-              height: '100px',
-              maxHeight: '100px'
-            }}
-          />
-        </Box>
-
-        {/* Games Grid */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: {
-              xs: '1fr',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(3, 1fr)'
-            },
-            gap: 4,
-            mb: 4
-          }}
-          itemScope
-          itemType="http://schema.org/ItemList"
-        >
-          {filteredGames.length > 0 ? (
-            filteredGames.map((game, index) => (
-              <div key={game.id} itemProp="itemListElement" itemScope itemType="http://schema.org/Game">
-                <meta itemProp="position" content={String(index + 1)} />
-                <Card
-                  sx={{
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      transform: 'translateY(-5px)',
-                      boxShadow: 3
-                    }
-                  }}
-                >
-                  {/* Game Image */}
-                  <Box 
-                    sx={{ 
-                      height: 180,
-                      overflow: 'hidden',
-                      position: 'relative'
-                    }}
+            {/* Tag Filter */}
+            <div className="mx-auto mt-6 flex max-w-2xl items-center justify-center gap-1">
+              <button onClick={() => scrollTags("left")} className="shrink-0 rounded-full p-1.5 text-primary hover:bg-accent" aria-label="Scroll left">
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <div ref={tagsRef} className="flex gap-2 overflow-x-auto scrollbar-none">
+                {ALL_TAGS.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => toggleTag(tag)}
+                    className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-semibold transition-all ${
+                      selectedTags.includes(tag)
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-primary/40 text-primary hover:bg-accent"
+                    }`}
                   >
-                    <Image
-                      src={game.image}
-                      alt={`${game.title} game screenshot`}
-                      fill
-                      priority={index < 3}
-                      style={{
-                        objectFit: 'cover',
-                        transition: 'transform 0.5s ease',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
-                      itemProp="image"
-                    />
-                  </Box>
-                  
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    {/* Game Title */}
-                    <Typography
-                      variant="h3"
-                      component="h3"
-                      sx={{
-                        fontWeight: 700,
-                        mb: 1,
-                        color: 'text.primary',
-                        minHeight: '3em',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                        fontSize: '1.25rem'
-                      }}
-                      itemProp="name"
-                    >
-                      {game.title}
-                    </Typography>
-                    
-                    {/* Game Description */}
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        mb: 2,
-                        color: 'text.secondary',
-                        minHeight: '4em',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
-                      }}
-                      itemProp="description"
-                    >
-                      {game.description}
-                    </Typography>
-                    
-                    {/* Game Tags */}
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-                      {game.tags.map((tag) => (
-                        <Chip
-                          key={tag}
-                          label={tag}
-                          size="small"
-                          sx={{
-                            borderRadius: '4px',
-                            backgroundColor: 'grey.200',
-                            color: 'text.secondary',
-                            fontSize: '0.7rem',
-                            '&:hover': {
-                              backgroundColor: 'primary.light',
-                              color: 'primary.dark'
-                            },
-                            transition: 'all 0.2s ease'
-                          }}
-                          itemProp="keywords"
-                        />
-                      ))}
-                    </Box>
-                    
-                    <Button
-                      variant="contained"
-                      href={game.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      endIcon={<SportsEsportsIcon />}
-                      fullWidth
-                      sx={{
-                        borderRadius: '50px',
-                        fontWeight: 600,
-                        mt: 'auto',
-                        py: 1.5,
-                        '&:hover': {
-                          backgroundColor: 'primary.dark',
-                          transform: 'scale(1.02)',
-                          boxShadow: `0 4px 8px ${theme.palette.primary.main}`
-                        },
-                        transition: 'all 0.2s ease'
-                      }}
-                      aria-label={`Play ${game.title}`}
-                      itemProp="url"
-                    >
-                      Play Now
-                    </Button>
-                  </CardContent>
-                </Card>
+                    {tag}
+                  </button>
+                ))}
               </div>
-            ))
-          ) : (
-            <Typography 
-              variant="body1" 
-              align="center" 
-              sx={{ 
-                py: 4,
-                color: 'text.secondary',
-                gridColumn: '1 / -1'
-              }}
-            >
-              No games found matching your selected filters.
-            </Typography>
-          )}
-        </Box>
+              <button onClick={() => scrollTags("right")} className="shrink-0 rounded-full p-1.5 text-primary hover:bg-accent" aria-label="Scroll right">
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          </motion.div>
 
-        {/* Additional Content Section */}
-        <Box sx={{ mt: 6 }}>
-          <Typography variant="h2" component="h2" sx={{ mb: 2, fontSize: '1.5rem', textAlign: 'center', color: 'common.black' }}>
-            Why Play Puzzle Games?
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2, textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
-            Puzzle games offer more than just entertainment—they&apos;re powerful tools for cognitive development. 
-            Regular play can improve memory, enhance problem-solving skills, boost concentration, and even 
-            help prevent cognitive decline. Our carefully selected games target different mental skills, from 
-            logical reasoning to strategic planning, ensuring a comprehensive brain workout.
-          </Typography>
-        </Box>
+          {/* Top leaderboard */}
+          <AdBlock slot="5934836566" format="leaderboard" lazy={false} minHeight={90} className="mb-8" />
 
-        {/* Ad Banner */}
-        <Box sx={{ mt: 6, height: '100px' }}>
-          <AdSenseAd 
-            slot="3955548106" 
-            format="fluid"
-            style={{ 
-              display: 'block',
-              height: '100px',
-              maxHeight: '100px'
-            }}
-          />
-        </Box>
-      </Container>
+          {/* Games Grid */}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredGames.length > 0 ? (
+              filteredGames.map((game, i) => (
+                <motion.div
+                  key={game.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={game.image}
+                        alt={`${game.title} – Free Online Puzzle Game`}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading={i < 3 ? "eager" : "lazy"}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "/placeholder.svg";
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-1 flex-col p-5">
+                      <h2 className="mb-1.5 font-display text-lg font-bold">{game.title}</h2>
+                      <p className="mb-3 flex-1 text-sm text-muted-foreground">{game.description}</p>
+                      <div className="mb-4 flex flex-wrap gap-1.5">
+                        {game.tags.map((tag) => (
+                          <Badge key={tag} variant="secondary" className="rounded-full text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                      <Button asChild className="w-full gap-2 rounded-full font-semibold">
+                        <a href={game.url} target="_blank" rel="noopener noreferrer">
+                          <Gamepad2 className="h-4 w-4" /> Play Now <ExternalLink className="h-3 w-3" />
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <div className="col-span-full py-12 text-center text-muted-foreground">
+                No games found matching your selected filters.
+              </div>
+            )}
+          </div>
+
+          {/* Ad before SEO content */}
+          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
+
+          {/* SEO Content */}
+          <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-border bg-card p-6 sm:p-8">
+            <h2 className="mb-3 font-display text-xl font-bold">Why Play Brain Training Puzzle Games?</h2>
+            <p className="mb-4 text-muted-foreground">
+              Puzzle games offer more than entertainment. They&apos;re powerful cognitive tools. Regular play delivers measurable mental benefits:
+            </p>
+            <ul className="mb-4 space-y-1.5 text-sm text-muted-foreground">
+              <li>🧠 <strong>Improved memory</strong> through pattern recall and working memory exercises</li>
+              <li>⚡ <strong>Faster thinking</strong> with strategic decisions under time pressure</li>
+              <li>🎯 <strong>Better focus</strong> from deep concentration and attention training</li>
+              <li>🛡️ <strong>Stress relief</strong> via mindful engagement that reduces anxiety</li>
+            </ul>
+            <h3 className="mb-2 font-display text-base font-semibold">People Also Search For</h3>
+            <div className="flex flex-wrap gap-2">
+              {["free puzzle games online", "brain training games", "logic games for adults", "LinkedIn puzzle games", "daily puzzle games"].map((q) => (
+                <span key={q} className="rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">{q}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom rectangle */}
+          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
+        </div>
+      </main>
     </>
   );
-}
+};
+
+export default Games;
