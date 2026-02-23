@@ -74,7 +74,7 @@ const Terms = () => (
         "@type": "WebPage",
         name: "Terms of Service | PuzzleLogicHub",
         description: "Review the terms and conditions governing your use of PuzzleLogicHub's services and content.",
-        url: "https://dailypuzzlesolve.com/terms",
+        url: "https://daily-puzzle-solve.vercel.app/terms",
         datePublished: "2025-01-01",
         dateModified: lastUpdated,
       }}

@@ -66,7 +66,7 @@ npm run dev
 ```
 
 The Vite dev server automatically proxies `/api` requests to `http://localhost:3000`.  
-In production, API calls go directly to `https://dailypuzzlesolve.com/api`.
+In production, API calls go directly to `https://daily-puzzle-solve.vercel.app/api`.
 
 ---
 
