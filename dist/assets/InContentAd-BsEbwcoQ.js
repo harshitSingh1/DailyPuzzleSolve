@@ -1,0 +1,1 @@
+import{j as e,A as a}from"./index-AIe8Slnw.js";const r=({slot:t="5934836566",className:o=""})=>e.jsx(a,{slot:t,format:"in-article",layoutKey:"-fb+5w+4e-db+86",lazy:!0,minHeight:280,className:o});export{r as I};

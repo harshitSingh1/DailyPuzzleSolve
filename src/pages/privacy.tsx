@@ -79,7 +79,7 @@ const Privacy = () => (
         "@type": "WebPage",
         name: "Privacy Policy | PuzzleLogicHub",
         description: "Learn how PuzzleLogicHub collects, uses, and protects your personal information.",
-        url: "https://dailypuzzlesolve.com/privacy",
+        url: "https://daily-puzzle-solve.vercel.app/privacy",
         datePublished: "2025-01-01",
         dateModified: lastUpdated,
       }}
