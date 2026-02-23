@@ -6,81 +6,31 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/</loc>
-  <lastmod>2025-04-24T03:41:47+00:00</lastmod>
-  <priority>1.00</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/meme</loc>
-  <lastmod>2025-04-24T03:41:48+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/tools</loc>
-  <lastmod>2025-04-24T03:42:10+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/shop</loc>
-  <lastmod>2025-04-24T03:42:10+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/games</loc>
-  <lastmod>2025-04-24T03:41:57+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/blog</loc>
-  <lastmod>2025-04-24T03:41:57+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/contact</loc>
-  <lastmod>2025-04-24T03:41:58+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/solutions/pinpoint</loc>
-  <lastmod>2025-04-24T03:42:10+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/solutions/queens</loc>
-  <lastmod>2025-04-24T03:42:10+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/solutions/tango</loc>
-  <lastmod>2025-04-24T03:42:10+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/solutions/crossclimb</loc>
-  <lastmod>2025-04-24T03:42:10+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/solutions/zip</loc>
-  <lastmod>2025-04-24T03:42:10+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/about</loc>
-  <lastmod>2025-04-24T03:42:10+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/privacy</loc>
-  <lastmod>2025-04-24T03:42:10+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://daily-puzzle-solve.vercel.app/terms</loc>
-  <lastmod>2025-04-24T03:42:10+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
+    <!-- Homepage -->
+  <url>
+    <loc>https://daily-puzzle-solve.vercel.app/</loc>
+    <priority>1.0</priority>
+  </url>
 
+  <!-- Core Solution Pages -->
+  <url><loc>https://daily-puzzle-solve.vercel.app/solutions/pinpoint</loc><priority>0.9</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/solutions/queens</loc><priority>0.9</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/solutions/tango</loc><priority>0.9</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/solutions/crossclimb</loc><priority>0.9</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/solutions/zip</loc><priority>0.9</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/solutions/minisudoku</loc><priority>0.9</priority></url>
+
+  <!-- Main Pages -->
+  <url><loc>https://daily-puzzle-solve.vercel.app/games</loc><priority>0.8</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/blog</loc><priority>0.8</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/shop</loc><priority>0.8</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/tools</loc><priority>0.8</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/memes</loc><priority>0.7</priority></url>
+
+  <!-- Info Pages -->
+  <url><loc>https://daily-puzzle-solve.vercel.app/contact</loc><priority>0.4</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/about</loc><priority>0.3</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/privacy</loc><priority>0.2</priority></url>
+  <url><loc>https://daily-puzzle-solve.vercel.app/terms</loc><priority>0.2</priority></url>
 
 </urlset>
