@@ -1,21 +1,16 @@
-import { useState, memo } from "react";
+import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
-import { ArrowLeft, Play, Image as ImageIcon, Loader2, AlertCircle, Share2, Flag, Gamepad2 } from "lucide-react";
+import { ArrowLeft, Play, Image as ImageIcon, AlertCircle, Gamepad2, Lightbulb, Eye, EyeOff } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import SEOHead from "@/components/SEOHead";
 import AdBlock from "@/components/ads/AdBlock";
 import InContentAd from "@/components/ads/InContentAd";
+import SocialShareButtons from "@/components/SocialShareButtons";
+import PuzzleCountdown from "@/components/PuzzleCountdown";
 import { fetchPuzzles } from "@/lib/api";
 import { PUZZLE_GAMES, SITE_URL, SITE_NAME } from "@/lib/constants";
 import type { Puzzle } from "@/lib/types";
@@ -27,13 +22,18 @@ const getVideoId = (url: string) => {
 };
 
 const today = new Date().toISOString().split("T")[0];
-const todayLong = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+const todayLong = new Date().toLocaleDateString("en-US", {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 
 const SolutionDetail = () => {
   const { game } = useParams<{ game: string }>();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [viewMode, setViewMode] = useState<"video" | "images">("images");
+  const [showHints, setShowHints] = useState(false);
 
   const gameInfo = PUZZLE_GAMES.find((g) => g.id === game);
   const gameLabel = gameInfo?.label || game || "Puzzle";
@@ -43,7 +43,11 @@ const SolutionDetail = () => {
     .replace(/^./, (str) => str.toUpperCase())
     .replace("Linkedin", "LinkedIn");
 
-  const { data: puzzles, isLoading, error } = useQuery({
+  const {
+    data: puzzles,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["puzzles", game],
     queryFn: () => fetchPuzzles(game),
     enabled: !!game,
@@ -51,78 +55,86 @@ const SolutionDetail = () => {
   });
 
   const canonicalUrl = `${SITE_URL}/solutions/${game}`;
-
-  // Related puzzles (all except current)
   const relatedGames = PUZZLE_GAMES.filter((g) => g.id !== game);
 
-  const jsonLd = puzzles && puzzles.length > 0
-    ? [
-        {
-          "@context": "https://schema.org",
-          "@type": "ItemList",
-          name: `${formattedGameName} Puzzle Solutions – ${today}`,
-          url: canonicalUrl,
-          dateModified: today,
-          numberOfItems: puzzles.length,
-          itemListElement: puzzles.map((puzzle, index) => ({
-            "@type": "ListItem",
-            position: index + 1,
-            item: {
-              "@type": "HowTo",
-              name: puzzle.heading,
-              description: `Step-by-step solution for ${puzzle.heading}`,
-              datePublished: today,
-              dateModified: today,
-              author: { "@type": "Organization", name: SITE_NAME },
-              image: puzzle.screenshots?.[0] || `${SITE_URL}${gameInfo?.image || "/images/hero.jpeg"}`,
-              step: puzzle.screenshots?.map((img, i) => ({
-                "@type": "HowToStep",
-                position: i + 1,
-                text: `Step ${i + 1} of the ${formattedGameName} solution`,
-                image: img,
-              })),
-              ...(puzzle.ytVideo && {
-                video: {
-                  "@type": "VideoObject",
-                  name: `${puzzle.heading} – Video Solution`,
-                  thumbnailUrl: `https://img.youtube.com/vi/${getVideoId(puzzle.ytVideo)}/hqdefault.jpg`,
-                  embedUrl: `https://www.youtube.com/embed/${getVideoId(puzzle.ytVideo)}`,
-                  uploadDate: today,
+  const jsonLd =
+    puzzles && puzzles.length > 0
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: `${formattedGameName} Puzzle Solutions – ${today}`,
+            url: canonicalUrl,
+            dateModified: today,
+            numberOfItems: puzzles.length,
+            itemListElement: puzzles.map((puzzle, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              item: {
+                "@type": "HowTo",
+                name: puzzle.heading,
+                description: `Step-by-step solution for ${puzzle.heading}. Updated ${todayLong}.`,
+                datePublished: today,
+                dateModified: today,
+                author: { "@type": "Organization", name: SITE_NAME },
+                image: puzzle.screenshots?.[0] || `${SITE_URL}${gameInfo?.image || "/images/hero.jpeg"}`,
+                step: puzzle.screenshots?.map((img, i) => ({
+                  "@type": "HowToStep",
+                  position: i + 1,
+                  text: `Step ${i + 1} of the ${formattedGameName} solution`,
+                  image: img,
+                })),
+                ...(puzzle.ytVideo && {
+                  video: {
+                    "@type": "VideoObject",
+                    name: `${puzzle.heading} – Video Solution`,
+                    description: `Video walkthrough for ${puzzle.heading}. Watch how to solve today's ${formattedGameName} puzzle step by step.`,
+                    thumbnailUrl: `https://img.youtube.com/vi/${getVideoId(puzzle.ytVideo)}/hqdefault.jpg`,
+                    embedUrl: `https://www.youtube.com/embed/${getVideoId(puzzle.ytVideo)}`,
+                    uploadDate: today,
+                  },
+                }),
+              },
+            })),
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: `What is today's ${formattedGameName} answer (${todayLong})?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `Today's ${formattedGameName} answer (${todayLong}) is provided above with step-by-step screenshots and a video walkthrough. We update within 30 minutes of the puzzle going live.`,
                 },
-              }),
-            },
-          })),
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: [
-            {
-              "@type": "Question",
-              name: `What is today's ${formattedGameName} solution?`,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: `Today's ${formattedGameName} solution (${todayLong}) is provided above with step-by-step screenshots and a video walkthrough.`,
               },
-            },
-            {
-              "@type": "Question",
-              name: `How do I solve the ${formattedGameName} puzzle?`,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: `Use the step-by-step image guide or video walkthrough on this page to solve today's ${formattedGameName} puzzle.`,
+              {
+                "@type": "Question",
+                name: `How do I solve the ${formattedGameName} puzzle today?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `Use the step-by-step image guide or video walkthrough on this page to solve today's ${formattedGameName} puzzle. Start with our hints section if you want to try solving it yourself first.`,
+                },
               },
-            },
-          ],
-        },
-      ]
-    : undefined;
+              {
+                "@type": "Question",
+                name: `Where can I find ${formattedGameName} hints without spoilers?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `We provide progressive hints for each ${formattedGameName} puzzle. Click "Show Hints" on the solution page to get clues without seeing the full answer.`,
+                },
+              },
+            ],
+          },
+        ]
+      : undefined;
 
   return (
     <>
       <SEOHead
-        title={`${formattedGameName} Solution Today (${today}) – Step-by-Step Guide`}
-        description={`Today's ${formattedGameName} puzzle solution (${todayLong}). Step-by-step screenshots, video walkthrough, and expert tips. Updated daily – never lose your streak!`}
+        title={`${formattedGameName} Answer Today (${today}) – Solution & Hints`}
+        description={`Today's ${formattedGameName} answer & solution (${todayLong}). Step-by-step screenshots, video walkthrough, and hints. Updated daily – never lose your streak! Free LinkedIn puzzle answers.`}
         path={`/solutions/${game}`}
         type="article"
         image={`${SITE_URL}${gameInfo?.image || "/images/hero.jpeg"}`}
@@ -130,7 +142,7 @@ const SolutionDetail = () => {
         dateModified={today}
         breadcrumbs={[
           { name: "Solutions", url: `${SITE_URL}/solutions` },
-          { name: `${formattedGameName} Solution`, url: canonicalUrl },
+          { name: `${formattedGameName} Answer Today`, url: canonicalUrl },
         ]}
         jsonLd={jsonLd}
       />
@@ -139,28 +151,37 @@ const SolutionDetail = () => {
         <div className="container max-w-4xl">
           {/* Breadcrumb nav */}
           <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/" className="hover:text-foreground">Home</Link>
+            <Link to="/" className="hover:text-foreground">
+              Home
+            </Link>
             <span>/</span>
-            <Link to="/solutions" className="hover:text-foreground">Solutions</Link>
+            <Link to="/solutions" className="hover:text-foreground">
+              Solutions
+            </Link>
             <span>/</span>
-            <span className="text-foreground font-medium">{formattedGameName}</span>
+            <span className="text-foreground font-medium">{formattedGameName} Answer Today</span>
           </nav>
 
           {/* Page Header */}
           <div className="mb-6 text-center">
             <h1 className="mb-2 font-display text-2xl font-extrabold sm:text-3xl lg:text-4xl">
-              {formattedGameName} Solution Today
+              {formattedGameName} Answer Today ({today})
             </h1>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Badge variant="secondary" className="gap-1 rounded-full">
                 <span className="h-2 w-2 rounded-full bg-primary animate-pulse inline-block" />
                 Updated Today
               </Badge>
-              <time dateTime={today} className="text-sm text-muted-foreground">{todayLong}</time>
+              <time dateTime={today} className="text-sm text-muted-foreground">
+                {todayLong}
+              </time>
             </div>
             <p className="mt-2 text-muted-foreground">
-              Step-by-step guide to master today's {formattedGameName.toLowerCase()} puzzle
+              Step-by-step guide to solve today's {formattedGameName.toLowerCase()} puzzle — screenshots, video & hints
             </p>
+            <div className="mt-3 flex justify-center">
+              <PuzzleCountdown />
+            </div>
           </div>
 
           {/* Top leaderboard */}
@@ -190,7 +211,9 @@ const SolutionDetail = () => {
             <div className="flex flex-col items-center justify-center gap-3 py-20 text-center">
               <AlertCircle className="h-10 w-10 text-muted-foreground" />
               <p className="text-muted-foreground">Server is waking up, retrying...</p>
-              <Button variant="outline" onClick={() => window.location.reload()}>Try Again</Button>
+              <Button variant="outline" onClick={() => window.location.reload()}>
+                Try Again
+              </Button>
             </div>
           )}
 
@@ -205,14 +228,51 @@ const SolutionDetail = () => {
 
           {puzzles && puzzles.length > 0 && (
             <div className="space-y-6">
+              {/* Hints Section */}
+              <div className="rounded-lg border border-border bg-accent/20 p-5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Lightbulb className="h-5 w-5 text-primary" />
+                    <h2 className="font-display text-base font-bold">{formattedGameName} Hints (No Spoilers)</h2>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 rounded-full"
+                    onClick={() => setShowHints(!showHints)}
+                  >
+                    {showHints ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    {showHints ? "Hide Hints" : "Show Hints"}
+                  </Button>
+                </div>
+                {showHints && (
+                  <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+                    <p>
+                      <strong>Hint 1:</strong> Look at the first screenshot carefully - the pattern starts from the
+                      top-left.
+                    </p>
+                    <p>
+                      <strong>Hint 2:</strong> Think about what all the elements have in common before making your move.
+                    </p>
+                    <p>
+                      <strong>Hint 3:</strong> If you're stuck, try working backwards from the final screenshot.
+                    </p>
+                    <p className="text-xs italic mt-2">
+                      💡 Still stuck? Scroll down for the full step-by-step solution.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Today's Answer header */}
+              <h2 className="font-display text-xl font-bold text-center">
+                Today's {formattedGameName} Answer — {todayLong}
+              </h2>
+
               <Accordion type="single" collapsible defaultValue={puzzles[0]?._id} className="space-y-3">
                 {puzzles.map((puzzle, puzzleIndex) => (
-                  <>
-                    <AccordionItem
-                      key={puzzle._id}
-                      value={puzzle._id}
-                      className="overflow-hidden rounded-lg border border-border"
-                    >
+                  <div key={puzzle._id}>
+                    <AccordionItem value={puzzle._id} className="overflow-hidden rounded-lg border border-border">
                       <AccordionTrigger className="bg-primary/10 px-5 py-4 font-display text-sm font-bold hover:no-underline data-[state=open]:bg-primary data-[state=open]:text-primary-foreground sm:text-base">
                         {puzzle.heading}
                       </AccordionTrigger>
@@ -257,18 +317,32 @@ const SolutionDetail = () => {
 
                         {/* Images */}
                         {viewMode === "images" && puzzle.screenshots && puzzle.screenshots.length > 0 && (
-                          <div className="mb-5 grid gap-4 sm:grid-cols-2">
+                          <div className="mb-5 flex flex-col items-center gap-5">
                             {puzzle.screenshots.map((src, i) => (
-                              <img
+                              <div
                                 key={i}
-                                src={src}
-                                alt={`${puzzle.heading} – step ${i + 1} solution screenshot`}
-                                className="w-full rounded-lg border border-border shadow-sm"
-                                loading={i > 1 ? "lazy" : "eager"}
-                              />
+                                className="w-full max-w-xl overflow-hidden rounded-lg border border-border bg-muted shadow-sm"
+                              >
+                                <img
+                                  src={src}
+                                  alt={`${puzzle.heading} – step ${i + 1} solution screenshot for ${todayLong}`}
+                                  width={800}
+                                  height={450}
+                                  className="w-full h-auto object-contain"
+                                  loading={i > 1 ? "lazy" : "eager"}
+                                  decoding={i > 1 ? "async" : "sync"}
+                                />
+                              </div>
                             ))}
                           </div>
                         )}
+
+                        {/* Social Share */}
+                        <SocialShareButtons
+                          url={canonicalUrl}
+                          title={`${formattedGameName} Answer Today (${today}) – ${puzzle.heading}`}
+                          className="mb-4"
+                        />
 
                         {/* Action Buttons */}
                         <div className="flex flex-wrap gap-2">
@@ -278,71 +352,99 @@ const SolutionDetail = () => {
                             className="gap-1.5 rounded-full"
                             onClick={() => navigate("/contact")}
                           >
-                            <Flag className="h-3.5 w-3.5" /> Report Problem
+                            Report Problem
                           </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="gap-1.5 rounded-full"
-                            asChild
-                          >
+                          <Button variant="outline" size="sm" className="gap-1.5 rounded-full" asChild>
                             <a href="/games">
                               <Gamepad2 className="h-3.5 w-3.5" /> Play Game
                             </a>
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="gap-1.5 rounded-full ml-auto"
-                            onClick={() => {
-                              navigator.clipboard.writeText(window.location.href);
-                              toast({ title: "Link copied!", description: "Solution URL copied to clipboard." });
-                            }}
-                          >
-                            <Share2 className="h-3.5 w-3.5" /> Share Solution
                           </Button>
                         </div>
                       </AccordionContent>
                     </AccordionItem>
 
                     {/* In-article ad after first solution */}
-                    {puzzleIndex === 0 && (
-                      <InContentAd key="after-first-solution" className="my-4" />
-                    )}
-                  </>
+                    {puzzleIndex === 0 && <InContentAd className="my-4" />}
+                  </div>
                 ))}
               </Accordion>
 
               {/* SEO Content block */}
               <div className="mt-10 rounded-lg border border-border bg-card p-6 sm:p-8">
                 <h2 className="mb-3 font-display text-xl font-bold">
-                  How to Solve {formattedGameName} Puzzles
+                  How to Solve {formattedGameName} Puzzles — Tips & Strategy
                 </h2>
                 <p className="mb-4 text-sm text-muted-foreground">
-                  Mastering {formattedGameName.toLowerCase()} requires understanding the core mechanics and patterns. Our daily solutions provide:
+                  Mastering {formattedGameName.toLowerCase()} requires understanding the core mechanics and recognizing
+                  recurring patterns. Our daily {formattedGameName.toLowerCase()} answers and solutions provide:
                 </p>
                 <ul className="mb-6 space-y-1.5 text-sm text-muted-foreground">
                   <li>✅ Visual step-by-step screenshots for every puzzle</li>
                   <li>✅ Video walkthroughs for visual learners</li>
+                  <li>✅ Progressive hints so you can try solving first</li>
                   <li>✅ Multiple solving strategies explained</li>
                   <li>✅ Updated daily so you never lose your streak</li>
                 </ul>
+
                 <h3 className="mb-2 font-display text-lg font-semibold">Frequently Asked Questions</h3>
                 <div className="space-y-3 text-sm text-muted-foreground">
                   <div>
-                    <p><strong>Q: How often are new {formattedGameName} solutions added?</strong></p>
-                    <p className="mt-0.5">A: We update our solutions daily, within 30 minutes of each new puzzle going live.</p>
+                    <p>
+                      <strong>Q: What is today's {formattedGameName} answer?</strong>
+                    </p>
+                    <p className="mt-0.5">
+                      A: Today's {formattedGameName} answer ({todayLong}) is shown above with step-by-step screenshots
+                      and a video walkthrough.
+                    </p>
                   </div>
                   <div>
-                    <p><strong>Q: Can I request a specific puzzle solution?</strong></p>
-                    <p className="mt-0.5">A: Yes! <Link to="/contact" className="text-primary underline">Contact us</Link> with your puzzle request and we'll prioritize it.</p>
+                    <p>
+                      <strong>Q: How often are {formattedGameName} solutions added?</strong>
+                    </p>
+                    <p className="mt-0.5">
+                      A: We update our solutions daily, within 30 minutes of each new puzzle going live.
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <strong>Q: Can I get hints instead of the full {formattedGameName} answer?</strong>
+                    </p>
+                    <p className="mt-0.5">
+                      A: Yes! Use the "Show Hints" section at the top of this page for progressive clues without
+                      spoilers.
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <strong>Q: Can I request a specific puzzle solution?</strong>
+                    </p>
+                    <p className="mt-0.5">
+                      A: Yes!{" "}
+                      <Link to="/contact" className="text-primary underline">
+                        Contact us
+                      </Link>{" "}
+                      with your puzzle request and we'll prioritize it.
+                    </p>
                   </div>
                 </div>
               </div>
 
+              {/* Share CTA */}
+              <div className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-center">
+                <h3 className="mb-2 font-display text-base font-bold">Share Today's {formattedGameName} Answer</h3>
+                <p className="mb-3 text-sm text-muted-foreground">
+                  Help your friends solve today's puzzle — share this solution!
+                </p>
+                <SocialShareButtons
+                  url={canonicalUrl}
+                  title={`${formattedGameName} Answer Today (${today}) – Step by Step Solution`}
+                  className="justify-center"
+                />
+              </div>
+
               {/* Related Puzzles */}
               <div className="rounded-lg border border-border bg-muted/30 p-5">
-                <h2 className="mb-3 font-display text-base font-bold">Related Puzzle Solutions</h2>
+                <h2 className="mb-3 font-display text-base font-bold">More LinkedIn Puzzle Answers Today</h2>
                 <div className="flex flex-wrap gap-2">
                   {relatedGames.map((g) => (
                     <Link
@@ -350,7 +452,7 @@ const SolutionDetail = () => {
                       to={`/solutions/${g.id}`}
                       className="rounded-full border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-all hover:border-primary hover:text-primary"
                     >
-                      {g.emoji} {g.label} Solution Today
+                      {g.emoji} {g.label} Answer Today
                     </Link>
                   ))}
                 </div>

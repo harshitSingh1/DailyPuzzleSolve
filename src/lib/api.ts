@@ -3,6 +3,21 @@ import type { Puzzle, ShopItem, Tool, ContactFormData, ApiResponse } from "./typ
 
 const TIMEOUT_MS = 10_000;
 
+// ── In-memory response cache ──────────────────────────────────────────
+const memCache = new Map<string, { data: unknown; ts: number }>();
+const CACHE_TTL: Record<string, number> = {
+  "/puzzles": 60_000,       // 60s for puzzles
+  "/shops": 5 * 60_000,     // 5 min for shop
+  "/tools": 5 * 60_000,     // 5 min for tools
+};
+
+function getCacheTtl(endpoint: string): number {
+  for (const [prefix, ttl] of Object.entries(CACHE_TTL)) {
+    if (endpoint.startsWith(prefix)) return ttl;
+  }
+  return 0;
+}
+
 async function fetchWithTimeout(url: string, options?: RequestInit): Promise<Response> {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -15,6 +30,17 @@ async function fetchWithTimeout(url: string, options?: RequestInit): Promise<Res
 }
 
 async function fetchApi<T>(endpoint: string, options?: RequestInit, retries = 3): Promise<T> {
+  // Check in-memory cache for GET requests
+  const isGet = !options?.method || options.method === "GET";
+  const ttl = getCacheTtl(endpoint);
+  if (isGet && ttl > 0) {
+    const cacheKey = endpoint;
+    const cached = memCache.get(cacheKey);
+    if (cached && Date.now() - cached.ts < ttl) {
+      return cached.data as T;
+    }
+  }
+
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
@@ -32,17 +58,22 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit, retries = 3)
       }
 
       const json = await res.json();
+
+      // Store in cache
+      if (isGet && ttl > 0) {
+        memCache.set(endpoint, { data: json, ts: Date.now() });
+      }
+
       return json;
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err));
 
       if (err instanceof Error && err.name === "AbortError") {
         lastError = new Error("Request timed out. The server may be starting up. Please try again.");
-        break; // don't retry on timeout
+        break;
       }
 
       if (attempt < retries) {
-        // Brief pause before retry (exponential-lite: 500ms, 1000ms)
         await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
       }
     }

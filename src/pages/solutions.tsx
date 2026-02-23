@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SEOHead from "@/components/SEOHead";
 import AdBlock from "@/components/ads/AdBlock";
+import PuzzleCountdown from "@/components/PuzzleCountdown";
 import { PUZZLE_GAMES, SITE_URL, SITE_NAME } from "@/lib/constants";
 
 const today = new Date().toISOString().split("T")[0];
@@ -13,22 +14,22 @@ const Solutions = () => {
   return (
     <>
       <SEOHead
-        title={`Daily LinkedIn Puzzle Solutions (${today}) – Pinpoint, Queens, Tango & More`}
-        description={`Browse today's LinkedIn puzzle solutions: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku. Step-by-step screenshots and video walkthroughs updated daily. ${todayLong}.`}
+        title={`LinkedIn Puzzle Answers Today (${today}) – Pinpoint, Queens, Tango & More`}
+        description={`Today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku solutions. Step-by-step screenshots, video walkthroughs & hints. Updated daily – ${todayLong}.`}
         path="/solutions"
         datePublished="2025-01-01"
         dateModified={today}
-        breadcrumbs={[{ name: "Solutions", url: `${SITE_URL}/solutions` }]}
+        breadcrumbs={[{ name: "Puzzle Answers Today", url: `${SITE_URL}/solutions` }]}
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          name: "Daily LinkedIn Puzzle Solutions",
+          name: "LinkedIn Puzzle Answers Today",
           url: `${SITE_URL}/solutions`,
           dateModified: today,
           publisher: { "@type": "Organization", name: SITE_NAME },
           hasPart: PUZZLE_GAMES.map((g) => ({
             "@type": "HowTo",
-            name: `${g.label} Solution Today`,
+            name: `${g.label} Answer Today`,
             url: `${SITE_URL}/solutions/${g.id}`,
             image: `${SITE_URL}${g.image}`,
           })),
@@ -39,7 +40,7 @@ const Solutions = () => {
         <div className="container">
           <div className="mb-3 text-center">
             <h1 className="mb-2 font-display text-2xl font-extrabold sm:text-3xl lg:text-4xl">
-              Daily Puzzle Solutions
+              LinkedIn Puzzle Answers Today
             </h1>
             <div className="flex flex-wrap items-center justify-center gap-3 mb-3">
               <Badge variant="secondary" className="gap-1 rounded-full">
@@ -49,8 +50,11 @@ const Solutions = () => {
               <time dateTime={today} className="text-sm text-muted-foreground">{todayLong}</time>
             </div>
             <p className="mx-auto max-w-2xl text-muted-foreground">
-              Choose a puzzle game below to see today's step-by-step solution with screenshots and video walkthroughs. Never lose your streak!
+              Choose a puzzle below for today's step-by-step answer with screenshots, video walkthroughs & hints. Never lose your streak!
             </p>
+            <div className="mt-3 flex justify-center">
+              <PuzzleCountdown />
+            </div>
           </div>
 
           {/* Top leaderboard */}
@@ -68,7 +72,7 @@ const Solutions = () => {
                   <div className="h-44 overflow-hidden bg-muted">
                     <img
                       src={game.image}
-                      alt={`${game.label} – Daily Solution ${today}`}
+                      alt={`${game.label} Answer Today – ${today}`}
                       className="h-full w-full object-cover transition-transform group-hover:scale-105"
                       loading={i < 3 ? "eager" : "lazy"}
                       onError={(e) => {
@@ -77,13 +81,13 @@ const Solutions = () => {
                     />
                   </div>
                   <div className="flex flex-1 flex-col p-5">
-                    <h2 className="mb-1 font-display text-lg font-bold">{game.label}</h2>
+                    <h2 className="mb-1 font-display text-lg font-bold">{game.label} Answer Today</h2>
                     <p className="mb-4 min-h-[3em] text-sm text-muted-foreground">{game.description}</p>
                     <Button
                       asChild
                       className="mt-auto w-full rounded-full font-display font-semibold transition-transform hover:scale-[1.02]"
                     >
-                      <Link to={`/solutions/${game.id}`}>View Today's Solution →</Link>
+                      <Link to={`/solutions/${game.id}`}>View Today's Answer →</Link>
                     </Button>
                   </div>
                 </div>
@@ -96,11 +100,11 @@ const Solutions = () => {
 
           {/* SEO content */}
           <div className="mt-8 rounded-lg border border-border bg-card p-6 sm:p-8">
-            <h2 className="mb-2 font-display text-xl font-bold">About Our Daily LinkedIn Puzzle Solutions</h2>
+            <h2 className="mb-2 font-display text-xl font-bold">About Our Daily LinkedIn Puzzle Answers</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Every day, we publish complete solutions for all active LinkedIn puzzle games: Pinpoint, Queens, Tango, Crossclimb, Zip, and Mini Sudoku.
-              Each guide includes annotated screenshots and a video walkthrough so you can quickly understand every step.
-              Bookmark this page to get your daily fix and maintain your puzzle streak.
+              Every day, we publish complete answers and solutions for all active LinkedIn puzzle games: Pinpoint, Queens, Tango, Crossclimb, Zip, and Mini Sudoku.
+              Each guide includes annotated screenshots, a video walkthrough, and progressive hints so you can try solving it yourself first.
+              Bookmark this page to get your daily fix and maintain your puzzle streak. We update within 30 minutes of each new puzzle going live.
             </p>
           </div>
         </div>
