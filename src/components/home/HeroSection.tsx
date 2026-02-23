@@ -55,7 +55,7 @@ const HeroSection = memo(() => {
             className="mb-6 text-[1.1rem] font-normal text-white/90 md:text-[1.25rem]"
             style={{ textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}
           >
-            Daily solutions with step-by-step explanations and video walkthroughs.
+            Today's Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku answers with step-by-step guides.
           </motion.p>
 
           <motion.div

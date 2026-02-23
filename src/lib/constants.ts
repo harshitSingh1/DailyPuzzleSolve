@@ -2,56 +2,62 @@ export const API_BASE_URL = "https://dps-backend-epx7.onrender.com/api";
 
 export const SITE_NAME = "PuzzleLogicHub";
 export const SITE_URL = "https://dailypuzzlesolve.com";
-export const SITE_DESCRIPTION = "Get instant access to today's LinkedIn puzzle solutions: Pinpoint, Queens, Tango, Crossclimb, Zip, and Mini Sudoku. Step-by-step explanations, video guides, and expert tips updated daily.";
+export const SITE_DESCRIPTION = "Get today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku solutions. Step-by-step screenshots, video walkthroughs & expert tips updated daily. Never lose your streak!";
 
 export const PUZZLE_GAMES = [
   {
     id: "pinpoint",
     label: "LinkedIn Pinpoint",
     emoji: "🎯",
-    description: "Word puzzle where you find the common connection between four given words. Get daily solutions with detailed explanations.",
+    description: "Today's LinkedIn Pinpoint answer & solution. Find the common connection between four words with our step-by-step guide.",
     image: "/images/pinpoint-game.png",
     difficulty: "Medium",
+    keywords: ["linkedin pinpoint answer today", "pinpoint solution today", "linkedin pinpoint hints", "pinpoint puzzle clues"],
   },
   {
     id: "queens",
     label: "LinkedIn Queens",
     emoji: "👑",
-    description: "Logic puzzle where you place queens on a chessboard without them attacking each other. Step-by-step daily solutions available.",
+    description: "Today's LinkedIn Queens puzzle answer & solution. Place queens on the board without conflicts using our daily guide.",
     image: "/images/queens-game.png",
     difficulty: "Hard",
+    keywords: ["queens puzzle answer today", "linkedin queens solution", "queens puzzle hints", "linkedin queens today"],
   },
   {
     id: "tango",
     label: "LinkedIn Tango",
     emoji: "💃",
-    description: "Pattern-matching puzzle where you connect colored dots with non-crossing lines. Get expert solutions daily.",
+    description: "Today's LinkedIn Tango puzzle answer & solution. Connect colored dots with non-crossing lines — solved daily.",
     image: "/images/tango-game.png",
     difficulty: "Medium",
+    keywords: ["linkedin tango answer today", "tango puzzle solution", "linkedin tango hints"],
   },
   {
     id: "crossclimb",
     label: "LinkedIn Crossclimb",
     emoji: "🧗",
-    description: "Hybrid puzzle combining crossword clues with a ladder-style word progression. Daily solutions with explanations.",
+    description: "Today's LinkedIn Crossclimb answer & solution. Hybrid crossword-ladder puzzle solved daily with explanations.",
     image: "/images/crossclimb-game.png",
     difficulty: "Hard",
+    keywords: ["linkedin crossclimb answer today", "crossclimb solution", "crossclimb puzzle hints"],
   },
   {
     id: "zip",
     label: "LinkedIn Zip",
     emoji: "⚡",
-    description: "Number sequence puzzle where you find the missing number in an interlocking pattern. Daily solutions available.",
+    description: "Today's LinkedIn Zip puzzle answer & solution. Find the missing number in interlocking patterns — daily guide.",
     image: "/images/zip-game.png",
     difficulty: "Easy",
+    keywords: ["linkedin zip answer today", "zip puzzle solution", "linkedin zip hints"],
   },
   {
     id: "minisudoku",
     label: "LinkedIn Mini Sudoku",
     emoji: "🔢",
-    description: "A compact Sudoku puzzle exclusive to LinkedIn. Solve the mini grid with logic and deduction. Daily solutions with step-by-step guides.",
+    description: "Today's LinkedIn Mini Sudoku answer & solution. Solve the compact grid with logic — step-by-step daily guide.",
     image: "/images/mini-sudoku.png",
     difficulty: "Medium",
+    keywords: ["linkedin mini sudoku answer today", "mini sudoku solution", "linkedin sudoku hints"],
   },
 ] as const;
 
@@ -73,23 +79,27 @@ export const SOCIAL_LINKS = {
 
 export const FAQ_DATA = [
   {
-    question: "How often are puzzle solutions updated?",
-    answer: "Solutions are updated daily within 30 minutes for all LinkedIn puzzle games including Pinpoint, Queens, Tango, Crossclimb, Zip, and Mini Sudoku. You can also request solutions for other puzzle games.",
+    question: "What are today's LinkedIn puzzle answers?",
+    answer: "We publish daily solutions for all LinkedIn puzzle games — Pinpoint, Queens, Tango, Crossclimb, Zip, and Mini Sudoku — within 30 minutes of each new puzzle going live. Scroll up to find today's answers with step-by-step screenshots and video walkthroughs.",
   },
   {
-    question: "Are the solutions free to access?",
+    question: "How do I solve LinkedIn Pinpoint today?",
+    answer: "Check our daily Pinpoint solution page for the answer. We provide the common connection word, step-by-step clue analysis, and a video walkthrough to help you understand the logic behind today's puzzle.",
+  },
+  {
+    question: "Are the puzzle solutions free to access?",
     answer: "Yes, all puzzle solutions are completely free to access. We believe in making puzzle-solving resources available to everyone.",
   },
   {
     question: "How detailed are the solutions?",
-    answer: "Each solution includes step-by-step explanations, screenshots, and video walkthroughs when available. We ensure every step is clearly explained.",
+    answer: "Each solution includes step-by-step explanations, annotated screenshots showing every move, and video walkthroughs when available. We ensure every step is clearly explained so you can learn the strategy.",
   },
   {
-    question: "Can I request help for a specific puzzle?",
-    answer: "Yes! You can contact us through our support page, and we'll help you with any specific puzzle you're struggling with.",
+    question: "Can I get hints instead of the full answer?",
+    answer: "Yes! Each solution page includes a hints section that gives you progressive clues without spoiling the full answer. Start with Hint 1 and work your way up only if you need more help.",
   },
   {
-    question: "Can you tell me more about PuzzleLogicHub?",
-    answer: "PuzzleLogicHub is your premier destination for comprehensive LinkedIn puzzle solutions. We provide daily updated solutions for Pinpoint, Queens, Tango, Crossclimb, Zip, and Mini Sudoku puzzles, helping you master these challenging games with detailed explanations and expert strategies.",
+    question: "What LinkedIn puzzle games do you cover?",
+    answer: "We cover all six LinkedIn puzzle games: Pinpoint (word connections), Queens (logic placement), Tango (pattern matching), Crossclimb (crossword ladder), Zip (number sequences), and Mini Sudoku (compact grid). Solutions are updated daily for each game.",
   },
 ];

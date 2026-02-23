@@ -32,7 +32,7 @@ const TodaysPuzzles = memo(() => {
                 </div>
                 <div className="flex flex-1 flex-col p-5">
                   <h3 className="mb-1 font-display text-lg font-bold text-foreground">
-                    {game.label}
+                    {game.label} Answer Today
                   </h3>
                   <p className="mb-4 min-h-[3em] text-sm text-muted-foreground">
                     {game.description}
@@ -41,7 +41,7 @@ const TodaysPuzzles = memo(() => {
                     asChild
                     className="mt-auto w-full rounded-full font-display font-semibold transition-transform hover:scale-[1.02]"
                   >
-                    <Link to={`/solutions/${game.id}`}>View Today's Solution</Link>
+                    <Link to={`/solutions/${game.id}`}>View Today's Answer</Link>
                   </Button>
                 </div>
               </div>

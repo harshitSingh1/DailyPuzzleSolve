@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +8,7 @@ import { HelmetProvider } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import RecruitmentBanner from "@/components/RecruitmentBanner";
+import { prefetchGlobalData, startKeepAlive } from "@/lib/prefetcher";
 
 import Index from "./pages/index";
 
@@ -32,10 +33,10 @@ const ScrollPopupAd = lazy(() => import("./components/ads/ScrollPopupAd"));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 3,
-      staleTime: 10 * 60 * 1000, // 10 min stale, show cached data first
+      retry: 1,
+      staleTime: 30 * 60 * 1000,       // 30 min stale – show cached data instantly
       refetchOnWindowFocus: false,
-      gcTime: 24 * 60 * 60 * 1000, // 24h cache in memory
+      gcTime: 60 * 60 * 1000,           // 60 min cache in memory
       refetchOnReconnect: false,
     },
   },
@@ -47,7 +48,13 @@ const PageFallback = () => (
   </div>
 );
 
-const App = () => (
+const App = () => {
+  useEffect(() => {
+    prefetchGlobalData(queryClient);
+    startKeepAlive();
+  }, []);
+
+  return (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -87,6 +94,7 @@ const App = () => (
       </TooltipProvider>
     </QueryClientProvider>
   </HelmetProvider>
-);
+  );
+};
 
 export default App;
