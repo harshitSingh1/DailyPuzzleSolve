@@ -11,7 +11,7 @@ const HeroSection = memo(() => {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="w-full bg-white/10 backdrop-blur-sm border-b border-white/10 py-2.5 px-4 text-center"
+        className="hidden md:block w-full bg-white/10 backdrop-blur-sm border-b border-white/10 py-2.5 px-4 text-center"
       >
         <p
           className="text-sm font-medium text-white/95 sm:text-base"

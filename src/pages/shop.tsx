@@ -1,105 +1,83 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ShoppingBag, Star, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import SEOHead from "@/components/SEOHead";
 import AdBlock from "@/components/ads/AdBlock";
+import ShopCard from "@/components/shop/ShopCard";
+import ShopFilters, { type SortOption } from "@/components/shop/ShopFilters";
 import { fetchShopItems } from "@/lib/api";
+import { parseDescription } from "@/lib/shopUtils";
 import { SITE_URL, SITE_NAME } from "@/lib/constants";
+import { Link } from "react-router-dom";
 import type { ShopItem } from "@/lib/types";
 
 const categories = ["All", "Tech", "Puzzles", "Books"] as const;
 const today = new Date().toISOString().split("T")[0];
-
-function parseDescription(description: string) {
-  const priceRegex = /(Rs|₹)\s*([\d,]+)\s*\/-/;
-  const discountRegex = /\(([^)]+)\)/;
-  const priceMatch = description.match(priceRegex);
-  const discountMatch = description.match(discountRegex);
-  const clean = description
-    .replace(priceRegex, "")
-    .replace(discountRegex, "")
-    .replace(/\s+/g, " ")
-    .trim();
-  return {
-    cleanDescription: clean,
-    price: priceMatch ? `${priceMatch[1]} ${priceMatch[2]}/-` : null,
-    discount: discountMatch ? discountMatch[1] : null,
-  };
-}
-
-const ShopCard = ({ item }: { item: ShopItem }) => {
-  const { cleanDescription, price, discount } = parseDescription(item.description || "");
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-shadow hover:shadow-lg"
-      itemScope
-      itemType="https://schema.org/Product"
-    >
-      {discount && (
-        <Badge className="absolute right-3 top-3 z-10 bg-destructive text-destructive-foreground">{discount}</Badge>
-      )}
-      <div className="aspect-square overflow-hidden bg-muted flex items-center justify-center">
-        <img
-          src={item.image || "/placeholder.svg"}
-          alt={item.productName}
-          className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
-          itemProp="image"
-        />
-      </div>
-      <div className="flex flex-1 flex-col p-4">
-        <h2 className="font-display text-lg font-bold line-clamp-2 mb-1" itemProp="name">{item.productName}</h2>
-        <div className="mb-2 flex items-center gap-1" itemProp="aggregateRating" itemScope itemType="https://schema.org/AggregateRating">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star
-              key={i}
-              className={`h-4 w-4 ${i < Math.round(item.rating || 0) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/30"}`}
-            />
-          ))}
-          <span className="ml-1 text-xs text-muted-foreground">
-            <span itemProp="ratingValue">{(item.rating || 0).toFixed(1)}</span>
-          </span>
-          <meta itemProp="bestRating" content="5" />
-        </div>
-        <p className="mb-4 flex-1 text-sm text-muted-foreground line-clamp-3" itemProp="description">{cleanDescription}</p>
-        <div className="flex items-center justify-between gap-2">
-          {price && (
-            <span className="font-display font-bold text-primary" itemProp="offers" itemScope itemType="https://schema.org/Offer">
-              <span itemProp="price">{price}</span>
-            </span>
-          )}
-          <Button asChild size="sm" className="ml-auto gap-1.5">
-            <a href={item.url} target="_blank" rel="noopener noreferrer">
-              <ShoppingBag className="h-4 w-4" />
-              {item.buttonText || "Buy Now"}
-            </a>
-          </Button>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+const MAX_PRICE = 100000;
 
 const Shop = () => {
   const [category, setCategory] = useState<string>("All");
-  const { data: items = [], isLoading, error } = useQuery({
+  const [sort, setSort] = useState<SortOption>("none");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, MAX_PRICE]);
+
+  const {
+    data: items = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["shop"],
     queryFn: fetchShopItems,
   });
 
+  const handleCategoryChange = useCallback((c: string) => setCategory(c), []);
+  const handleSortChange = useCallback((s: SortOption) => setSort(s), []);
+  const handlePriceRangeChange = useCallback((r: [number, number]) => setPriceRange(r), []);
+
   const filtered = useMemo(() => {
-    if (category === "All") return items;
-    return items.filter((item) =>
-      (item.description || "").toLowerCase().includes(category.toLowerCase())
-    );
-  }, [items, category]);
+    let result = items;
+
+    // Category filter
+    if (category !== "All") {
+      result = result.filter((item) => (item.description || "").toLowerCase().includes(category.toLowerCase()));
+    }
+
+    // Parse descriptions once for filtering/sorting
+    const withParsed = result.map((item) => ({
+      item,
+      parsed: parseDescription(item.description || ""),
+    }));
+
+    // Price range filter
+    const priceFiltered = withParsed.filter(({ parsed }) => {
+      if (parsed.priceNumeric === null) return true; // keep items without price
+      const aboveMin = parsed.priceNumeric >= priceRange[0];
+      const belowMax = priceRange[1] >= MAX_PRICE ? true : parsed.priceNumeric <= priceRange[1];
+      return aboveMin && belowMax;
+    });
+
+    // Smart sort-filters (best-deal / featured applied as filters)
+    let smartFiltered = priceFiltered;
+    if (sort === "best-deal") {
+      smartFiltered = smartFiltered.filter(({ parsed }) => parsed.discount !== null);
+    }
+    if (sort === "featured") {
+      smartFiltered = smartFiltered.filter(({ parsed }) => (parsed.discount || "").toLowerCase().includes("featured"));
+    }
+
+    // Sort
+    if (sort === "price-asc") {
+      smartFiltered.sort((a, b) => (a.parsed.priceNumeric ?? Infinity) - (b.parsed.priceNumeric ?? Infinity));
+    } else if (sort === "price-desc") {
+      smartFiltered.sort((a, b) => (b.parsed.priceNumeric ?? 0) - (a.parsed.priceNumeric ?? 0));
+    } else if (sort === "rating-desc") {
+      smartFiltered.sort((a, b) => (b.item.rating || 0) - (a.item.rating || 0));
+    }
+
+    return smartFiltered.map(({ item }) => item);
+  }, [items, category, priceRange, sort]);
 
   return (
     <>
@@ -122,29 +100,31 @@ const Shop = () => {
       <main className="pt-6 pb-12">
         <div className="container">
           {/* Header */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10 text-center">
-            <h1 className="font-display text-3xl font-extrabold sm:text-4xl mb-2">Puzzle Books & Brain Games</h1>
-            <p className="mx-auto max-w-lg text-muted-foreground">
-              Curated mind-challenging books and puzzle games to sharpen your thinking
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 text-center">
+            <h1 className="font-display text-3xl font-extrabold sm:text-4xl mb-3">Puzzle Books & Brain Games</h1>
+            <p className="mx-auto max-w-2xl text-sm text-muted-foreground leading-relaxed">
+              We have compared 10–15 similar products in each category and verified all reviews before listing them to
+              provide you with the best products in the market. To report/suggest any product, please{" "}
+              <Link to="/contact" className="text-primary underline underline-offset-2 hover:text-primary/80">
+                Contact Us
+              </Link>
+              .
             </p>
-            {/* Category filter */}
-            <div className="mt-6 flex flex-wrap justify-center gap-2">
-              {categories.map((cat) => (
-                <Button
-                  key={cat}
-                  variant={category === cat ? "default" : "outline"}
-                  size="sm"
-                  className="rounded-full"
-                  onClick={() => setCategory(cat)}
-                >
-                  {cat}
-                </Button>
-              ))}
-            </div>
           </motion.div>
 
+          {/* Filters Bar */}
+          <ShopFilters
+            category={category}
+            categories={categories}
+            onCategoryChange={handleCategoryChange}
+            sort={sort}
+            onSortChange={handleSortChange}
+            priceRange={priceRange}
+            onPriceRangeChange={handlePriceRangeChange}
+            maxPrice={MAX_PRICE}
+          />
           {/* Top leaderboard */}
-          <AdBlock slot="5934836566" format="leaderboard" lazy={false} minHeight={90} className="mb-8" />
+          <AdBlock slot="5934836566" format="leaderboard" lazy={false} minHeight={90} className="my-6" />
 
           {/* Product Grid */}
           {isLoading ? (
@@ -164,11 +144,13 @@ const Shop = () => {
           ) : error ? (
             <div className="flex flex-col items-center gap-3 py-12 text-center">
               <p className="text-muted-foreground">Server is waking up, retrying...</p>
-              <Button variant="outline" size="sm" onClick={() => window.location.reload()}>Try Again</Button>
+              <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
+                Try Again
+              </Button>
             </div>
           ) : filtered.length === 0 ? (
             <p className="text-center text-muted-foreground py-12">
-              {category === "All" ? "No products available at the moment." : `No ${category} products found.`}
+              No products match the current filters. Try adjusting your selection.
             </p>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -188,25 +170,34 @@ const Shop = () => {
             </Button>
           </div>
 
-          {/* Ad before SEO blurb */}
           <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
 
           {/* SEO blurb */}
-          <div className="mx-auto mt-8 max-w-2xl rounded-xl border border-border bg-muted/30 p-6 text-center">
+          <section className="mx-auto mt-8 max-w-2xl rounded-xl border border-border bg-muted/30 p-6 text-center">
             <h2 className="mb-2 font-display text-lg font-bold">Why Buy Puzzle Books & Games?</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Our curated selection of puzzle books and strategy games is designed to challenge minds of all skill levels.
-              Whether you're a beginner building problem-solving skills or an expert seeking a complex challenge,
-              each product is hand-picked for quality and learning value.
+              Our curated selection of puzzle books and strategy games is designed to challenge minds of all skill
+              levels. Whether you're a beginner building problem-solving skills or an expert seeking a complex
+              challenge, each product is hand-picked for quality and learning value.
             </p>
             <div className="mt-4 flex flex-wrap justify-center gap-2">
-              {["puzzle books for adults", "brain training games", "logic puzzle books", "strategy board games", "best puzzle gifts"].map((q) => (
-                <span key={q} className="rounded-full bg-background border border-border px-3 py-1 text-xs text-muted-foreground">{q}</span>
+              {[
+                "puzzle books for adults",
+                "brain training games",
+                "logic puzzle books",
+                "strategy board games",
+                "best puzzle gifts",
+              ].map((q) => (
+                <span
+                  key={q}
+                  className="rounded-full bg-background border border-border px-3 py-1 text-xs text-muted-foreground"
+                >
+                  {q}
+                </span>
               ))}
             </div>
-          </div>
+          </section>
 
-          {/* Bottom rectangle */}
           <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-4" />
         </div>
       </main>

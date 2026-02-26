@@ -81,7 +81,7 @@ const Contact = () => {
           "@context": "https://schema.org",
           "@type": "ContactPage",
           name: "Contact PuzzleLogicHub",
-          url: "https://daily-puzzle-solve.vercel.app/contact",
+          url: "https://dailypuzzlesolve.com/contact",
           publisher: { "@type": "Organization", name: "PuzzleLogicHub" },
         }}
       />
