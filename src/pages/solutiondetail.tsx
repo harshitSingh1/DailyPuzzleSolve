@@ -177,7 +177,7 @@ const SolutionDetail = () => {
               </time>
             </div>
             <p className="mt-2 text-muted-foreground">
-              Step-by-step guide to solve today's {formattedGameName.toLowerCase()} puzzle — screenshots, video & hints
+              Step-by-step guide to solve today's {formattedGameName.toLowerCase()} puzzle - screenshots, video & hints
             </p>
             <div className="mt-3 flex justify-center">
               <PuzzleCountdown />
@@ -266,7 +266,7 @@ const SolutionDetail = () => {
 
               {/* Today's Answer header */}
               <h2 className="font-display text-xl font-bold text-center">
-                Today's {formattedGameName} Answer — {todayLong}
+                Today's {formattedGameName} Answer - {todayLong}
               </h2>
 
               <Accordion type="single" collapsible defaultValue={puzzles[0]?._id} className="space-y-3">
@@ -372,7 +372,7 @@ const SolutionDetail = () => {
               {/* SEO Content block */}
               <div className="mt-10 rounded-lg border border-border bg-card p-6 sm:p-8">
                 <h2 className="mb-3 font-display text-xl font-bold">
-                  How to Solve {formattedGameName} Puzzles — Tips & Strategy
+                  How to Solve {formattedGameName} Puzzles - Tips & Strategy
                 </h2>
                 <p className="mb-4 text-sm text-muted-foreground">
                   Mastering {formattedGameName.toLowerCase()} requires understanding the core mechanics and recognizing

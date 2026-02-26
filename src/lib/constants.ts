@@ -1,7 +1,7 @@
 export const API_BASE_URL = "https://dps-backend-epx7.onrender.com/api";
 
 export const SITE_NAME = "PuzzleLogicHub";
-export const SITE_URL = "https://daily-puzzle-solve.vercel.app";
+export const SITE_URL = "https://dailypuzzlesolve.com";
 export const SITE_DESCRIPTION = "Get today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku solutions. Step-by-step screenshots, video walkthroughs & expert tips updated daily. Never lose your streak!";
 
 export const PUZZLE_GAMES = [
