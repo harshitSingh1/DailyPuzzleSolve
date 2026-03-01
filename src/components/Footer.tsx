@@ -10,12 +10,15 @@ const quickLinks = [
   { path: "/shop", name: "Buy Fun Games" },
   { path: "/games", name: "More Puzzles" },
   { path: "/blog", name: "Read Articles" },
+  { path: "/memes", name: "Tech Memes" },
 ];
 
 const infoLinks = [
   { path: "/about", name: "About Us" },
+  { path: "/editorial-policy", name: "Editorial Policy" },
   { path: "/privacy", name: "Privacy Policy" },
-  { path: "/terms", name: "Terms" },
+  { path: "/terms", name: "Terms of Service" },
+  { path: "/disclaimer", name: "Disclaimer" },
   { path: "/contact", name: "Contact" },
 ];
 
@@ -36,12 +39,10 @@ const Footer = memo(() => {
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2">
               <img src="/images/logo1.png" alt="PuzzleLogicHub Logo" width={32} height={32} className="h-8 w-8" loading="lazy" />
-              <span className="font-display text-xl font-bold text-gradient">
-                {SITE_NAME}
-              </span>
+              <span className="font-display text-xl font-bold text-gradient">{SITE_NAME}</span>
             </Link>
             <p className="text-sm text-white/70">
-              Your daily source for logic puzzle solutions and brain teasers.
+              Your daily source for LinkedIn puzzle solutions, strategy guides, and brain training resources. Updated every day within 30 minutes of each puzzle going live.
             </p>
             <div className="flex gap-2">
               {socialItems.map((s) => (
@@ -102,9 +103,12 @@ const Footer = memo(() => {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
-          <span>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</span>
-          <span>Designed for puzzle enthusiasts worldwide</span>
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
+          <span>&copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</span>
+          <span className="text-center">
+            Contact: <a href="mailto:contact@puzzlelogichub.com" className="text-white/70 hover:text-white underline">contact@puzzlelogichub.com</a>
+          </span>
+          <span>Not affiliated with LinkedIn Corporation. All trademarks belong to their respective owners.</span>
         </div>
       </div>
     </footer>

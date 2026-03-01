@@ -103,14 +103,19 @@ const Shop = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 text-center">
             <h1 className="font-display text-3xl font-extrabold sm:text-4xl mb-3">Puzzle Books & Brain Games</h1>
             <p className="mx-auto max-w-2xl text-sm text-muted-foreground leading-relaxed">
-              We have compared 10–15 similar products in each category and verified all reviews before listing them to
-              provide you with the best products in the market. To report/suggest any product, please{" "}
+              We have compared 10 to 15 similar products in each category and verified all reviews before listing them to
+              provide you with the best products in the market. To report or suggest any product, please{" "}
               <Link to="/contact" className="text-primary underline underline-offset-2 hover:text-primary/80">
                 Contact Us
               </Link>
               .
             </p>
           </motion.div>
+
+          {/* Affiliate Disclosure */}
+          <div className="mx-auto mb-8 max-w-3xl rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-xs text-muted-foreground">
+            <strong className="text-foreground">Affiliate Disclosure:</strong> Some links on this page are affiliate links. If you make a purchase through these links, we may earn a small commission at no extra cost to you. This helps us keep the site running and continue providing free daily puzzle solutions. Read our full <Link to="/disclaimer" className="text-primary underline underline-offset-2">Disclaimer</Link>.
+          </div>
 
           {/* Filters Bar */}
           <ShopFilters
@@ -171,6 +176,19 @@ const Shop = () => {
           </div>
 
           <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
+
+          {/* Buyer Guide (repositioned below grid) */}
+          <div className="mx-auto mt-8 max-w-3xl space-y-4 text-muted-foreground leading-relaxed">
+            <p>
+              If you enjoy solving LinkedIn puzzles daily, you will love having a physical puzzle book or strategy game to practice with offline. Puzzle books strengthen the same pattern recognition and logical deduction skills that make you better at Pinpoint, Queens, and Tango. Strategy board games add a social element, letting you challenge friends and family while training your brain.
+            </p>
+            <p>
+              Our team personally reviews every product before adding it to this page. We compare pricing, read verified buyer reviews, check the publisher's reputation, and test difficulty levels to make sure each recommendation offers genuine value. Products that receive consistently negative feedback or poor quality ratings are removed from our listings.
+            </p>
+            <p>
+              Whether you are shopping for yourself or looking for a thoughtful gift for a puzzle-loving friend, you will find something here that fits. We organize products by category and price range so you can quickly narrow down your options.
+            </p>
+          </div>
 
           {/* SEO blurb */}
           <section className="mx-auto mt-8 max-w-2xl rounded-xl border border-border bg-muted/30 p-6 text-center">

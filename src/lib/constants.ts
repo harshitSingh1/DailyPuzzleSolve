@@ -1,14 +1,14 @@
 export const API_BASE_URL = "https://dps-backend-epx7.onrender.com/api";
 
 export const SITE_NAME = "PuzzleLogicHub";
-export const SITE_URL = "https://dailypuzzlesolve.com";
+export const SITE_URL = "https://daily-puzzle-solve.vercel.app";
 export const SITE_DESCRIPTION = "Get today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku solutions. Step-by-step screenshots, video walkthroughs & expert tips updated daily. Never lose your streak!";
 
 export const PUZZLE_GAMES = [
   {
     id: "pinpoint",
     label: "LinkedIn Pinpoint",
-    emoji: "🎯",
+    icon: "Target",
     description: "Today's LinkedIn Pinpoint answer & solution. Find the common connection between four words with our step-by-step guide.",
     image: "/images/pinpoint-game.png",
     difficulty: "Medium",
@@ -17,7 +17,7 @@ export const PUZZLE_GAMES = [
   {
     id: "queens",
     label: "LinkedIn Queens",
-    emoji: "👑",
+    icon: "Crown",
     description: "Today's LinkedIn Queens puzzle answer & solution. Place queens on the board without conflicts using our daily guide.",
     image: "/images/queens-game.png",
     difficulty: "Hard",
@@ -26,7 +26,7 @@ export const PUZZLE_GAMES = [
   {
     id: "tango",
     label: "LinkedIn Tango",
-    emoji: "💃",
+    icon: "Disc",
     description: "Today's LinkedIn Tango puzzle answer & solution. Connect colored dots with non-crossing lines — solved daily.",
     image: "/images/tango-game.png",
     difficulty: "Medium",
@@ -35,7 +35,7 @@ export const PUZZLE_GAMES = [
   {
     id: "crossclimb",
     label: "LinkedIn Crossclimb",
-    emoji: "🧗",
+    icon: "ArrowUpDown",
     description: "Today's LinkedIn Crossclimb answer & solution. Hybrid crossword-ladder puzzle solved daily with explanations.",
     image: "/images/crossclimb-game.png",
     difficulty: "Hard",
@@ -44,7 +44,7 @@ export const PUZZLE_GAMES = [
   {
     id: "zip",
     label: "LinkedIn Zip",
-    emoji: "⚡",
+    icon: "Zap",
     description: "Today's LinkedIn Zip puzzle answer & solution. Find the missing number in interlocking patterns — daily guide.",
     image: "/images/zip-game.png",
     difficulty: "Easy",
@@ -53,7 +53,7 @@ export const PUZZLE_GAMES = [
   {
     id: "minisudoku",
     label: "LinkedIn Mini Sudoku",
-    emoji: "🔢",
+    icon: "Grid3x3",
     description: "Today's LinkedIn Mini Sudoku answer & solution. Solve the compact grid with logic — step-by-step daily guide.",
     image: "/images/mini-sudoku.png",
     difficulty: "Medium",
@@ -63,11 +63,11 @@ export const PUZZLE_GAMES = [
 
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/games", label: "Games" },
-  { href: "/blog", label: "Blog" },
+  { href: "/memes", label: "Memes" },
   { href: "/shop", label: "Shop" },
   { href: "/tools", label: "Tools" },
-  { href: "/memes", label: "Memes" },
+  { href: "/blog", label: "Blogs" },
+  { href: "/about", label: "About" },
 ] as const;
 
 export const SOCIAL_LINKS = {

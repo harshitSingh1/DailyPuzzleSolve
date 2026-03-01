@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -40,6 +41,44 @@ async function fetchBlogPosts(): Promise<BlogPost[]> {
 const POSTS_PER_PAGE = 6;
 const today = new Date().toISOString().split("T")[0];
 
+const ORIGINAL_ARTICLES = [
+  {
+    title: "How to Solve LinkedIn Pinpoint Faster",
+    description: "Proven strategies for guessing the Pinpoint answer in fewer clues. Master category thinking, elimination, and word association.",
+    path: "/blog/how-to-solve-linkedin-pinpoint",
+    readTime: "8 min",
+    image: "/images/pinpoint-game.png",
+  },
+  {
+    title: "Best Brain Training Techniques for Puzzle Solvers",
+    description: "Science-backed methods to improve memory, focus, and pattern recognition. Spaced repetition, working memory exercises, and deliberate practice.",
+    path: "/blog/brain-training-techniques",
+    readTime: "10 min",
+    image: "/images/hero.jpeg",
+  },
+  {
+    title: "Daily Puzzle Strategy Guide: Master Every LinkedIn Game",
+    description: "Complete strategies for Pinpoint, Queens, Tango, Crossclimb, Zip, and Mini Sudoku. Tips from experienced solvers.",
+    path: "/blog/daily-puzzle-strategy-guide",
+    readTime: "12 min",
+    image: "/images/crossclimb-game.png",
+  },
+  {
+    title: "How to Master the LinkedIn Queens Puzzle",
+    description: "Constraint-based solving, backtracking, and pattern recognition. A systematic approach that eliminates guessing.",
+    path: "/blog/queens-puzzle-strategy",
+    readTime: "9 min",
+    image: "/images/queens-game.png",
+  },
+  {
+    title: "LinkedIn Tango Puzzle: Tips to Solve It Every Time",
+    description: "Master forced moves, balance counting, and the triple rule. Systematic techniques for consistent solves.",
+    path: "/blog/tango-puzzle-tips",
+    readTime: "7 min",
+    image: "/images/tango-game.png",
+  },
+];
+
 const Blog = () => {
   const [page, setPage] = useState(1);
 
@@ -76,8 +115,8 @@ const Blog = () => {
   return (
     <>
       <SEOHead
-        title="Tech & Programming Blog – Trending Articles for Developers"
-        description="Stay updated with the latest technology trends, programming tutorials, and coding articles curated for puzzle enthusiasts and developers."
+        title="Puzzle Strategy Blog - Tips, Guides & Brain Training Articles"
+        description="Expert puzzle-solving strategies, brain training techniques, and daily guides for LinkedIn Pinpoint, Queens, Tango, Crossclimb, Zip, and Mini Sudoku."
         path="/blog"
         type="website"
         dateModified={today}
@@ -88,11 +127,52 @@ const Blog = () => {
       <main className="pt-6 pb-12">
         <div className="container max-w-5xl">
           <h1 className="mb-2 text-center font-display text-3xl font-extrabold text-foreground sm:text-4xl">
-            Trending Tech Articles
+            Puzzle Strategy Blog
           </h1>
-          <p className="mb-8 text-center text-sm text-muted-foreground">
-            Curated programming & technology content, updated regularly
+          <p className="mb-8 text-center text-muted-foreground max-w-2xl mx-auto">
+            In-depth strategy guides, brain training articles, and daily solving tips written by our editorial team. Learn the reasoning behind every puzzle so you can solve tomorrow's on your own.
           </p>
+
+          {/* Original strategy articles */}
+          <section className="mb-10">
+            <h2 className="font-display text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-primary" /> Our Strategy Guides
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {ORIGINAL_ARTICLES.map((article, i) => (
+                <motion.div
+                  key={article.path}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <Link
+                    to={article.path}
+                    className="flex flex-col h-full overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-md hover:border-primary/50"
+                  >
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="h-36 w-full object-cover"
+                      loading={i < 3 ? "eager" : "lazy"}
+                    />
+                    <div className="flex flex-1 flex-col p-4">
+                      <h3 className="mb-1 font-display text-base font-bold text-foreground line-clamp-2">{article.title}</h3>
+                      <p className="mb-3 text-sm text-muted-foreground line-clamp-2">{article.description}</p>
+                      <div className="mt-auto flex items-center justify-between text-xs text-muted-foreground">
+                        <span>{SITE_NAME} Team</span>
+                        <span>{article.readTime} read</span>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+
+          <AdBlock slot="5934836566" format="leaderboard" lazy={false} minHeight={90} className="mb-6" />
+
+          <h2 className="font-display text-xl font-bold text-foreground mb-4">Trending Tech Articles</h2>
 
           {/* Featured post */}
           {isLoading ? (

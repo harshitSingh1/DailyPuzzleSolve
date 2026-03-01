@@ -73,13 +73,13 @@ const Privacy = () => (
       title="Privacy Policy"
       description="Learn how PuzzleLogicHub collects, uses, and protects your personal information. Read our comprehensive privacy policy."
       path="/privacy"
-      robots="noindex, follow"
+      robots="index, follow"
       jsonLd={{
         "@context": "https://schema.org",
         "@type": "WebPage",
         name: "Privacy Policy | PuzzleLogicHub",
         description: "Learn how PuzzleLogicHub collects, uses, and protects your personal information.",
-        url: "https://dailypuzzlesolve.com/privacy",
+        url: "https://daily-puzzle-solve.vercel.app/privacy",
         datePublished: "2025-01-01",
         dateModified: lastUpdated,
       }}
