@@ -19,7 +19,14 @@ const Contact = lazy(() => import("./pages/contact"));
 const About = lazy(() => import("./pages/about"));
 const Privacy = lazy(() => import("./pages/privacy"));
 const Terms = lazy(() => import("./pages/terms"));
+const Disclaimer = lazy(() => import("./pages/disclaimer"));
+const EditorialPolicy = lazy(() => import("./pages/editorial-policy"));
 const Blog = lazy(() => import("./pages/blog"));
+const BlogPinpoint = lazy(() => import("./pages/blog/how-to-solve-linkedin-pinpoint"));
+const BlogBrainTraining = lazy(() => import("./pages/blog/brain-training-techniques"));
+const BlogStrategyGuide = lazy(() => import("./pages/blog/daily-puzzle-strategy-guide"));
+const BlogQueensStrategy = lazy(() => import("./pages/blog/queens-puzzle-strategy"));
+const BlogTangoTips = lazy(() => import("./pages/blog/tango-puzzle-tips"));
 const Games = lazy(() => import("./pages/games"));
 const Memes = lazy(() => import("./pages/memes"));
 const Shop = lazy(() => import("./pages/shop"));
@@ -75,8 +82,15 @@ const App = () => {
                   <Route path="/about" element={<About />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/terms" element={<Terms />} />
+                  <Route path="/disclaimer" element={<Disclaimer />} />
+                  <Route path="/editorial-policy" element={<EditorialPolicy />} />
                   <Route path="/games" element={<Games />} />
                   <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/how-to-solve-linkedin-pinpoint" element={<BlogPinpoint />} />
+                  <Route path="/blog/brain-training-techniques" element={<BlogBrainTraining />} />
+                  <Route path="/blog/daily-puzzle-strategy-guide" element={<BlogStrategyGuide />} />
+                  <Route path="/blog/queens-puzzle-strategy" element={<BlogQueensStrategy />} />
+                  <Route path="/blog/tango-puzzle-tips" element={<BlogTangoTips />} />
                   <Route path="/shop" element={<Shop />} />
                   <Route path="/tools" element={<Tools />} />
                   <Route path="/memes" element={<Memes />} />

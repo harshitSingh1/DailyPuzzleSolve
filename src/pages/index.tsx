@@ -1,10 +1,13 @@
+import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
+import { Puzzle, Wrench, BookOpen, ShoppingCart, Smile } from "lucide-react";
 import HeroSection from "@/components/home/HeroSection";
 import TodaysPuzzles from "@/components/home/TodaysPuzzles";
 import FAQSection from "@/components/home/FAQSection";
 import WhatsNewSection from "@/components/home/WhatsNewSection";
 import PuzzleCountdown from "@/components/PuzzleCountdown";
 import AdBlock from "@/components/ads/AdBlock";
+import PuzzleIcon from "@/components/PuzzleIcon";
 import { SITE_DESCRIPTION, SITE_URL, SITE_NAME, PUZZLE_GAMES } from "@/lib/constants";
 
 const today = new Date().toISOString().split("T")[0];
@@ -91,45 +94,125 @@ const Index = () => {
       />
 
       <main>
+        {/* Compact hero */}
         <HeroSection />
-        {/* Ad below hero */}
-        <AdBlock slot="5934836566" format="leaderboard" lazy={false} minHeight={90} className="my-2" />
 
-        {/* Puzzles section heading with freshness signal */}
-        <div className="container pt-6 pb-2 text-center">
-          <h2 className="font-display text-2xl font-extrabold sm:text-3xl">
+        {/* === INTERACTIVE SECTION FIRST === */}
+        <div className="container pt-5 pb-2 text-center" id="puzzles">
+          <h2 className="font-display text-xl font-extrabold sm:text-2xl">
             Today's LinkedIn Puzzle Answers
           </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
             Updated daily · <time dateTime={today}>{todayLong}</time>
           </p>
-          <div className="mt-3 flex justify-center">
+          <div className="mt-2 flex justify-center">
             <PuzzleCountdown />
           </div>
         </div>
 
         <TodaysPuzzles />
 
-        {/* Mid-page ad */}
-        <AdBlock slot="5934836566" format="leaderboard" lazy={true} minHeight={90} className="my-4" />
+        <AdBlock slot="5934836566" format="leaderboard" lazy={true} minHeight={90} className="my-3" />
 
         <WhatsNewSection />
+
+        {/* === SEO CONTENT BELOW THE FOLD === */}
+
+        {/* Branded intro section */}
+        <section className="py-8 sm:py-10">
+          <div className="container max-w-4xl">
+            <h2 className="mb-3 text-center font-display text-xl font-extrabold sm:text-2xl">
+              Welcome to {SITE_NAME}
+            </h2>
+            <div className="space-y-3 text-sm sm:text-base text-muted-foreground leading-relaxed">
+              <p>
+                LinkedIn launched a collection of daily puzzle games in 2024, and they quickly became one of the platform's most popular features. Every day, millions of professionals take a break from their feeds to solve Pinpoint, Queens, Tango, Crossclimb, Zip, and Mini Sudoku. These games test your vocabulary, logic, pattern recognition, and spatial reasoning, and each one resets at the same time every day.
+              </p>
+              <p>
+                PuzzleLogicHub exists because we know that feeling of being stuck on a puzzle with no reliable help available. Most search results are either outdated, incomplete, or buried under ads. We built this site to be the resource we wished we had: fast, accurate daily solutions with real explanations, not just screenshots of the final answer.
+              </p>
+              <p>
+                Every solution on this site is created by our team of puzzle enthusiasts within 30 minutes of each new puzzle going live. We include annotated screenshots, step-by-step reasoning, progressive hints for those who want a nudge rather than the full answer, and video walkthroughs for visual learners. Our goal is not just to give you today's answer but to help you understand the logic so you can solve tomorrow's puzzle on your own.
+              </p>
+            </div>
+
+            {/* Trust signals */}
+            <div className="mt-6 grid gap-3 grid-cols-3">
+              <div className="rounded-xl border border-border bg-card p-3 text-center shadow-sm">
+                <p className="font-display text-xl font-extrabold text-primary">6</p>
+                <p className="text-xs text-muted-foreground">Puzzles Daily</p>
+              </div>
+              <div className="rounded-xl border border-border bg-card p-3 text-center shadow-sm">
+                <p className="font-display text-xl font-extrabold text-primary">30 min</p>
+                <p className="text-xs text-muted-foreground">Post Time</p>
+              </div>
+              <div className="rounded-xl border border-border bg-card p-3 text-center shadow-sm">
+                <p className="font-display text-xl font-extrabold text-primary">100%</p>
+                <p className="text-xs text-muted-foreground">Free Access</p>
+              </div>
+            </div>
+
+            {/* Category links */}
+            <div className="mt-6">
+              <h3 className="mb-2 text-center font-display text-base font-bold">Explore More</h3>
+              <div className="flex flex-wrap justify-center gap-2">
+                <Link to="/games" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs sm:text-sm font-semibold transition-all hover:border-primary hover:text-primary flex items-center gap-1"><Puzzle className="h-3.5 w-3.5" /> More Puzzles</Link>
+                <Link to="/tools" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs sm:text-sm font-semibold transition-all hover:border-primary hover:text-primary flex items-center gap-1"><Wrench className="h-3.5 w-3.5" /> Tools</Link>
+                <Link to="/blog" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs sm:text-sm font-semibold transition-all hover:border-primary hover:text-primary flex items-center gap-1"><BookOpen className="h-3.5 w-3.5" /> Articles</Link>
+                <Link to="/shop" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs sm:text-sm font-semibold transition-all hover:border-primary hover:text-primary flex items-center gap-1"><ShoppingCart className="h-3.5 w-3.5" /> Shop</Link>
+                <Link to="/memes" className="rounded-full border border-border bg-card px-3 py-1.5 text-xs sm:text-sm font-semibold transition-all hover:border-primary hover:text-primary flex items-center gap-1"><Smile className="h-3.5 w-3.5" /> Memes</Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <AdBlock slot="5934836566" format="leaderboard" lazy={true} minHeight={90} className="my-3" />
+
+        {/* Strategy articles */}
+        <section className="py-8 sm:py-10 bg-muted/30">
+          <div className="container max-w-5xl">
+            <h2 className="mb-2 text-center font-display text-xl font-extrabold sm:text-2xl">
+              Puzzle Strategy Articles
+            </h2>
+            <p className="mb-5 text-center text-xs sm:text-sm text-muted-foreground">
+              In-depth guides written by our editorial team
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { title: "How to Solve LinkedIn Pinpoint Faster", path: "/blog/how-to-solve-linkedin-pinpoint", desc: "Master category thinking and elimination to guess in fewer clues.", time: "8 min" },
+                { title: "Best Brain Training Techniques", path: "/blog/brain-training-techniques", desc: "Science-backed methods for memory, focus, and pattern recognition.", time: "10 min" },
+                { title: "Daily Puzzle Strategy Guide", path: "/blog/daily-puzzle-strategy-guide", desc: "Complete strategies for all six LinkedIn puzzle games.", time: "12 min" },
+              ].map((a) => (
+                <Link key={a.path} to={a.path} className="rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md hover:border-primary/50">
+                  <h3 className="font-display text-sm sm:text-base font-bold text-foreground mb-1">{a.title}</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-2">{a.desc}</p>
+                  <span className="text-xs text-primary font-semibold">{a.time} read →</span>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-4 text-center">
+              <Link to="/blog" className="text-sm font-semibold text-primary hover:underline">
+                View all articles →
+              </Link>
+            </div>
+          </div>
+        </section>
 
         <FAQSection />
 
         {/* Related puzzles / internal linking */}
-        <section className="py-8 sm:py-10 bg-muted/30">
+        <section className="py-6 sm:py-8 bg-muted/30">
           <div className="container">
-            <h2 className="mb-4 text-center font-display text-xl font-bold">Popular LinkedIn Puzzle Answers</h2>
-            <div className="flex flex-wrap justify-center gap-3">
+            <h2 className="mb-3 text-center font-display text-lg font-bold">Popular LinkedIn Puzzle Answers</h2>
+            <div className="flex flex-wrap justify-center gap-2">
               {PUZZLE_GAMES.map((g) => (
-                <a
+                <Link
                   key={g.id}
-                  href={`/solutions/${g.id}`}
-                  className="rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-all hover:border-primary hover:text-primary"
+                  to={`/solutions/${g.id}`}
+                  className="rounded-full border border-border bg-card px-3 py-1.5 text-xs sm:text-sm font-semibold text-foreground transition-all hover:border-primary hover:text-primary"
                 >
-                  {g.emoji} {g.label} Answer Today
-                </a>
+                  <PuzzleIcon icon={g.icon} className="h-4 w-4 inline-block mr-1" />{g.label} Answer Today
+                </Link>
               ))}
             </div>
           </div>

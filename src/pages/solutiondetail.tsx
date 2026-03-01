@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Play, Image as ImageIcon, AlertCircle, Gamepad2, Lightbulb, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Play, Image as ImageIcon, AlertCircle, Gamepad2, Lightbulb, Eye, EyeOff, CheckCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import SEOHead from "@/components/SEOHead";
 import AdBlock from "@/components/ads/AdBlock";
 import InContentAd from "@/components/ads/InContentAd";
 import SocialShareButtons from "@/components/SocialShareButtons";
+import PuzzleIcon from "@/components/PuzzleIcon";
 import PuzzleCountdown from "@/components/PuzzleCountdown";
 import { fetchPuzzles } from "@/lib/api";
 import { PUZZLE_GAMES, SITE_URL, SITE_NAME } from "@/lib/constants";
@@ -179,6 +180,15 @@ const SolutionDetail = () => {
             <p className="mt-2 text-muted-foreground">
               Step-by-step guide to solve today's {formattedGameName.toLowerCase()} puzzle - screenshots, video & hints
             </p>
+
+            {/* Author byline – E-E-A-T trust signal */}
+            <div className="mt-4 inline-flex items-center gap-3 rounded-full border border-border bg-card px-4 py-2 text-sm shadow-sm">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">PLH</div>
+              <div className="text-left">
+                <p className="font-medium text-foreground">By the {SITE_NAME} Editorial Team</p>
+                <p className="text-xs text-muted-foreground">Verified solution · Published <time dateTime={today}>{todayLong}</time></p>
+              </div>
+            </div>
             <div className="mt-3 flex justify-center">
               <PuzzleCountdown />
             </div>
@@ -258,7 +268,7 @@ const SolutionDetail = () => {
                       <strong>Hint 3:</strong> If you're stuck, try working backwards from the final screenshot.
                     </p>
                     <p className="text-xs italic mt-2">
-                      💡 Still stuck? Scroll down for the full step-by-step solution.
+                      Still stuck? Scroll down for the full step-by-step solution.
                     </p>
                   </div>
                 )}
@@ -379,11 +389,11 @@ const SolutionDetail = () => {
                   recurring patterns. Our daily {formattedGameName.toLowerCase()} answers and solutions provide:
                 </p>
                 <ul className="mb-6 space-y-1.5 text-sm text-muted-foreground">
-                  <li>✅ Visual step-by-step screenshots for every puzzle</li>
-                  <li>✅ Video walkthroughs for visual learners</li>
-                  <li>✅ Progressive hints so you can try solving first</li>
-                  <li>✅ Multiple solving strategies explained</li>
-                  <li>✅ Updated daily so you never lose your streak</li>
+                  <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> Visual step-by-step screenshots for every puzzle</li>
+                  <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> Video walkthroughs for visual learners</li>
+                  <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> Progressive hints so you can try solving first</li>
+                  <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> Multiple solving strategies explained</li>
+                  <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> Updated daily so you never lose your streak</li>
                 </ul>
 
                 <h3 className="mb-2 font-display text-lg font-semibold">Frequently Asked Questions</h3>
@@ -452,7 +462,7 @@ const SolutionDetail = () => {
                       to={`/solutions/${g.id}`}
                       className="rounded-full border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-all hover:border-primary hover:text-primary"
                     >
-                      {g.emoji} {g.label} Answer Today
+                      <PuzzleIcon icon={g.icon} className="h-3.5 w-3.5 inline-block mr-1" />{g.label} Answer Today
                     </Link>
                   ))}
                 </div>

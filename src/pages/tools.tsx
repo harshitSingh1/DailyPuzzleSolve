@@ -154,6 +154,19 @@ const Tools = () => {
           {/* Ad before SEO blurb */}
           <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
 
+          {/* Educational Intro (repositioned below grid) */}
+          <div className="mx-auto mt-8 max-w-3xl space-y-4 text-muted-foreground leading-relaxed">
+            <p>
+              Whether you are debugging code, optimizing a workflow, or looking for a better way to visualize data structures, the right tool can save you hours. We have tested dozens of free online tools and selected the ones that genuinely help with both programming tasks and puzzle-solving strategies.
+            </p>
+            <p>
+              Each tool listed here meets three criteria: it must be free to use (at least for core features), it must work reliably in a web browser without requiring installations, and it must have practical value for developers or puzzle enthusiasts. We regularly review and update this list to remove tools that have gone offline and add new ones that deserve attention.
+            </p>
+            <p>
+              From code formatters and JSON validators to algorithm visualizers and regex testers, these resources complement the puzzle-solving mindset. Many competitive puzzle solvers use tools like these to prototype solutions, verify patterns, and sharpen their logical thinking outside of daily puzzles.
+            </p>
+          </div>
+
           {/* SEO blurb */}
           <div className="mx-auto mt-8 max-w-2xl rounded-xl border border-border bg-muted/30 p-6 text-center">
             <h2 className="font-display text-xl font-bold mb-2">About Our Developer Tools Collection</h2>

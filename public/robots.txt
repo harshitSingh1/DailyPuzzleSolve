@@ -2,7 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /private/
-Disallow: /api/
 
 # Crawl-delay for polite bots
 Crawl-delay: 1
