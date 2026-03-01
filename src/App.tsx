@@ -33,9 +33,7 @@ const Shop = lazy(() => import("./pages/shop"));
 const Tools = lazy(() => import("./pages/tools"));
 const NotFound = lazy(() => import("./pages/notfound"));
 
-// Lazy-loaded heavy ad components
-const StickyMobileAd = lazy(() => import("./components/ads/StickyMobileAd"));
-const ScrollPopupAd = lazy(() => import("./components/ads/ScrollPopupAd"));
+// Removed intrusive popup/sticky ads for AdSense policy compliance
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,10 +97,6 @@ const App = () => {
               </Suspense>
             </div>
             <Footer />
-            <Suspense fallback={null}>
-              <StickyMobileAd />
-              <ScrollPopupAd />
-            </Suspense>
           </div>
         </BrowserRouter>
       </TooltipProvider>

@@ -558,8 +558,6 @@ const Memes = () => {
             <p className="text-muted-foreground">Create your own memes or browse the freshest programming humor from Reddit</p>
           </motion.div>
 
-          <AdBlock slot="5934836566" format="leaderboard" lazy={false} minHeight={90} className="mb-8" />
-
           {/* ── EDITOR SECTION ─────────────────────── */}
           <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
             {/* Canvas */}
@@ -925,8 +923,8 @@ const Memes = () => {
             </div>
           </div>
 
-          {/* Ad before SEO Content */}
-          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
+          {/* Ad after gallery */}
+          <AdBlock slot="5934836566" format="in-article" layoutKey="-fb+5w+4e-db+86" lazy={true} minHeight={280} className="mt-8" />
 
           {/* Written intro (repositioned below gallery) */}
           <div className="mx-auto mt-8 max-w-3xl space-y-3 text-sm text-muted-foreground leading-relaxed">
@@ -962,7 +960,7 @@ const Memes = () => {
             </div>
           </div>
 
-          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-4" />
+          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-6" />
         </div>
       </main>
     </>

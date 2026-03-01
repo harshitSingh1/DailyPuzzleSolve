@@ -128,8 +128,8 @@ const Shop = () => {
             onPriceRangeChange={handlePriceRangeChange}
             maxPrice={MAX_PRICE}
           />
-          {/* Top leaderboard */}
-          <AdBlock slot="5934836566" format="leaderboard" lazy={false} minHeight={90} className="my-6" />
+          {/* Top banner ad */}
+          <AdBlock slot="5934836566" format="leaderboard" lazy={false} minHeight={90} className="my-4" />
 
           {/* Product Grid */}
           {isLoading ? (
@@ -175,7 +175,7 @@ const Shop = () => {
             </Button>
           </div>
 
-          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
+          <AdBlock slot="5934836566" format="in-article" layoutKey="-fb+5w+4e-db+86" lazy={true} minHeight={280} className="mt-8" />
 
           {/* Buyer Guide (repositioned below grid) */}
           <div className="mx-auto mt-8 max-w-3xl space-y-4 text-muted-foreground leading-relaxed">
@@ -216,7 +216,7 @@ const Shop = () => {
             </div>
           </section>
 
-          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-4" />
+          <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-6" />
         </div>
       </main>
     </>
