@@ -148,8 +148,18 @@ const SolutionDetail = () => {
         jsonLd={jsonLd}
       />
 
-      <main className="py-8 sm:py-12">
-        <div className="container max-w-4xl">
+      <main className="py-6 sm:py-10">
+        <div className="container">
+          <div className="flex gap-6">
+            {/* Left Sidebar Ad - xl only */}
+            <aside className="hidden xl:block w-[160px] shrink-0" aria-label="Advertisement">
+              <div className="sticky top-24">
+                <AdBlock slot="5934836566" format="auto" minHeight={600} lazy={true} className="my-0 w-[160px]" />
+              </div>
+            </aside>
+
+            {/* Main Content */}
+            <div className="min-w-0 flex-1 max-w-4xl mx-auto">
           {/* Breadcrumb nav */}
           <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
             <Link to="/" className="hover:text-foreground">
@@ -472,6 +482,15 @@ const SolutionDetail = () => {
 
           {/* Bottom rectangle ad */}
           <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
+            </div>
+
+            {/* Right Sidebar Ad - xl only */}
+            <aside className="hidden xl:block w-[160px] shrink-0" aria-label="Advertisement">
+              <div className="sticky top-24">
+                <AdBlock slot="5934836566" format="auto" minHeight={600} lazy={true} className="my-0 w-[160px]" />
+              </div>
+            </aside>
+          </div>
         </div>
       </main>
     </>

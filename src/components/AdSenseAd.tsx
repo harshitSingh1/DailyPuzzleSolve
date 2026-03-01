@@ -28,16 +28,7 @@ const AdSenseAd = ({
   const adRef = useRef<HTMLModElement>(null);
   const initialized = useRef(false);
 
-  useEffect(() => {
-    // Load the AdSense script once
-    if (!document.querySelector(`script[src*="adsbygoogle"]`)) {
-      const script = document.createElement("script");
-      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`;
-      script.async = true;
-      script.crossOrigin = "anonymous";
-      document.head.appendChild(script);
-    }
-  }, []);
+  // Script is loaded once in index.html <head>
 
   useEffect(() => {
     if (!initialized.current && adRef.current) {

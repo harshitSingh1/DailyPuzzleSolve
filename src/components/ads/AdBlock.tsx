@@ -36,21 +36,7 @@ interface AdBlockProps {
   layoutKey?: string;
 }
 
-let scriptInjected = false;
-
-function injectAdSenseScript() {
-  if (scriptInjected) return;
-  if (document.querySelector(`script[src*="adsbygoogle"]`)) {
-    scriptInjected = true;
-    return;
-  }
-  const script = document.createElement("script");
-  script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${PUBLISHER_ID}`;
-  script.async = true;
-  script.crossOrigin = "anonymous";
-  document.head.appendChild(script);
-  scriptInjected = true;
-}
+// Script is now loaded once in index.html <head> — no dynamic injection needed
 
 const AdBlock = ({
   slot,
@@ -91,7 +77,6 @@ const AdBlock = ({
     // Delay 1 second to avoid blocking LCP / main thread
     const timer = setTimeout(() => {
       try {
-        injectAdSenseScript();
         if (insRef.current && !insRef.current.getAttribute("data-adsbygoogle-status")) {
           (window as any).adsbygoogle = (window as any).adsbygoogle || [];
           (window as any).adsbygoogle.push({});
