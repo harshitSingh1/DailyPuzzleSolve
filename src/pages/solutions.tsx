@@ -5,17 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import SEOHead from "@/components/SEOHead";
 import AdBlock from "@/components/ads/AdBlock";
 import PuzzleCountdown from "@/components/PuzzleCountdown";
+import PuzzleIcon from "@/components/PuzzleIcon";
 import { PUZZLE_GAMES, SITE_URL, SITE_NAME } from "@/lib/constants";
 
 const today = new Date().toISOString().split("T")[0];
+const todayFormatted = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric" });
 const todayLong = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
 const Solutions = () => {
   return (
     <>
       <SEOHead
-        title={`LinkedIn Puzzle Answers Today (${today}) – Pinpoint, Queens, Tango & More`}
-        description={`Today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku solutions. Step-by-step screenshots, video walkthroughs & hints. Updated daily – ${todayLong}.`}
+        title={`LinkedIn Puzzle Answers Today (${todayFormatted})`}
+        description={`Today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku. Step-by-step solutions with screenshots updated daily.`}
         path="/solutions"
         datePublished="2025-01-01"
         dateModified={today}
@@ -50,14 +52,13 @@ const Solutions = () => {
               <time dateTime={today} className="text-sm text-muted-foreground">{todayLong}</time>
             </div>
             <p className="mx-auto max-w-2xl text-muted-foreground">
-              Choose a puzzle below for today's step-by-step answer with screenshots, video walkthroughs & hints. Never lose your streak!
+              Choose a puzzle below for today's step-by-step answer with screenshots, video walkthroughs and hints. Never lose your streak!
             </p>
             <div className="mt-3 flex justify-center">
               <PuzzleCountdown />
             </div>
           </div>
 
-          {/* Top leaderboard */}
           <AdBlock slot="5934836566" format="leaderboard" lazy={false} minHeight={90} className="mb-8" />
 
           <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -72,22 +73,22 @@ const Solutions = () => {
                   <div className="h-44 overflow-hidden bg-muted">
                     <img
                       src={game.image}
-                      alt={`${game.label} Answer Today – ${today}`}
+                      alt={`${game.label} Answer Today – ${todayFormatted}`}
+                      width={400}
+                      height={225}
                       className="h-full w-full object-cover transition-transform group-hover:scale-105"
                       loading={i < 3 ? "eager" : "lazy"}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = "/placeholder.svg";
-                      }}
+                      onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }}
                     />
                   </div>
                   <div className="flex flex-1 flex-col p-5">
-                    <h2 className="mb-1 font-display text-lg font-bold">{game.label} Answer Today</h2>
+                    <h2 className="mb-1 font-display text-lg font-bold">
+                      <PuzzleIcon icon={game.icon} className="h-4 w-4 inline-block mr-1" />
+                      {game.label} Answer Today
+                    </h2>
                     <p className="mb-4 min-h-[3em] text-sm text-muted-foreground">{game.description}</p>
-                    <Button
-                      asChild
-                      className="mt-auto w-full rounded-full font-display font-semibold transition-transform hover:scale-[1.02]"
-                    >
-                      <Link to={`/solutions/${game.id}`}>View Today's Answer →</Link>
+                    <Button asChild className="mt-auto w-full rounded-full font-display font-semibold">
+                      <Link to={`/solutions/${game.id}`}>View Today's Answer</Link>
                     </Button>
                   </div>
                 </div>
@@ -95,7 +96,6 @@ const Solutions = () => {
             ))}
           </div>
 
-          {/* Bottom in-article ad */}
           <AdBlock slot="5934836566" format="in-article" layoutKey="-fb+5w+4e-db+86" lazy={true} minHeight={280} className="mt-10" />
 
           {/* SEO content */}

@@ -7,19 +7,15 @@ interface SEOHeadProps {
   path?: string;
   type?: string;
   image?: string;
-  /** robots meta - default "index, follow" */
   robots?: string;
-  /** datePublished ISO string e.g. "2026-02-19" */
   datePublished?: string;
-  /** dateModified ISO string - defaults to today */
   dateModified?: string;
-  /** Breadcrumb items for BreadcrumbList schema */
   breadcrumbs?: Array<{ name: string; url: string }>;
-  /** Primary JSON-LD object (can be an array for multiple schemas) */
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  hreflang?: boolean;
 }
 
-const today = new Date().toISOString().split("T")[0]; // "2026-02-19"
+const today = new Date().toISOString().split("T")[0];
 
 const SEOHead = ({
   title,
@@ -27,11 +23,12 @@ const SEOHead = ({
   path = "/",
   type = "website",
   image = `${SITE_URL}/images/hero.jpeg`,
-  robots = "index, follow",
+  robots = "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
   datePublished,
   dateModified = today,
   breadcrumbs,
   jsonLd,
+  hreflang = true,
 }: SEOHeadProps) => {
   const fullTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
   const url = `${SITE_URL}${path}`;
@@ -53,13 +50,36 @@ const SEOHead = ({
       }
     : null;
 
-  // Merge primary jsonLd + breadcrumb into a @graph if both exist
+  // Organization schema for E-E-A-T
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/images/logo1.png`,
+    sameAs: [
+      "https://twitter.com/PuzzleLogicHub",
+      "https://youtube.com/@PuzzleLogicHub",
+      "https://linkedin.com/company/puzzlelogichub",
+      "https://facebook.com/PuzzleLogicHub",
+      "https://instagram.com/PuzzleLogicHub",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      url: `${SITE_URL}/contact`,
+    },
+  };
+
+  // Merge primary jsonLd + breadcrumb + org into a @graph
   const schemas: Record<string, unknown>[] = [];
   if (jsonLd) {
     if (Array.isArray(jsonLd)) schemas.push(...jsonLd);
     else schemas.push(jsonLd);
   }
   if (breadcrumbSchema) schemas.push(breadcrumbSchema);
+  // Only add org schema on homepage to avoid bloat
+  if (path === "/") schemas.push(orgSchema);
 
   return (
     <Helmet>
@@ -72,6 +92,16 @@ const SEOHead = ({
       {/* Freshness signals */}
       {datePublished && <meta name="article:published_time" content={datePublished} />}
       <meta name="article:modified_time" content={dateModified} />
+
+      {/* Hreflang for international targeting */}
+      {hreflang && (
+        <>
+          <link rel="alternate" hrefLang="en-us" href={url} />
+          <link rel="alternate" hrefLang="en-gb" href={url} />
+          <link rel="alternate" hrefLang="en-in" href={url} />
+          <link rel="alternate" hrefLang="x-default" href={url} />
+        </>
+      )}
 
       {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />

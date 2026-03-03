@@ -1,9 +1,9 @@
 import { useState, memo } from "react";
 import { Link } from "react-router-dom";
-import { Youtube, Twitter, Linkedin, Send } from "lucide-react";
+import { Youtube, Twitter, Linkedin, Send, Facebook, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SOCIAL_LINKS, SITE_NAME } from "@/lib/constants";
+import { SOCIAL_LINKS, SITE_NAME, PUZZLE_GAMES } from "@/lib/constants";
 
 const quickLinks = [
   { path: "/tools", name: "Useful Tools" },
@@ -26,6 +26,8 @@ const socialItems = [
   { icon: Youtube, url: SOCIAL_LINKS.youtube, label: "YouTube", hoverColor: "hover:bg-[hsl(0,100%,50%)]" },
   { icon: Linkedin, url: SOCIAL_LINKS.linkedin, label: "LinkedIn", hoverColor: "hover:bg-[hsl(210,70%,35%)]" },
   { icon: Twitter, url: SOCIAL_LINKS.twitter, label: "Twitter", hoverColor: "hover:bg-[hsl(203,89%,53%)]" },
+  { icon: Facebook, url: SOCIAL_LINKS.facebook, label: "Facebook", hoverColor: "hover:bg-[hsl(220,46%,48%)]" },
+  { icon: Instagram, url: SOCIAL_LINKS.instagram, label: "Instagram", hoverColor: "hover:bg-[hsl(340,75%,54%)]" },
 ];
 
 const Footer = memo(() => {
@@ -52,7 +54,7 @@ const Footer = memo(() => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white transition-all ${s.hoverColor} hover:scale-110`}
-                  aria-label={s.label}
+                  aria-label={`Follow PuzzleLogicHub on ${s.label}`}
                 >
                   <s.icon className="h-4 w-4" />
                 </a>
@@ -72,9 +74,19 @@ const Footer = memo(() => {
             </ul>
           </div>
 
-          {/* Information */}
+          {/* Puzzle Solutions + Information */}
           <div>
-            <h4 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-white/60">Information</h4>
+            <h4 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-white/60">Today's Solutions</h4>
+            <ul className="space-y-2">
+              {PUZZLE_GAMES.slice(0, 6).map((g) => (
+                <li key={g.id}>
+                  <Link to={`/solutions/${g.id}`} className="text-sm text-white/70 transition-all hover:text-white hover:pl-1">
+                    {g.label} Answer Today
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <h4 className="mt-4 mb-3 font-display text-sm font-semibold uppercase tracking-wider text-white/60">Information</h4>
             <ul className="space-y-2">
               {infoLinks.map((link) => (
                 <li key={link.path}>
@@ -95,8 +107,9 @@ const Footer = memo(() => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="border-white/20 bg-white text-foreground text-sm"
+                aria-label="Email address for newsletter"
               />
-              <Button size="icon" className="shrink-0" aria-label="Subscribe">
+              <Button size="icon" className="shrink-0" aria-label="Subscribe to newsletter">
                 <Send className="h-4 w-4" />
               </Button>
             </div>

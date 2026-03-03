@@ -2,7 +2,7 @@ export const API_BASE_URL = "https://dps-backend-epx7.onrender.com/api";
 
 export const SITE_NAME = "PuzzleLogicHub";
 export const SITE_URL = "https://daily-puzzle-solve.vercel.app";
-export const SITE_DESCRIPTION = "Get today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku solutions. Step-by-step screenshots, video walkthroughs & expert tips updated daily. Never lose your streak!";
+export const SITE_DESCRIPTION = "Get today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku solutions. Step-by-step screenshots, video walkthroughs & expert tips updated daily.";
 
 export const PUZZLE_GAMES = [
   {
@@ -71,10 +71,12 @@ export const NAV_LINKS = [
 ] as const;
 
 export const SOCIAL_LINKS = {
-  youtube: "https://youtube.com/",
-  twitter: "https://twitter.com/",
-  linkedin: "https://linkedin.com/",
-  reddit: "https://reddit.com/",
+  youtube: "https://youtube.com/@PuzzleLogicHub",
+  twitter: "https://twitter.com/PuzzleLogicHub",
+  linkedin: "https://linkedin.com/company/puzzlelogichub",
+  reddit: "https://reddit.com/r/PuzzleLogicHub",
+  facebook: "https://facebook.com/PuzzleLogicHub",
+  instagram: "https://instagram.com/PuzzleLogicHub",
 };
 
 export const FAQ_DATA = [
@@ -101,5 +103,13 @@ export const FAQ_DATA = [
   {
     question: "What LinkedIn puzzle games do you cover?",
     answer: "We cover all six LinkedIn puzzle games: Pinpoint (word connections), Queens (logic placement), Tango (pattern matching), Crossclimb (crossword ladder), Zip (number sequences), and Mini Sudoku (compact grid). Solutions are updated daily for each game.",
+  },
+  {
+    question: "What time are LinkedIn puzzles updated?",
+    answer: "LinkedIn puzzles reset daily. Our team publishes new solutions within 30 minutes of each puzzle going live. We also display a countdown timer so you know exactly when fresh answers will be available.",
+  },
+  {
+    question: "Is PuzzleLogicHub affiliated with LinkedIn?",
+    answer: "No. PuzzleLogicHub is an independent website and is not affiliated with, endorsed by, or sponsored by LinkedIn Corporation. All puzzle names and trademarks belong to their respective owners.",
   },
 ];

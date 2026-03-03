@@ -21,15 +21,15 @@ const RecruitmentBanner = () => {
     <div className="relative border-b border-primary/20 bg-primary/10 px-4 py-3 text-center text-sm">
       <div className="container flex items-center justify-center gap-3">
         <Users className="h-4 w-4 text-primary" />
-        <span className="text-foreground">
-          We're looking for contributors to help grow this open-source project!
+        <span className="text-foreground">We're looking for contributors to help grow this WebApp!
+
         </span>
         <Button variant="default" size="sm" className="ml-2 rounded-full text-xs" asChild>
           <a
             href="https://github.com/harshitSingh1/DailyPuzzleSolve"
             target="_blank"
-            rel="noopener noreferrer"
-          >
+            rel="noopener noreferrer">
+            
             Join Us
           </a>
         </Button>
@@ -37,12 +37,12 @@ const RecruitmentBanner = () => {
       <button
         onClick={handleDismiss}
         className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-        aria-label="Dismiss"
-      >
+        aria-label="Dismiss">
+        
         <X className="h-4 w-4" />
       </button>
-    </div>
-  );
+    </div>);
+
 };
 
 export default RecruitmentBanner;
