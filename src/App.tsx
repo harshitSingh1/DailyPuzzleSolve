@@ -29,6 +29,11 @@ const BlogQueensStrategy = lazy(() => import("./pages/blog/queens-puzzle-strateg
 const BlogTangoTips = lazy(() => import("./pages/blog/tango-puzzle-tips"));
 const Games = lazy(() => import("./pages/games"));
 const Memes = lazy(() => import("./pages/memes"));
+const LinkedinPuzzleGuide = lazy(() => import("./pages/linkedin-puzzle-guide"));
+const HowToSolveZip = lazy(() => import("./pages/how-to-solve-linkedin-zip"));
+const HowToSolvePinpoint = lazy(() => import("./pages/how-to-solve-linkedin-pinpoint"));
+const LinkedinGamesGuide = lazy(() => import("./pages/linkedin-games-complete-guide"));
+const BestStrategies = lazy(() => import("./pages/best-strategies-for-linkedin-puzzles"));
 const Shop = lazy(() => import("./pages/shop"));
 const Tools = lazy(() => import("./pages/tools"));
 const NotFound = lazy(() => import("./pages/notfound"));
@@ -92,6 +97,11 @@ const App = () => {
                   <Route path="/shop" element={<Shop />} />
                   <Route path="/tools" element={<Tools />} />
                   <Route path="/memes" element={<Memes />} />
+                  <Route path="/linkedin-puzzle-guide" element={<LinkedinPuzzleGuide />} />
+                  <Route path="/how-to-solve-linkedin-zip" element={<HowToSolveZip />} />
+                  <Route path="/how-to-solve-linkedin-pinpoint" element={<HowToSolvePinpoint />} />
+                  <Route path="/linkedin-games-complete-guide" element={<LinkedinGamesGuide />} />
+                  <Route path="/best-strategies-for-linkedin-puzzles" element={<BestStrategies />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

@@ -2,13 +2,26 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /private/
-
-# Crawl-delay for polite bots
-Crawl-delay: 1
+Disallow: /*?*
+Allow: /solutions/
+Allow: /blog/
+Allow: /games
+Allow: /tools
+Allow: /shop
+Allow: /memes
+Allow: /about
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+Allow: /disclaimer
+Allow: /editorial-policy
 
 Sitemap: https://daily-puzzle-solve.vercel.app/sitemap.xml
 
-# Google specific
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
