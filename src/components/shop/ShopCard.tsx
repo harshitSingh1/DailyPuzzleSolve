@@ -50,10 +50,11 @@ const ShopCard = ({ item }: { item: ShopItem }) => {
         </div>
         <p className="mb-4 flex-1 text-sm text-muted-foreground line-clamp-3" itemProp="description">{cleanDescription}</p>
         <div className="flex items-center justify-between gap-2">
-          <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
+        <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
             <meta itemProp="price" content={String(priceNumeric || 0)} />
             <meta itemProp="priceCurrency" content="INR" />
             <meta itemProp="availability" content="https://schema.org/InStock" />
+            <meta itemProp="priceValidUntil" content={`${new Date().getFullYear() + 1}-12-31`} />
             <meta itemProp="url" content={item.url} />
             <meta itemProp="shippingDetails" content="Free delivery available" />
             <meta itemProp="hasMerchantReturnPolicy" content="7 day replacement" />
