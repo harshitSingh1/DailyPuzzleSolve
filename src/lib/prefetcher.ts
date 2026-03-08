@@ -1,3 +1,4 @@
+// src\lib\prefetcher.ts
 import { QueryClient } from "@tanstack/react-query";
 import { fetchPuzzles, fetchShopItems, fetchTools } from "./api";
 import { PUZZLE_GAMES, API_BASE_URL } from "./constants";

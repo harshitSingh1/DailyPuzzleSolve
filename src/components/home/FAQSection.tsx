@@ -1,9 +1,13 @@
+// src\components\home\FAQSection.tsx
+"use client";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
 import { FAQ_DATA } from "@/lib/constants";
 
 const FAQSection = () => {

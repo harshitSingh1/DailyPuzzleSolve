@@ -1,3 +1,4 @@
+// src\lib\shopUtils.ts
 export function parseDescription(description: string) {
   const priceRegex = /(Rs|₹)\s*([\d,]+)\s*\/-/;
   const discountRegex = /\(([^)]+)\)/;

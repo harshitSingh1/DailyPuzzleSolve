@@ -1,9 +1,18 @@
+//src\lib\constants.ts
 export const API_BASE_URL = "https://dps-backend-epx7.onrender.com/api";
 
-export const SITE_NAME = "PuzzleLogicHub";
+export const SITE_NAME = "LogicPuzzleHub";
 export const SITE_URL = "https://daily-puzzle-solve.vercel.app";
 export const SITE_DESCRIPTION = "Get today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku solutions. Step-by-step screenshots, video walkthroughs & expert tips updated daily.";
-
+export const SITE_KEYWORDS = [
+  "linkedin puzzle answers",
+  "linkedin pinpoint answer today",
+  "linkedin queens solution",
+  "linkedin tango puzzle answer",
+  "linkedin crossclimb solution",
+  "linkedin zip puzzle answer",
+  "linkedin mini sudoku answer",
+];
 export const PUZZLE_GAMES = [
   {
     id: "pinpoint",
@@ -71,12 +80,12 @@ export const NAV_LINKS = [
 ] as const;
 
 export const SOCIAL_LINKS = {
-  youtube: "https://youtube.com/@PuzzleLogicHub",
-  twitter: "https://twitter.com/PuzzleLogicHub",
-  linkedin: "https://linkedin.com/company/puzzlelogichub",
-  reddit: "https://reddit.com/r/PuzzleLogicHub",
-  facebook: "https://facebook.com/PuzzleLogicHub",
-  instagram: "https://instagram.com/PuzzleLogicHub",
+  youtube: "https://youtube.com/@LogicPuzzleHub",
+  twitter: "https://twitter.com/LogicPuzzleHub",
+  linkedin: "https://linkedin.com/company/LogicPuzzleHub",
+  reddit: "https://reddit.com/r/LogicPuzzleHub",
+  facebook: "https://facebook.com/LogicPuzzleHub",
+  instagram: "https://instagram.com/LogicPuzzleHub",
 };
 
 export const FAQ_DATA = [
@@ -109,7 +118,7 @@ export const FAQ_DATA = [
     answer: "LinkedIn puzzles reset daily. Our team publishes new solutions within 30 minutes of each puzzle going live. We also display a countdown timer so you know exactly when fresh answers will be available.",
   },
   {
-    question: "Is PuzzleLogicHub affiliated with LinkedIn?",
-    answer: "No. PuzzleLogicHub is an independent website and is not affiliated with, endorsed by, or sponsored by LinkedIn Corporation. All puzzle names and trademarks belong to their respective owners.",
+    question: "Is LogicPuzzleHub affiliated with LinkedIn?",
+    answer: "No. LogicPuzzleHub is an independent website and is not affiliated with, endorsed by, or sponsored by LinkedIn Corporation. All puzzle names and trademarks belong to their respective owners.",
   },
 ];

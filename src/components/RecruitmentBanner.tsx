@@ -1,3 +1,6 @@
+// src\components\RecruitmentBanner.tsx
+"use client";
+
 import { useState, useEffect } from "react";
 import { X, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";

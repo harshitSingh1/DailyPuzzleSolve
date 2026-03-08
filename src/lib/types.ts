@@ -1,3 +1,4 @@
+// src\lib\types.ts
 export interface Puzzle {
   _id: string;
   heading: string;

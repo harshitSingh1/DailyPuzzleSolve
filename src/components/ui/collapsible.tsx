@@ -1,3 +1,4 @@
+// src\components\ui\collapsible.tsx
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 
 const Collapsible = CollapsiblePrimitive.Root;

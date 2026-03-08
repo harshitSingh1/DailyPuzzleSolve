@@ -1,3 +1,6 @@
+// src\components\ui\slider.tsx
+"use client";
+
 import * as React from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 

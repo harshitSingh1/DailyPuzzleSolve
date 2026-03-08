@@ -1,3 +1,6 @@
+// src\components\ui\toast.tsx
+"use client";
+
 import * as React from "react";
 import * as ToastPrimitives from "@radix-ui/react-toast";
 import { cva, type VariantProps } from "class-variance-authority";

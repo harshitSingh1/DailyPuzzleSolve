@@ -1,6 +1,8 @@
+// src\components\PuzzleIcon.tsx
 import { Target, Crown, Disc, ArrowUpDown, Zap, Grid3x3 } from "lucide-react";
+import type { ComponentType } from "react";
 
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+const ICON_MAP: Record<string, ComponentType<{ className?: string }>> = {
   Target,
   Crown,
   Disc,

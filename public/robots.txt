@@ -1,27 +1,8 @@
 User-agent: *
 Allow: /
+
 Disallow: /admin/
 Disallow: /private/
-Disallow: /*?*
-Allow: /solutions/
-Allow: /blog/
-Allow: /games
-Allow: /tools
-Allow: /shop
-Allow: /memes
-Allow: /about
-Allow: /contact
-Allow: /privacy
-Allow: /terms
-Allow: /disclaimer
-Allow: /editorial-policy
+Disallow: /api/
 
-Sitemap: https://daily-puzzle-solve.vercel.app/sitemap.xml
-
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 0
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
+Sitemap: https://logicpuzzlehub.xyz/sitemap.xml
