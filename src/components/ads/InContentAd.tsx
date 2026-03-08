@@ -1,24 +1,25 @@
-/**
- * InContentAd - In-article / fluid ad for placement within page content.
- * High RPM format. Lazy-loaded by default.
- */
+"use client";
 
 import AdBlock from "./AdBlock";
 
-interface InContentAdProps {
+interface Props {
   slot?: string;
   className?: string;
 }
 
-const InContentAd = ({ slot = "5934836566", className = "" }: InContentAdProps) => (
-  <AdBlock
-    slot={slot}
-    format="in-article"
-    layoutKey="-fb+5w+4e-db+86"
-    lazy={true}
-    minHeight={280}
-    className={className}
-  />
-);
+export default function InContentAd({
+  slot = "5934836566",
+  className = "",
+}: Props) {
 
-export default InContentAd;
+  return (
+    <AdBlock
+      slot={slot}
+      format="in-article"
+      layoutKey="-fb+5w+4e-db+86"
+      lazy
+      minHeight={280}
+      className={className}
+    />
+  );
+}

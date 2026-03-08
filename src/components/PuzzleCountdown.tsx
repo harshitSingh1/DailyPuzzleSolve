@@ -1,3 +1,6 @@
+// src\components\PuzzleCountdown.tsx
+"use client";
+
 import { useState, useEffect, memo } from "react";
 import { Clock } from "lucide-react";
 

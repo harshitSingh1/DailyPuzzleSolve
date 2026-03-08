@@ -1,11 +1,20 @@
+"use client";
+
 import { memo } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 const HeroSection = memo(() => {
+  const scrollToPuzzles = () => {
+    document
+      .getElementById("puzzles")
+      ?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section className="relative overflow-hidden min-h-[220px] sm:min-h-[300px] md:min-h-[350px] flex flex-col">
+      
       {/* Background image + blue gradient overlay */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
@@ -19,8 +28,11 @@ const HeroSection = memo(() => {
           `,
         }}
       />
+
       <div className="container relative z-10 flex flex-1 items-center py-6 sm:py-8">
         <div className="mx-auto max-w-[800px] text-center">
+
+          {/* Title */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -32,6 +44,7 @@ const HeroSection = memo(() => {
             <span className="block">Like Never Before</span>
           </motion.h1>
 
+          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -42,6 +55,7 @@ const HeroSection = memo(() => {
             Today's Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku answers with step-by-step guides.
           </motion.p>
 
+          {/* Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -51,19 +65,21 @@ const HeroSection = memo(() => {
             <Button
               size="sm"
               className="rounded-full bg-white px-5 py-2 sm:px-8 sm:py-3 font-display text-sm sm:text-base font-semibold text-primary shadow-md hover:bg-white/90 hover:-translate-y-0.5 transition-all"
-              onClick={() => document.getElementById("puzzles")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={scrollToPuzzles}
             >
               View Solutions
             </Button>
+
             <Button
               asChild
               size="sm"
               variant="outline"
               className="rounded-full border-white bg-transparent px-5 py-2 sm:px-8 sm:py-3 font-display text-sm sm:text-base font-semibold text-white hover:bg-white/10 hover:border-white hover:-translate-y-0.5 transition-all"
             >
-              <Link to="/games">More Games</Link>
+              <Link href="/games">More Games</Link>
             </Button>
           </motion.div>
+
         </div>
       </div>
     </section>

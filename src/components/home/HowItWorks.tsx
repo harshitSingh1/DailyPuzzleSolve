@@ -1,3 +1,6 @@
+// src\components\home\HowItWorks.tsx
+"use client";
+
 import { memo } from "react";
 import { motion } from "framer-motion";
 import { Search, BookOpen, Trophy } from "lucide-react";

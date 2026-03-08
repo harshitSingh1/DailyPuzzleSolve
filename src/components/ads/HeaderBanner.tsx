@@ -1,17 +1,15 @@
-/**
- * HeaderBanner - Leaderboard/responsive ad placed below the navbar.
- * Visible only on content pages; hidden on About, Privacy, Terms, Contact.
- * Uses the AdBlock component for CLS-safe rendering.
- */
+"use client";
 
-import { useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation";
 import AdBlock from "./AdBlock";
 
 const NO_AD_PATHS = ["/about", "/privacy", "/terms", "/contact", "/"];
 
-const HeaderBanner = () => {
-  const { pathname } = useLocation();
-  if (NO_AD_PATHS.some((p) => pathname === p)) return null;
+export default function HeaderBanner() {
+
+  const pathname = usePathname();
+
+  if (NO_AD_PATHS.includes(pathname)) return null;
 
   return (
     <div className="w-full border-b border-border/40 bg-background">
@@ -24,6 +22,4 @@ const HeaderBanner = () => {
       />
     </div>
   );
-};
-
-export default HeaderBanner;
+}

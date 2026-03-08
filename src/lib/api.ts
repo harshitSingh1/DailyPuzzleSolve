@@ -1,3 +1,5 @@
+// src\lib\api.ts
+
 import { API_BASE_URL } from "./constants";
 import type { Puzzle, ShopItem, Tool, ContactFormData, ApiResponse } from "./types";
 
@@ -98,32 +100,54 @@ const normalize = (s: string) =>
 
 // gameId is the short id like "pinpoint", "queens", etc.
 export async function fetchPuzzles(gameId?: string): Promise<Puzzle[]> {
-  const query = gameId ? `?game=${encodeURIComponent(gameId)}` : "";
-  const res = await fetchApi<ApiResponse<Puzzle[]>>(`/puzzles${query}`);
-  const data = Array.isArray(res.data) ? res.data : [];
 
-  // Client-side filter using normalized heading matching
+  const query = gameId ? `?game=${encodeURIComponent(gameId)}` : "";
+
+  const res = await fetch(`${API_BASE_URL}/puzzles${query}`, {
+    next: { revalidate: 3600 },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch puzzles");
+  }
+
+  const json: ApiResponse<Puzzle[]> = await res.json();
+
+  const data = Array.isArray(json.data) ? json.data : [];
+
   if (gameId && GAME_ID_KEYWORDS[gameId]) {
+
     const keywords = GAME_ID_KEYWORDS[gameId];
+
     const filtered = data.filter((p) => {
       const heading = normalize(p.heading || "");
       return keywords.some((kw) => heading.includes(kw));
     });
-    if (filtered.length > 0 || filtered.length < data.length) return filtered;
+
+    return filtered;
   }
 
   return data;
 }
 
 export async function fetchShopItems(): Promise<ShopItem[]> {
-  const res = await fetchApi<ApiResponse<ShopItem[]>>("/shops");
-  return Array.isArray(res.data) ? res.data : [];
+  const res = await fetch(`${API_BASE_URL}/shops`, {
+    next: { revalidate: 3600 },
+  });
+
+  const json: ApiResponse<ShopItem[]> = await res.json();
+  return json.data ?? [];
 }
 
 export async function fetchTools(): Promise<Tool[]> {
-  const res = await fetchApi<ApiResponse<Tool[]>>("/tools");
-  return Array.isArray(res.data) ? res.data : [];
+  const res = await fetch(`${API_BASE_URL}/tools`, {
+    next: { revalidate: 3600 },
+  });
+
+  const json: ApiResponse<Tool[]> = await res.json();
+  return json.data ?? [];
 }
+
 
 export async function submitContact(data: ContactFormData): Promise<{ message: string }> {
   return fetchApi<{ message: string }>("/contact", {

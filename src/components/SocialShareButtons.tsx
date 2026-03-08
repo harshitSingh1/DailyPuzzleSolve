@@ -1,3 +1,6 @@
+// src\components\SocialShareButtons.tsx
+"use client";
+
 import { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, MessageCircle, Facebook } from "lucide-react";

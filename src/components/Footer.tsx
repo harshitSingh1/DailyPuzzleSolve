@@ -1,9 +1,12 @@
+"use client";
+
 import { useState, memo } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Youtube, Twitter, Linkedin, Send, Facebook, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SOCIAL_LINKS, SITE_NAME, PUZZLE_GAMES } from "@/lib/constants";
+import Image from "next/image";
 
 const quickLinks = [
   { path: "/tools", name: "Useful Tools" },
@@ -39,8 +42,8 @@ const Footer = memo(() => {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="space-y-4">
-            <Link to="/" className="flex items-center gap-2">
-              <img src="/images/logo1.png" alt="PuzzleLogicHub Logo" width={32} height={32} className="h-8 w-8" loading="lazy" />
+            <Link href="/" className="flex items-center gap-2">
+              <Image src="/images/logo1.png" alt="LogicPuzzleHub Logo" width={32}  height={32}  className="h-8 w-8" />
               <span className="font-display text-xl font-bold text-gradient">{SITE_NAME}</span>
             </Link>
             <p className="text-sm text-white/70">
@@ -54,7 +57,7 @@ const Footer = memo(() => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white transition-all ${s.hoverColor} hover:scale-110`}
-                  aria-label={`Follow PuzzleLogicHub on ${s.label}`}
+                  aria-label={`Follow LogicPuzzleHub on ${s.label}`}
                 >
                   <s.icon className="h-4 w-4" />
                 </a>
@@ -68,7 +71,7 @@ const Footer = memo(() => {
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.path}>
-                  <Link to={link.path} className="text-sm text-white/70 transition-all hover:text-white hover:pl-1">{link.name}</Link>
+                  <Link href={link.path} className="text-sm text-white/70 transition-all hover:text-white hover:pl-1">{link.name}</Link>
                 </li>
               ))}
             </ul>
@@ -80,7 +83,7 @@ const Footer = memo(() => {
             <ul className="space-y-2">
               {PUZZLE_GAMES.slice(0, 6).map((g) => (
                 <li key={g.id}>
-                  <Link to={`/solutions/${g.id}`} className="text-sm text-white/70 transition-all hover:text-white hover:pl-1">
+                  <Link href={`/solutions/${g.id}`} className="text-sm text-white/70 transition-all hover:text-white hover:pl-1">
                     {g.label} Answer Today
                   </Link>
                 </li>
@@ -90,7 +93,7 @@ const Footer = memo(() => {
             <ul className="space-y-2">
               {infoLinks.map((link) => (
                 <li key={link.path}>
-                  <Link to={link.path} className="text-sm text-white/70 transition-all hover:text-white hover:pl-1">{link.name}</Link>
+                  <Link href={link.path} className="text-sm text-white/70 transition-all hover:text-white hover:pl-1">{link.name}</Link>
                 </li>
               ))}
             </ul>
@@ -119,7 +122,7 @@ const Footer = memo(() => {
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
           <span>&copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</span>
           <span className="text-center">
-            Contact: <a href="mailto:contact@puzzlelogichub.com" className="text-white/70 hover:text-white underline">contact@puzzlelogichub.com</a>
+            Contact: <a href="mailto:contact@LogicPuzzleHub.com" className="text-white/70 hover:text-white underline">contact@LogicPuzzleHub.com</a>
           </span>
           <span>Not affiliated with LinkedIn Corporation. All trademarks belong to their respective owners.</span>
         </div>

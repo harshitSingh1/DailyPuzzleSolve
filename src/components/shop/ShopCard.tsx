@@ -1,9 +1,13 @@
+// src\components\shop\ShopCard.tsx
+"use client";
+
 import { motion } from "framer-motion";
 import { ShoppingBag, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { ShopItem } from "@/lib/types";
 import { parseDescription } from "@/lib/shopUtils";
+import Image from "next/image";
 
 const ShopCard = ({ item }: { item: ShopItem }) => {
   const { cleanDescription, price, discount, priceNumeric } = parseDescription(item.description || "");
@@ -22,13 +26,17 @@ const ShopCard = ({ item }: { item: ShopItem }) => {
         <Badge className="absolute right-3 top-3 z-10 bg-destructive text-destructive-foreground">{discount}</Badge>
       )}
       <div className="aspect-square overflow-hidden bg-muted flex items-center justify-center">
-        <img
+        <Image
           src={item.image || "/placeholder.svg"}
           alt={item.productName || "Product"}
+          width={400}
+          height={400}
           className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
+          priority={false}
+loading="lazy"
+sizes="(max-width:768px) 100vw, 400px"
           itemProp="image"
-        />
+          />
       </div>
       <meta itemProp="name" content={item.productName || "Product"} />
       <div className="flex flex-1 flex-col p-4">

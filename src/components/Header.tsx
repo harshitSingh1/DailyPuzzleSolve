@@ -1,5 +1,9 @@
+// src\components\Header.tsx
+"use client";
+
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NAV_LINKS, PUZZLE_GAMES } from "@/lib/constants";
@@ -16,25 +20,26 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import Image from "next/image";
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [solutionsOpen, setSolutionsOpen] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
-  const isActive = (href: string) =>
-    href === "/" ? location.pathname === "/" : location.pathname.startsWith(href);
+ const isActive = (href: string) =>
+  href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  const isSolutionsActive = location.pathname.startsWith("/solutions");
+const isSolutionsActive = pathname.startsWith("/solutions");
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card shadow-sm">
       <div className="container flex h-14 items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <img src="/images/logo1.png" alt="PuzzleLogicHub Logo" width={28} height={28} className="h-7 w-7" />
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/images/logo1.png" alt="LogicPuzzleHub Logo" width={28} height={28} className="h-7 w-7" />
           <span className="font-display text-lg font-extrabold tracking-tight">
-            <span className="text-gradient">PuzzleLogicHub</span>
+            <span className="text-gradient">LogicPuzzleHub</span>
           </span>
           <span className="ml-1 hidden sm:inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
             <span className="relative flex h-1.5 w-1.5">
@@ -49,9 +54,9 @@ const Header = () => {
         <nav className="hidden items-center gap-0.5 lg:flex">
           {/* Home */}
           <Link
-            to="/"
+            href="/"
             className={`px-2.5 py-1.5 font-display text-sm font-medium transition-colors hover:text-primary ${
-              isActive("/") && location.pathname === "/"
+              isActive("/") && pathname === "/"
                 ? "text-primary"
                 : "text-foreground"
             }`}
@@ -76,7 +81,7 @@ const Header = () => {
                 {PUZZLE_GAMES.map((game) => (
                   <DropdownMenuItem key={game.id} asChild className="rounded-md p-0">
                     <Link
-                      to={`/solutions/${game.id}`}
+                      href={`/solutions/${game.id}`}
                       className="flex flex-col items-center gap-1 rounded-md px-2 py-2.5 text-center transition-colors hover:bg-accent"
                     >
                       <PuzzleIcon icon={game.icon} className="h-5 w-5 text-primary" />
@@ -92,7 +97,7 @@ const Header = () => {
           {NAV_LINKS.filter((l) => l.href !== "/").map((link) => (
             <Link
               key={link.href}
-              to={link.href}
+              href={link.href}
               className={`px-2.5 py-1.5 font-display text-sm font-medium transition-colors hover:text-primary ${
                 isActive(link.href) ? "text-primary" : "text-foreground"
               }`}
@@ -105,7 +110,7 @@ const Header = () => {
         <div className="flex items-center gap-1.5">
           <ThemeToggle />
           <Button asChild size="sm" className="hidden rounded-lg font-display font-semibold lg:inline-flex">
-            <Link to="/contact">Contact</Link>
+            <Link href="/contact">Contact</Link>
           </Button>
           <Button
             variant="ghost"
@@ -124,10 +129,10 @@ const Header = () => {
         <nav className="border-t border-border bg-card p-3 lg:hidden">
           <div className="flex flex-col gap-0.5">
             <Link
-              to="/"
+              href="/"
               onClick={() => setMobileOpen(false)}
               className={`rounded-md px-3 py-2 font-display text-sm font-medium transition-colors hover:bg-accent ${
-                location.pathname === "/" ? "bg-accent text-primary font-semibold" : "text-muted-foreground"
+                pathname === "/" ? "bg-accent text-primary font-semibold" : "text-muted-foreground"
               }`}
             >
               Home
@@ -148,10 +153,10 @@ const Header = () => {
                   {PUZZLE_GAMES.map((game) => (
                     <Link
                       key={game.id}
-                      to={`/solutions/${game.id}`}
+                      href={`/solutions/${game.id}`}
                       onClick={() => setMobileOpen(false)}
                       className={`flex items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors hover:bg-accent ${
-                        location.pathname === `/solutions/${game.id}`
+                        pathname === `/solutions/${game.id}`
                           ? "text-primary font-semibold"
                           : "text-muted-foreground"
                       }`}
@@ -167,7 +172,7 @@ const Header = () => {
             {NAV_LINKS.filter((l) => l.href !== "/").map((link) => (
               <Link
                 key={link.href}
-                to={link.href}
+                href={link.href}
                 onClick={() => setMobileOpen(false)}
                 className={`rounded-md px-3 py-2 font-display text-sm font-medium transition-colors hover:bg-accent ${
                   isActive(link.href) ? "bg-accent text-primary font-semibold" : "text-muted-foreground"
@@ -178,7 +183,7 @@ const Header = () => {
             ))}
 
             <Link
-              to="/contact"
+              href="/contact"
               onClick={() => setMobileOpen(false)}
               className="mt-1.5 rounded-md bg-primary px-3 py-2 text-center font-display text-sm font-semibold text-primary-foreground"
             >

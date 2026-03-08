@@ -1,3 +1,4 @@
+// src\components\AdPlaceholder.tsx
 interface AdPlaceholderProps {
   slot: string;
   className?: string;

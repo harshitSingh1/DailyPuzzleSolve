@@ -1,3 +1,6 @@
+// src\components\home\WhatsNewSection.tsx
+"use client";
+
 import { memo } from "react";
 import { Zap, RefreshCw, Paintbrush, Wrench } from "lucide-react";
 

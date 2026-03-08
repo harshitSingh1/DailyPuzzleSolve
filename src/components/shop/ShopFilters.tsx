@@ -1,3 +1,6 @@
+// src\components\shop\ShopFilters.tsx
+"use client";
+
 import { useState, useCallback, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -41,23 +44,27 @@ const ShopFilters = ({
   maxPrice,
 }: ShopFiltersProps) => {
   const [localRange, setLocalRange] = useState<[number, number]>(priceRange);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setLocalRange(priceRange);
   }, [priceRange]);
 
-  const handleRangeChange = useCallback(
-    (values: number[]) => {
-      const range: [number, number] = [values[0], values[1]];
-      setLocalRange(range);
+const handleRangeChange = useCallback(
+  (values: number[]) => {
+    const range: [number, number] = [values[0], values[1]];
+    setLocalRange(range);
+
+    if (debounceRef.current) {
       clearTimeout(debounceRef.current);
-      debounceRef.current = setTimeout(() => {
-        onPriceRangeChange(range);
-      }, 150);
-    },
-    [onPriceRangeChange],
-  );
+    }
+
+    debounceRef.current = setTimeout(() => {
+      onPriceRangeChange(range);
+    }, 150);
+  },
+  [onPriceRangeChange],
+);
 
   return (
     <div
@@ -84,7 +91,7 @@ const ShopFilters = ({
 
       {/* Sort Dropdown */}
       <div className="shrink-0 w-full justify-self-end max-w-[160px] md:w-44">
-        <Select key={sort === "none" ? "cleared" : "active"} value={sort === "none" ? undefined : sort} onValueChange={(val) => onSortChange(val as SortOption)}>
+        <Select key={sort === "none" ? "cleared" : "active"} value={sort === "none" ? undefined : sort} onValueChange={(val: string) => onSortChange(val as SortOption)}>
           <SelectTrigger className="h-8 text-xs" aria-label="Sort products">
             <SelectValue placeholder="Sort By" />
           </SelectTrigger>
