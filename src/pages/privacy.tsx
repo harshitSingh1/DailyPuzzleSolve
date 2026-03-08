@@ -1,3 +1,4 @@
+// src\pages\privacy.tsx
 import { motion } from "framer-motion";
 import SEOHead from "@/components/SEOHead";
 import AdSenseAd from "@/components/AdSenseAd";

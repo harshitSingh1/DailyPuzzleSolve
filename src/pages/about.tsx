@@ -1,3 +1,4 @@
+// src\pages\about.tsx
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Target, Crown, Disc, ArrowUpDown, Zap, Grid3x3, Gamepad2, Wrench, BookOpen, ShoppingCart, Smile, CheckCircle, Shield } from "lucide-react";

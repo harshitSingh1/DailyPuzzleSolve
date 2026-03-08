@@ -1,3 +1,4 @@
+// src\pages\shop.tsx
 import { useState, useMemo, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";

@@ -1,3 +1,4 @@
+// src\pages\index.tsx
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { Puzzle, Wrench, BookOpen, ShoppingCart, Smile } from "lucide-react";

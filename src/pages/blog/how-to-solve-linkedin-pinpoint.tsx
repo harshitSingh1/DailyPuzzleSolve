@@ -1,3 +1,4 @@
+// src\pages\blog\how-to-solve-linkedin-pinpoint.tsx
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import AdBlock from "@/components/ads/AdBlock";

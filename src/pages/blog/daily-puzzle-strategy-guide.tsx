@@ -1,3 +1,4 @@
+// src\pages\blog\daily-puzzle-strategy-guide.tsx
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import AdBlock from "@/components/ads/AdBlock";

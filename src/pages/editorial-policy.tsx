@@ -1,3 +1,4 @@
+// src\pages\editorial-policy.tsx
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";

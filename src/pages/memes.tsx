@@ -1,3 +1,4 @@
+// src\pages\memes.tsx
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";

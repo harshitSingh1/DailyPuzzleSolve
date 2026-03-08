@@ -1,3 +1,4 @@
+// src\pages\linkedin-puzzle-guide.tsx
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { SITE_URL, SITE_NAME, PUZZLE_GAMES } from "@/lib/constants";

@@ -1,3 +1,4 @@
+// src\pages\games.tsx
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Brain, Zap, Target, Shield, RefreshCw } from "lucide-react";
