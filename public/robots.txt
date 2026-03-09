@@ -5,4 +5,4 @@ Disallow: /admin/
 Disallow: /private/
 Disallow: /api/
 
-Sitemap: https://logicpuzzlehub.xyz/sitemap.xml
+Sitemap: https://www.logicpuzzlehub.xyz/sitemap.xml
