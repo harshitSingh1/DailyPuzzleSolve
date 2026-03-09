@@ -1,8 +1,10 @@
 {
-  "routes": [
-    { "src": "/ads.txt", "dest": "/ads.txt" },
-    { "src": "/robots.txt", "dest": "/robots.txt" },
-    { "src": "/sitemap.xml", "dest": "/sitemap.xml" },
-    { "src": "/site.webmanifest", "dest": "/site.webmanifest" }
+  "headers": [
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml; charset=utf-8" }
+      ]
+    }
   ]
 }
