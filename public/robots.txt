@@ -1,28 +1,7 @@
 User-agent: *
 Allow: /
+
 Disallow: /admin/
 Disallow: /private/
-Disallow: /*?*
-Allow: /solutions/
-Allow: /blog/
-Allow: /games
-Allow: /tools
-Allow: /shop
-Allow: /memes
-Allow: /about
-Allow: /contact
-Allow: /privacy
-Allow: /terms
-Allow: /disclaimer
-Allow: /editorial-policy
-Allow: /answers/
 
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 0
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 0
-
-Sitemap: https://www.logicpuzzlehub.xyz/sitemap.xml
+Sitemap: https://logicpuzzlehub.xyz/sitemap.xml
