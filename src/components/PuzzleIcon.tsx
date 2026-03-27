@@ -1,5 +1,5 @@
 // src\components\PuzzleIcon.tsx
-import { Target, Crown, Disc, ArrowUpDown, Zap, Grid3x3 } from "lucide-react";
+import { Target, Crown, Disc, ArrowUpDown, Zap, Grid3x3, Award } from "lucide-react";
 import type { ComponentType } from "react";
 
 const ICON_MAP: Record<string, ComponentType<{ className?: string }>> = {
@@ -9,6 +9,7 @@ const ICON_MAP: Record<string, ComponentType<{ className?: string }>> = {
   ArrowUpDown,
   Zap,
   Grid3x3,
+  Award,
 };
 
 interface PuzzleIconProps {

@@ -93,6 +93,7 @@ const GAME_ID_KEYWORDS: Record<string, string[]> = {
   crossclimb: ["crossclimb"],
   zip: ["zip"],
   minisudoku: ["minisudoku", "mini sudoku"],
+  patches: ["patches"],
 };
 
 const normalize = (s: string) =>

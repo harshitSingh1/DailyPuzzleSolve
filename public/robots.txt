@@ -3,5 +3,6 @@ Allow: /
 
 Disallow: /admin/
 Disallow: /private/
+Disallow: /api/
 
 Sitemap: https://www.logicpuzzlehub.xyz/sitemap.xml

@@ -10,9 +10,9 @@ const PuzzleCountdown = memo(() => {
   useEffect(() => {
     const update = () => {
       const now = new Date();
-      // Next solution posts at 1:30 PM IST (UTC+5:30) = 08:00 UTC
+      // Next solution posts at 12:30 PM IST (UTC+5:30) = 08:00 UTC
       const target = new Date(now);
-      target.setUTCHours(8, 0, 0, 0); // 1:30 PM IST = 08:00 UTC
+      target.setUTCHours(7, 0, 0, 0); // 12:30 PM IST = 08:00 UTC
       if (now.getTime() >= target.getTime()) {
         target.setDate(target.getDate() + 1);
       }

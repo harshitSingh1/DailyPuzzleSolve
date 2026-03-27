@@ -2,47 +2,107 @@ import { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import AdBlock from "@/components/ads/AdBlock";
-import { SITE_URL, SITE_NAME } from "@/lib/constants";
+import { SITE_URL, SITE_NAME, PUZZLE_GAMES } from "@/lib/constants";
 
 const today = new Date().toISOString().split("T")[0];
+const gameData = PUZZLE_GAMES.find(g => g.id === "pinpoint");
 
 export const metadata: Metadata = {
-  title: "How to Solve LinkedIn Pinpoint Faster - Expert Tips & Strategies",
+  title: "How to Solve LinkedIn Pinpoint Puzzle - Ultimate Guide & Today's Answer",
   description:
-    "Learn proven strategies to solve LinkedIn Pinpoint puzzles faster. Master word association, category thinking, and elimination techniques with our expert guide.",
+    "Master LinkedIn Pinpoint with our step-by-step guide. Get expert strategies, daily answers, and tips to solve Pinpoint faster. Check today's Pinpoint answer and maintain your streak.",
+  keywords: [
+    "linkedin pinpoint answer today",
+    "how to solve linkedin pinpoint",
+    "pinpoint puzzle strategy",
+    "linkedin pinpoint tips",
+    "pinpoint solution today",
+    "linkedin games answers",
+    "pinpoint puzzle guide"
+  ],
   alternates: {
     canonical: `${SITE_URL}/blog/how-to-solve-linkedin-pinpoint`,
+  },
+  openGraph: {
+    title: "How to Solve LinkedIn Pinpoint Puzzle - Ultimate Guide & Today's Answer",
+    description: "Master LinkedIn Pinpoint with expert strategies and daily solutions",
+    url: `${SITE_URL}/blog/how-to-solve-linkedin-pinpoint`,
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: `${SITE_URL}/images/pinpoint-game.png`,
+        width: 1200,
+        height: 630,
+        alt: "LinkedIn Pinpoint Puzzle Guide",
+      },
+    ],
+    type: "article",
+    publishedTime: "2025-01-15T00:00:00Z",
+    modifiedTime: today,
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
 export default function HowToSolvePinpoint() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: "How to Solve LinkedIn Pinpoint Faster - Expert Tips & Strategies",
-    description:
-      "Learn proven strategies to solve LinkedIn Pinpoint puzzles faster.",
-    datePublished: "2025-01-15",
-    dateModified: today,
-    author: {
-      "@type": "Organization",
-      name: SITE_NAME,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: SITE_NAME,
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE_URL}/images/logo1.png`,
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: "How to Solve LinkedIn Pinpoint Puzzle - Ultimate Guide & Today's Answer",
+      description: "Master LinkedIn Pinpoint with expert strategies and daily solutions",
+      datePublished: "2025-01-15T00:00:00Z",
+      dateModified: today,
+      author: {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: SITE_URL,
       },
+      publisher: {
+        "@type": "Organization",
+        name: SITE_NAME,
+        logo: {
+          "@type": "ImageObject",
+          url: `${SITE_URL}/images/logo1.png`,
+        },
+      },
+      image: `${SITE_URL}/images/pinpoint-game.png`,
+      mainEntityOfPage: `${SITE_URL}/blog/how-to-solve-linkedin-pinpoint`,
     },
-    image: `${SITE_URL}/images/pinpoint-game.png`,
-    mainEntityOfPage: `${SITE_URL}/blog/how-to-solve-linkedin-pinpoint`,
-  };
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: SITE_URL,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Blog",
+          item: `${SITE_URL}/blog`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "How to Solve LinkedIn Pinpoint",
+          item: `${SITE_URL}/blog/how-to-solve-linkedin-pinpoint`,
+        },
+      ],
+    },
+  ];
 
   return (
     <>
@@ -89,6 +149,24 @@ export default function HowToSolvePinpoint() {
               className="w-full rounded-xl mb-6"
               loading="eager"
             />
+
+            {/* Today's Solution CTA */}
+            <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Need Today's Pinpoint Answer?</h3>
+                  <p className="text-gray-700">
+                    Get the latest LinkedIn Pinpoint solution with step-by-step explanation
+                  </p>
+                </div>
+                <Link
+                  href="/answers/pinpoint/today"
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors whitespace-nowrap"
+                >
+                  View Today's Answer →
+                </Link>
+              </div>
+            </div>
 
             {/* Top Ad */}
             <AdBlock
@@ -271,60 +349,94 @@ export default function HowToSolvePinpoint() {
               className="mt-8"
             />
 
-            {/* Related Articles */}
-            <div className="mt-10 rounded-xl border border-border bg-muted/30 p-6">
-              <h3 className="font-display text-lg font-bold mb-3">
-                Related Articles
+            {/* Related Articles & Resources */}
+            <div className="mt-10 rounded-xl border border-border bg-gradient-to-br from-gray-50 to-white p-6 shadow-sm">
+              <h3 className="font-display text-xl font-bold mb-4 text-gray-900">
+                More LinkedIn Puzzle Resources
               </h3>
-
-              <ul className="space-y-2">
-
-                <li>
-                  <Link
-                    href="/blog/brain-training-techniques"
-                    className="text-primary hover:underline"
-                  >
-                    Best Brain Training Techniques for Puzzle Solvers
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    href="/blog/daily-puzzle-strategy-guide"
-                    className="text-primary hover:underline"
-                  >
-                    Daily Puzzle Strategy Guide: Build Your Solving Skills
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    href="/blog/queens-puzzle-strategy"
-                    className="text-primary hover:underline"
-                  >
-                    How to Master LinkedIn Queens Puzzle
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    href="/blog/how-to-solve-linkedin-zip"
-                    className="text-primary hover:underline"
-                  >
-                    How to Solve Linkedin Zip
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    href="/solutions/pinpoint"
-                    className="text-primary hover:underline"
-                  >
-                    Today's Pinpoint Answer
-                  </Link>
-                </li>
-
-              </ul>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold text-lg mb-3 text-gray-800">Daily Puzzle Solutions</h4>
+                  <ul className="space-y-2">
+                    <li>
+                      <Link href="/answers/pinpoint/today" className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        Today's Pinpoint Answer
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/answers/queens/today" className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        Today's Queens Answer
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/answers/tango/today" className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        Today's Tango Answer
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/answers/zip/today" className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        Today's Zip Answer
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold text-lg mb-3 text-gray-800">Strategy Guides</h4>
+                  <ul className="space-y-2">
+                    <li>
+                      <Link href="/blog/how-to-solve-linkedin-queens" className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                        How to Solve LinkedIn Queens
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/how-to-solve-linkedin-tango" className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                        How to Solve LinkedIn Tango
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/how-to-solve-linkedin-zip" className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                        How to Solve LinkedIn Zip
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/linkedin-games-complete-guide" className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                        Complete LinkedIn Games Guide
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <h4 className="font-semibold text-lg mb-3 text-gray-800">Popular Articles</h4>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="/blog/best-strategies-for-linkedin-puzzles" className="text-blue-600 hover:text-blue-800 hover:underline">
+                      Best Strategies for All LinkedIn Puzzles
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/blog/daily-puzzle-strategy-guide" className="text-blue-600 hover:text-blue-800 hover:underline">
+                      Daily Puzzle Strategy Guide
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/blog/brain-training-techniques" className="text-blue-600 hover:text-blue-800 hover:underline">
+                      Brain Training Techniques for Puzzle Solvers
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </div>
 
           </article>

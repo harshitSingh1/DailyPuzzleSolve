@@ -1,20 +1,32 @@
-import AnswerLandingPage from "@/components/seo/AnswerLandingPage"
-import { SITE_URL } from "@/lib/constants"
+import { Metadata } from "next";
+import GameLandingPage from "@/components/GameLandingPage";
+import { PUZZLE_GAMES, SITE_URL, SITE_NAME } from "@/lib/constants";
 
-export const metadata = {
-  title: "Tango Puzzle Answer Today – LinkedIn Puzzle Solution",
-  description:
-    "Today's LinkedIn Tango puzzle answer with hints, explanation, and walkthrough.",
+const gameData = PUZZLE_GAMES.find((g) => g.id === "tango")!;
+
+export const metadata: Metadata = {
+  title: `${gameData.label} Answers - Daily Solutions & Archive`,
+  description: `Find all ${gameData.label} answers and solutions. Daily updates with step-by-step guides, hints, and explanations. Complete archive of past puzzles.`,
+  keywords: [
+    ...gameData.keywords,
+    "tango answers",
+    "tango archive",
+    "tango solutions",
+  ],
   alternates: {
     canonical: `${SITE_URL}/answers/tango`,
   },
+  openGraph: {
+    title: `${gameData.label} Answers - Daily Solutions`,
+    description: `Complete archive of ${gameData.label} answers with step-by-step solutions`,
+    url: `${SITE_URL}/answers/tango`,
+    siteName: SITE_NAME,
+    images: [{ url: `${SITE_URL}${gameData.image}`, width: 1200, height: 630 }],
+  },
+};
+
+export default function TangoPage() {
+  return <GameLandingPage gameId="tango" />;
 }
 
-export default function Page() {
-  return (
-    <AnswerLandingPage
-      gameName="LinkedIn Tango"
-      gameSlug="tango"
-    />
-  )
-}
+export const revalidate = 3600;

@@ -2,7 +2,7 @@
 export interface Puzzle {
   _id: string;
   heading: string;
-  gameType: "Pinpoint" | "Queens" | "Tango" | "Crossclimb" | "Zip" | "Mini Sudoku";
+  gameType: "Pinpoint" | "Queens" | "Tango" | "Crossclimb" | "Zip" | "Mini Sudoku" | "Patches";
   ytVideo: string;
   screenshots: string[];
   createdAt: string;
