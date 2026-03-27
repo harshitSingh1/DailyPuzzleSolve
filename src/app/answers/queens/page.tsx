@@ -1,20 +1,39 @@
-import AnswerLandingPage from "@/components/seo/AnswerLandingPage"
-import { SITE_URL } from "@/lib/constants"
+import { Metadata } from "next";
+import GameLandingPage from "@/components/GameLandingPage";
+import { PUZZLE_GAMES, SITE_URL, SITE_NAME } from "@/lib/constants";
 
-export const metadata = {
-  title: "Queens Puzzle Answer Today – LinkedIn Game Solution",
-  description:
-    "Today's LinkedIn Queens puzzle answer with hints and full explanation.",
+const gameData = PUZZLE_GAMES.find((g) => g.id === "queens")!;
+
+export const metadata: Metadata = {
+  title: `${gameData.label} Answers - Daily Solutions & Archive`,
+  description: `Find all ${gameData.label} answers and solutions. Daily updates with step-by-step guides, hints, and explanations. Complete archive of past puzzles.`,
+  keywords: [
+    ...gameData.keywords,
+    "queens answers",
+    "queens archive",
+    "queens solutions",
+    "all queens answers",
+  ],
   alternates: {
     canonical: `${SITE_URL}/answers/queens`,
   },
+  openGraph: {
+    title: `${gameData.label} Answers - Daily Solutions`,
+    description: `Complete archive of ${gameData.label} answers with step-by-step solutions`,
+    url: `${SITE_URL}/answers/queens`,
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: `${SITE_URL}${gameData.image}`,
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+};
+
+export default function QueensPage() {
+  return <GameLandingPage gameId="queens" />;
 }
 
-export default function Page() {
-  return (
-    <AnswerLandingPage
-      gameName="LinkedIn Queens"
-      gameSlug="queens"
-    />
-  )
-}
+export const revalidate = 3600;

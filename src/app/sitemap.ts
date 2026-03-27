@@ -1,48 +1,103 @@
-import { MetadataRoute } from "next";
+import { MetadataRoute } from 'next';
+
+const baseUrl = 'https://logicpuzzlehub.xyz';
+
+const games = [
+  'pinpoint',
+  'queens',
+  'tango',
+  'zip',
+  'crossclimb',
+  'mini-sudoku',
+  'patches',
+];
+
+function getDates(days: number) {
+  const dates: string[] = [];
+  const today = new Date();
+
+  for (let i = 0; i < days; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    dates.push(d.toISOString().split('T')[0]);
+  }
+
+  return dates;
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.logicpuzzlehub.xyz";
-
-  const routes = [
-    "",
-    "/memes",
-    "/shop",
-    "/tools",
-    "/blog",
-    "/about",
-    "/contact",
-    "/games",
-    "/solutions",
-    "/solutions/pinpoint",
-    "/solutions/queens",
-    "/solutions/tango",
-    "/solutions/crossclimb",
-    "/solutions/zip",
-    "/solutions/mini-sudoku",
-    "/answers/pinpoint",
-    "/answers/queens",
-    "/answers/tango",
-    "/answers/crossclimb",
-    "/answers/zip",
-    "/answers/mini-sudoku",
-    "/editorial-policy",
-    "/privacy",
-    "/terms",
-    "/blog/how-to-solve-linkedin-pinpoint",
-    "/blog/brain-training-techniques",
-    "/blog/daily-puzzle-strategy-guide",
-    "/blog/queens-puzzle-strategy",
-    "/blog/tango-puzzle-tips",
-    "/blog/how-to-solve-linkedin-zip",
-    "/blog/linkedin-games-complete-guide",
-    "/blog/linkedin-puzzle-guide",
-    "/blog/best-strategies-for-linkedin-puzzles",
+  const staticPages = [
+    '',
+    '/blog',
+    '/about',
+    '/contact',
+    '/games',
+    '/tools',
+    '/shop',
+    '/memes',
+    '/privacy',
+    '/terms',
+    '/disclaimer',
+    '/editorial-policy',
+    '/solutions',
   ];
 
-  return routes.map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date("2026-03-13"),
-    changeFrequency: route.startsWith("/answers") ? "daily" : "weekly",
-    priority: route === "" ? 1 : route.startsWith("/answers") ? 0.9 : 0.7,
-  }));
+  const blogPages = [
+    '/blog/how-to-solve-linkedin-pinpoint',
+    '/blog/how-to-solve-linkedin-queens',
+    '/blog/how-to-solve-linkedin-tango',
+    '/blog/how-to-solve-linkedin-zip',
+    '/blog/how-to-solve-linkedin-crossclimb',
+    '/blog/how-to-solve-linkedin-minisudoku',
+    '/blog/how-to-solve-linkedin-patches',
+    '/blog/linkedin-games-complete-guide',
+    '/blog/linkedin-puzzle-guide',
+    '/blog/best-strategies-for-linkedin-puzzles',
+    '/blog/brain-training-techniques',
+    '/blog/daily-puzzle-strategy-guide',
+  ];
+
+  const urls: MetadataRoute.Sitemap = [];
+
+  // Static pages
+  staticPages.forEach((route) => {
+    urls.push({
+      url: `${baseUrl}${route}`,
+      lastModified: new Date(),
+      priority: route === '' ? 1 : 0.8,
+    });
+  });
+
+  // Blog pages
+  blogPages.forEach((route) => {
+    urls.push({
+      url: `${baseUrl}${route}`,
+      lastModified: new Date(),
+      priority: 0.8,
+    });
+  });
+
+  // Game landing pages
+  games.forEach((game) => {
+    urls.push({
+      url: `${baseUrl}/answers/${game}`,
+      lastModified: new Date(),
+      priority: 0.9,
+    });
+  });
+
+
+  const dates = getDates(60); 
+
+  games.forEach((game) => {
+    dates.forEach((date) => {
+      urls.push({
+        url: `${baseUrl}/answers/${game}/${date}`,
+        lastModified: new Date(),
+        priority: 0.7,
+      });
+    });
+  });
+
+  return urls;
 }

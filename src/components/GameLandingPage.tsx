@@ -1,11 +1,11 @@
-import { Metadata } from "next";
 import Link from "next/link";
-import { Calendar, Clock, ArrowRight, Target } from "lucide-react";
+import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import JsonLd from "@/components/JsonLd";
 import AdBlock from "@/components/ads/AdBlock";
 import { PUZZLE_GAMES, SITE_URL, SITE_NAME } from "@/lib/constants";
+import PuzzleIcon from "@/components/PuzzleIcon";
 
 // Generate dates for the last 30 days
 function generateRecentDates(count: number = 30) {
@@ -32,37 +32,15 @@ function generateRecentDates(count: number = 30) {
   return dates;
 }
 
-const gameData = PUZZLE_GAMES.find((g) => g.id === "pinpoint")!;
+interface GameLandingPageProps {
+  gameId: string;
+}
 
-export const metadata: Metadata = {
-  title: `${gameData.label} Answers - Daily Solutions & Archive`,
-  description: `Find all ${gameData.label} answers and solutions. Daily updates with step-by-step guides, hints, and explanations. Complete archive of past puzzles.`,
-  keywords: [
-    ...gameData.keywords,
-    "pinpoint answers",
-    "pinpoint archive",
-    "pinpoint solutions",
-    "all pinpoint answers",
-  ],
-  alternates: {
-    canonical: `${SITE_URL}/answers/pinpoint`,
-  },
-  openGraph: {
-    title: `${gameData.label} Answers - Daily Solutions`,
-    description: `Complete archive of ${gameData.label} answers with step-by-step solutions`,
-    url: `${SITE_URL}/answers/pinpoint`,
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: `${SITE_URL}${gameData.image}`,
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
-};
+export default function GameLandingPage({ gameId }: GameLandingPageProps) {
+  const gameData = PUZZLE_GAMES.find((g) => g.id === gameId);
+  
+  if (!gameData) return null;
 
-export default function PinpointLandingPage() {
   const recentDates = generateRecentDates(30);
   const today = recentDates[0];
   const thisWeek = recentDates.filter((d) => d.isThisWeek);
@@ -73,7 +51,7 @@ export default function PinpointLandingPage() {
     "@type": "CollectionPage",
     name: `${gameData.label} Answers`,
     description: `Complete collection of ${gameData.label} answers and solutions`,
-    url: `${SITE_URL}/answers/pinpoint`,
+    url: `${SITE_URL}/answers/${gameId}`,
     publisher: {
       "@type": "Organization",
       name: SITE_NAME,
@@ -100,7 +78,7 @@ export default function PinpointLandingPage() {
           {/* Header */}
           <header className="mb-8">
             <div className="flex items-center gap-3 mb-4">
-              <Target className="w-10 h-10 text-primary" />
+              <PuzzleIcon icon={gameData.icon} className="w-10 h-10 text-primary" />
               <Badge variant="secondary">All Answers</Badge>
               <Badge variant="outline">{gameData.difficulty}</Badge>
             </div>
@@ -114,7 +92,7 @@ export default function PinpointLandingPage() {
             </p>
 
             {/* Quick Access to Today */}
-            <Link href={`/answers/pinpoint/${today.date}`}>
+            <Link href={`/answers/${gameId}/${today.date}`}>
               <Button size="lg" className="mb-6">
                 <Clock className="w-5 h-5 mr-2" />
                 View Today's Answer
@@ -144,7 +122,7 @@ export default function PinpointLandingPage() {
               Today's Answer
             </h2>
             <Link
-              href={`/answers/pinpoint/${today.date}`}
+              href={`/answers/${gameId}/${today.date}`}
               className="block p-6 bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl border-2 border-primary hover:border-primary/80 transition-all hover:shadow-lg group"
             >
               <div className="flex items-center justify-between mb-3">
@@ -174,7 +152,7 @@ export default function PinpointLandingPage() {
               {thisWeek.slice(1).map((dateInfo) => (
                 <Link
                   key={dateInfo.date}
-                  href={`/answers/pinpoint/${dateInfo.date}`}
+                  href={`/answers/${gameId}/${dateInfo.date}`}
                   className="group p-6 bg-card rounded-xl border hover:border-primary transition-all hover:shadow-lg"
                 >
                   <div className="flex items-start justify-between mb-3">
@@ -203,7 +181,7 @@ export default function PinpointLandingPage() {
               {older.map((dateInfo) => (
                 <Link
                   key={dateInfo.date}
-                  href={`/answers/pinpoint/${dateInfo.date}`}
+                  href={`/answers/${gameId}/${dateInfo.date}`}
                   className="p-4 bg-card rounded-lg border hover:border-primary transition-all hover:shadow text-center group"
                 >
                   <p className="text-sm font-semibold mb-1 group-hover:text-primary transition-colors">
@@ -219,7 +197,7 @@ export default function PinpointLandingPage() {
 
           {/* View Full Archive */}
           <section className="mb-12 text-center">
-            <Link href="/answers/pinpoint/archive">
+            <Link href={`/answers/${gameId}/archive`}>
               <Button size="lg" variant="outline">
                 <Calendar className="w-5 h-5 mr-2" />
                 View Full Archive (60+ Days)
@@ -260,7 +238,7 @@ export default function PinpointLandingPage() {
           <section>
             <h2 className="text-3xl font-bold mb-6">Other LinkedIn Puzzles</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {PUZZLE_GAMES.filter((g) => g.id !== "pinpoint").slice(0, 3).map((otherGame) => (
+              {PUZZLE_GAMES.filter((g) => g.id !== gameId).slice(0, 3).map((otherGame) => (
                 <Link
                   key={otherGame.id}
                   href={`/answers/${otherGame.id}`}
@@ -280,5 +258,3 @@ export default function PinpointLandingPage() {
     </>
   );
 }
-
-export const revalidate = 3600; // Revalidate every hour

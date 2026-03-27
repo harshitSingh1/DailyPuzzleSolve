@@ -2,8 +2,8 @@
 export const API_BASE_URL = "https://dps-backend-epx7.onrender.com/api";
 
 export const SITE_NAME = "LogicPuzzleHub";
-export const SITE_URL = "https://daily-puzzle-solve.vercel.app";
-export const SITE_DESCRIPTION = "Get today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku solutions. Step-by-step screenshots, video walkthroughs & expert tips updated daily.";
+export const SITE_URL = "https://www.logicpuzzlehub.xyz";
+export const SITE_DESCRIPTION = "Get today's LinkedIn puzzle answers: Pinpoint, Queens, Tango, Crossclimb, Zip, Mini Sudoku & Patches solutions. Step-by-step screenshots, video walkthroughs & expert tips updated daily.";
 export const SITE_KEYWORDS = [
   "linkedin puzzle answers",
   "linkedin pinpoint answer today",
@@ -12,6 +12,7 @@ export const SITE_KEYWORDS = [
   "linkedin crossclimb solution",
   "linkedin zip puzzle answer",
   "linkedin mini sudoku answer",
+  "linkedin patches answer today",
 ];
 export const PUZZLE_GAMES = [
   {
@@ -68,6 +69,15 @@ export const PUZZLE_GAMES = [
     difficulty: "Medium",
     keywords: ["linkedin mini sudoku answer today", "mini sudoku solution", "linkedin sudoku hints"],
   },
+  {
+    id: "patches",
+    label: "LinkedIn Patches",
+    icon: "Award",
+    description: "Today's LinkedIn Patches answer & solution. Complete the patchwork pattern puzzle with our daily guide.",
+    image: "/images/patches-game.png",
+    difficulty: "Medium",
+    keywords: ["linkedin patches answer today", "patches puzzle solution", "linkedin patches hints"],
+  },
 ] as const;
 
 export const NAV_LINKS = [
@@ -91,7 +101,7 @@ export const SOCIAL_LINKS = {
 export const FAQ_DATA = [
   {
     question: "What are today's LinkedIn puzzle answers?",
-    answer: "We publish daily solutions for all LinkedIn puzzle games — Pinpoint, Queens, Tango, Crossclimb, Zip, and Mini Sudoku — within 30 minutes of each new puzzle going live. Scroll up to find today's answers with step-by-step screenshots and video walkthroughs.",
+    answer: "We publish daily solutions for all LinkedIn puzzle games — Pinpoint, Queens, Tango, Crossclimb, Zip, Mini Sudoku, and Patches — within 30 minutes of each new puzzle going live. Scroll up to find today's answers with step-by-step screenshots and video walkthroughs.",
   },
   {
     question: "How do I solve LinkedIn Pinpoint today?",
@@ -111,7 +121,7 @@ export const FAQ_DATA = [
   },
   {
     question: "What LinkedIn puzzle games do you cover?",
-    answer: "We cover all six LinkedIn puzzle games: Pinpoint (word connections), Queens (logic placement), Tango (pattern matching), Crossclimb (crossword ladder), Zip (number sequences), and Mini Sudoku (compact grid). Solutions are updated daily for each game.",
+    answer: "We cover all seven LinkedIn puzzle games: Pinpoint (word connections), Queens (logic placement), Tango (pattern matching), Crossclimb (crossword ladder), Zip (number sequences), Mini Sudoku (compact grid), and Patches (pattern completion). Solutions are updated daily for each game.",
   },
   {
     question: "What time are LinkedIn puzzles updated?",
