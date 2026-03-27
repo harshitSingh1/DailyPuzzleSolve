@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { fetchAvailableDates } from '@/lib/solutionUtils';
 
 const baseUrl = 'https://logicpuzzlehub.xyz';
 
@@ -25,7 +26,7 @@ function getDates(days: number) {
   return dates;
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = [
     '',
     '/blog',
@@ -86,18 +87,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
+  for (const game of games) {
+    let dates: string[] = [];
 
-  const dates = getDates(60); 
+    try {
+      dates = await fetchAvailableDates(game);
+    } catch (err) {
+      console.error(`sitemap: failed to fetch dates for ${game}`, err);
+      dates = getDates(10);
+    }
 
-  games.forEach((game) => {
-    dates.forEach((date) => {
+    dates = [...new Set(dates)].sort((a, b) => b.localeCompare(a));
+
+    for (const date of dates) {
       urls.push({
         url: `${baseUrl}/answers/${game}/${date}`,
-        lastModified: new Date(),
+        lastModified: new Date(date),
         priority: 0.7,
       });
-    });
-  });
+    }
+  }
 
   return urls;
 }
