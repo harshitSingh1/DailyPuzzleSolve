@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import AdBlock from "./AdBlock";
 
-const NO_AD_PATHS = ["/about", "/privacy", "/terms", "/contact", "/"];
+const NO_AD_PATHS = ["/about", "/privacy", "/terms", "/contact", "/", "/solutions", "/answers", "/answers/[game]", "/solutions/[game]"];
 
 export default function HeaderBanner() {
 

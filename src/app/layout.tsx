@@ -90,10 +90,24 @@ export default function RootLayout({
           </main>
 
           <Footer />
+          
+          {/* AdSense Compliance Disclaimer */}
+          <div className="border-t border-border/50 bg-muted/50 px-4 py-3 text-xs text-muted-foreground text-center hidden md:block">
+            <p>
+              <strong>{SITE_NAME}</strong> is an independent publication providing daily LinkedIn puzzle solutions.{" "}
+              <a href="/editorial-policy" className="underline hover:no-underline">Editorial Policy</a> |{" "}
+              <a href="/privacy" className="underline hover:no-underline">Privacy</a> |{" "}
+              <a href="/terms" className="underline hover:no-underline">Terms</a>
+            </p>
+            <p className="mt-1">
+              Solutions verified daily • Not affiliated with LinkedIn® • Independent publication
+            </p>
+          </div>
 
         </Providers>
 
       </body>
+
 
     </html>
   );

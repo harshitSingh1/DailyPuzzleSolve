@@ -220,17 +220,9 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* AD */}
-        <AdBlock
-          slot="5934836566"
-          format="leaderboard"
-          lazy={true}
-          minHeight={90}
-          className="my-3"
-        />
-
         {/* STRATEGY ARTICLES */}
         <section className="py-8 sm:py-10 bg-muted/30">
+
           <div className="container max-w-5xl">
 
             <h2 className="mb-2 text-center font-display text-xl font-extrabold sm:text-2xl">
