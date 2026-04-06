@@ -168,11 +168,41 @@ export default function ShopPage() {
           offers: {
             "@type": "Offer",
             price: item.parsed.priceNumeric?.toString() || "1999",
-            priceCurrency: "INR",
+            priceCurrency: "INR", 
             availability: "http://schema.org/InStock",
             priceValidUntil: `${new Date().getFullYear() + 1}-12-31`,
-            url: item.url
-          }
+            url: item.url,
+            shippingDetails: {
+              "@type": "OfferShippingDetails",
+              shippingRate: {
+                "@type": "MonetaryAmount",
+                value: "0",
+                currency: "INR"
+              },
+              deliveryTime: {
+                "@type": "ShippingDeliveryTime",
+                handlingTime: {
+                  "@type": "QuantitativeValue",
+                  minValue: 0,
+                  maxValue: 2,
+                  unitText: "DAY"
+                }
+              },
+              shippingDestination: {
+                "@type": "DefinedRegion",
+                addressCountry: "IN"
+              }
+            },
+            hasMerchantReturnPolicy: {
+              "@type": "MerchantReturnPolicy",
+              applicableCountry: "IN",
+              returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+              merchantReturnDays: 7,
+              returnMethod: "https://schema.org/ReturnByMail",
+              returnFees: "https://schema.org/FreeReturn"
+            }
+          },
+          description: item.parsed.cleanDescription || `${item.productName} - High quality puzzle product available now.`
         },
       })),
     },
