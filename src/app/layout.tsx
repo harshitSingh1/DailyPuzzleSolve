@@ -1,5 +1,4 @@
 import "./globals.css";
-import Script from "next/script";
 import type { Metadata } from "next";
 
 import Header from "@/components/Header";
@@ -70,16 +69,18 @@ export default function RootLayout({
   return (
     <html lang="en">
 
+      {/* ✅ MOVE ADSENSE SCRIPT HERE */}
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5138062904998916"
+          crossOrigin="anonymous"
+        />
+      </head>
+
       <body className="min-h-screen flex flex-col">
 
         <Providers>
-
-          <Script
-            async
-            strategy="afterInteractive"
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5138062904998916"
-            crossOrigin="anonymous"
-          />
 
           <RecruitmentBanner />
 
@@ -107,8 +108,6 @@ export default function RootLayout({
         </Providers>
 
       </body>
-
-
     </html>
   );
 }
