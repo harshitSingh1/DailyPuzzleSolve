@@ -32,7 +32,7 @@ export default function ScrollPopupAd() {
   useEffect(() => {
     if (shouldSkip) return;
 
-    const timer = setTimeout(show, 45000);
+    const timer = setTimeout(show, 120000);
 
     return () => clearTimeout(timer);
   }, [shouldSkip]);
@@ -45,7 +45,7 @@ export default function ScrollPopupAd() {
       const scrolled = window.scrollY + window.innerHeight;
       const total = document.documentElement.scrollHeight;
 
-      if (scrolled / total >= 0.6) show();
+      if (scrolled / total >= 0.75) show();
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });

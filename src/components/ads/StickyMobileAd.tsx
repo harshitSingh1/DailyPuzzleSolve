@@ -25,7 +25,7 @@ export default function StickyMobileAd() {
 
     const timer = setTimeout(() => {
       setVisible(true);
-    }, 5000);
+    }, 90000);
 
     return () => clearTimeout(timer);
   }, [dismissed]);
