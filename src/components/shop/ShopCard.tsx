@@ -64,8 +64,7 @@ sizes="(max-width:768px) 100vw, 400px"
             <meta itemProp="availability" content="https://schema.org/InStock" />
             <meta itemProp="priceValidUntil" content={`${new Date().getFullYear() + 1}-12-31`} />
             <meta itemProp="url" content={item.url} />
-            <meta itemProp="shippingDetails" content="Free delivery available" />
-            <meta itemProp="hasMerchantReturnPolicy" content="7 day replacement" />
+          
             {price && (
               <span className="font-display font-bold text-primary">{price}</span>
             )}
