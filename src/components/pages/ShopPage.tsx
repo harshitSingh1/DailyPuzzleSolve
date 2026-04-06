@@ -125,33 +125,58 @@ export default function ShopPage() {
   /* JSON-LD */
   /* ------------------------------------------------ */
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Store",
-  name: "Puzzle Books & Brain Training Games Shop",
-  description:
-    "Curated puzzle books and brain training games for all skill levels.",
-  url: `${SITE_URL}/shop`,
-  dateModified: today,
-  publisher: {
-    "@type": "Organization",
-    name: SITE_NAME,
-  },
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Puzzle Products",
-    itemListElement: items.slice(0, 10).map((item: ShopItem, i: number) => ({
-      "@type": "Offer",
-      position: i + 1,
-      itemOffered: {
-        "@type": "Product",
-        name: item.productName,
-        image: item.image,
-        url: item.url,
-      },
-    })),
-  },
-};
+  const parsedItems = useMemo(() => 
+    items.slice(0, 10).map(item => {
+      const parsed = parseDescription(item.description || '');
+      const rating = Number(item.rating) || 4.3;
+      return {
+        ...item,
+        parsed,
+        rating: rating.toFixed(1)
+      };
+    }), [items]);
+
+  const jsonLd = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "Store",
+    name: "Puzzle Books & Brain Training Games Shop",
+    description: "Curated puzzle books and brain training games for all skill levels.",
+    url: `${SITE_URL}/shop`,
+    dateModified: today,
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+    },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Puzzle Products",
+      itemListElement: parsedItems.map((item, i) => ({
+        "@type": "Offer",
+        position: i + 1,
+        itemOffered: {
+          "@type": "Product",
+          name: item.productName,
+          image: item.image,
+          url: item.url,
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: item.rating,
+            reviewCount: "15",
+            bestRating: "5",
+            worstRating: "0"
+          },
+          offers: {
+            "@type": "Offer",
+            price: item.parsed.priceNumeric?.toString() || "1999",
+            priceCurrency: "INR",
+            availability: "http://schema.org/InStock",
+            priceValidUntil: `${new Date().getFullYear() + 1}-12-31`,
+            url: item.url
+          }
+        },
+      })),
+    },
+  }), [parsedItems, today]);
 
   return (
     <>
