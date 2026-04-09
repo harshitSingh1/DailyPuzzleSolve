@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description:
     "Learn how to solve LinkedIn Zip puzzle with expert strategies. Path-finding tips, dead-end avoidance, and step-by-step techniques to improve your Zip scores.",
   alternates: {
-    canonical: `${SITE_URL}/how-to-solve-linkedin-zip`,
+    canonical: `${SITE_URL}/blog/how-to-solve-linkedin-zip`,
   },
   robots: {
     index: true,

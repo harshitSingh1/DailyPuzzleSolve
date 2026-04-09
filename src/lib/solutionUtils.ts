@@ -20,7 +20,7 @@ function normalizeDate(dateStr: string): string {
 }
 
 // Extract date from puzzle createdAt
-function getPuzzleDate(puzzle: Puzzle): string {
+export function getPuzzleDate(puzzle: Puzzle): string {
   return normalizeDate(puzzle.createdAt);
 }
 

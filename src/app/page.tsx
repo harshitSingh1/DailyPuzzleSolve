@@ -170,7 +170,7 @@ export default function HomePage() {
             <div className="mt-6 grid gap-3 grid-cols-3">
 
               <div className="rounded-xl border border-border bg-card p-3 text-center shadow-sm">
-                <p className="font-display text-xl font-extrabold text-primary">6</p>
+                <p className="font-display text-xl font-extrabold text-primary">7</p>
                 <p className="text-xs text-muted-foreground">Puzzles Daily</p>
               </div>
 
@@ -346,6 +346,11 @@ export default function HomePage() {
               <Link href="/answers/mini-sudoku" className="rounded-full border px-3 py-1.5 text-sm hover:bg-accent">
                 <PuzzleIcon icon="mini-sudoku" className="h-4 w-4 inline mr-1" />
                 Mini Sudoku Answer Today
+              </Link>
+
+              <Link href="/answers/patches" className="rounded-full border px-3 py-1.5 text-sm hover:bg-accent">
+                <PuzzleIcon icon="patch" className="h-4 w-4 inline mr-1" />
+                Patch Answer Today
               </Link>
 
             </div>

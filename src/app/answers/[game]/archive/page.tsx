@@ -6,7 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import JsonLd from "@/components/JsonLd";
 import AdBlock from "@/components/ads/AdBlock";
+import { fetchPuzzles } from "@/lib/api";
 import { PUZZLE_GAMES, SITE_URL, SITE_NAME } from "@/lib/constants";
+import { getPuzzleDate } from "@/lib/solutionUtils";
 
 type Props = {
   params: Promise<{
@@ -14,30 +16,13 @@ type Props = {
   }>;
 };
 
-// Generate dates for the archive (last 60 days)
-function generateArchiveDates(count: number = 60) {
-  const dates = [];
-  for (let i = 0; i < count; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    dates.push({
-      date: date.toISOString().split("T")[0],
-      formatted: date.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
-      shortFormatted: date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }),
-      isToday: i === 0,
-      isThisWeek: i < 7,
-    });
-  }
-  return dates;
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 // SEO Metadata
@@ -92,10 +77,9 @@ export default async function ArchivePage({ params }: Props) {
 
   if (!gameData) return notFound();
 
-  const archiveDates = generateArchiveDates(60);
-  const todayDate = archiveDates[0];
-  const thisWeek = archiveDates.filter((d) => d.isThisWeek);
-  const older = archiveDates.filter((d) => !d.isThisWeek);
+  // Fetch actual available dates from backend
+  const puzzles = await fetchPuzzles(game);
+  const availableDates = [...new Set(puzzles.map(p => getPuzzleDate(p)))].sort((a, b) => b.localeCompare(a));
 
   // JSON-LD
   const jsonLd = {
@@ -194,66 +178,36 @@ export default async function ArchivePage({ params }: Props) {
             </p>
           </section>
 
-          {/* This Week Section */}
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6 flex items-center gap-2">
-              <Clock className="w-8 h-8 text-primary" />
-              This Week
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {thisWeek.map((dateInfo) => (
-                <Link
-                  key={dateInfo.date}
-                  href={`/answers/${game}/${dateInfo.date}`}
-                  className="group p-6 bg-card rounded-xl border hover:border-primary transition-all hover:shadow-lg"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        {dateInfo.shortFormatted}
-                      </p>
-                      <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
-                        {dateInfo.isToday ? "Today's Answer" : dateInfo.formatted.split(",")[0]}
-                      </h3>
-                    </div>
-                    {dateInfo.isToday && (
-                      <Badge variant="default" className="ml-2">
-                        Latest
-                      </Badge>
-                    )}
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground group-hover:text-primary transition-colors">
-                    <span>View Solution</span>
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
-              ))}
+          {/* Available Solutions */}
+          {availableDates.length > 0 ? (
+            <section className="mb-12">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-2">
+                <Calendar className="w-8 h-8 text-primary" />
+                All Available Solutions ({availableDates.length})
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {availableDates.map((dateStr) => (
+                  <Link
+                    key={dateStr}
+                    href={`/answers/${game}/${dateStr}`}
+                    className="p-4 bg-card rounded-lg border hover:border-primary transition-all hover:shadow text-center group"
+                  >
+                    <p className="text-sm font-semibold mb-1 group-hover:text-primary transition-colors">
+                      {formatDate(dateStr)}
+                    </p>
+                    <p className="text-xs text-muted-foreground group-hover:text-primary transition-colors">
+                      View Answer
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              <p className="text-lg">No solutions available yet.</p>
+              <p className="mt-2">Check back soon for new puzzle solutions.</p>
             </div>
-          </section>
-
-          {/* Older Puzzles Section */}
-          <section className="mb-8">
-            <h2 className="text-3xl font-bold mb-6 flex items-center gap-2">
-              <Calendar className="w-8 h-8 text-primary" />
-              Previous Puzzles
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {older.map((dateInfo) => (
-                <Link
-                  key={dateInfo.date}
-                  href={`/answers/${game}/${dateInfo.date}`}
-                  className="p-4 bg-card rounded-lg border hover:border-primary transition-all hover:shadow text-center group"
-                >
-                  <p className="text-sm text-muted-foreground mb-1">
-                    {dateInfo.shortFormatted}
-                  </p>
-                  <p className="text-xs text-muted-foreground group-hover:text-primary transition-colors">
-                    View Answer
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </section>
+          )}
 
           {/* SEO Content */}
           <section className="prose prose-lg dark:prose-invert max-w-none mb-8 p-6 bg-card rounded-xl border">
