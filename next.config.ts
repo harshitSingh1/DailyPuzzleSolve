@@ -62,13 +62,34 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Redirects for SEO
+  // Redirects for SEO - consolidate to single canonical domain
   async redirects() {
     return [
       // Redirect old URLs if any
       {
         source: "/puzzle/:game",
         destination: "/answers/:game/today",
+        permanent: true,
+      },
+      // Redirect old blog paths without /blog prefix
+      {
+        source: "/best-strategies-for-linkedin-puzzles",
+        destination: "/blog/best-strategies-for-linkedin-puzzles",
+        permanent: true,
+      },
+      {
+        source: "/linkedin-puzzle-guide",
+        destination: "/blog/linkedin-puzzle-guide",
+        permanent: true,
+      },
+      {
+        source: "/linkedin-games-complete-guide",
+        destination: "/blog/linkedin-games-complete-guide",
+        permanent: true,
+      },
+      {
+        source: "/how-to-solve-linkedin-zip",
+        destination: "/blog/how-to-solve-linkedin-zip",
         permanent: true,
       },
     ];

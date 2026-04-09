@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { fetchAvailableDates } from '@/lib/solutionUtils';
 
-const baseUrl = 'https://logicpuzzlehub.xyz';
+const baseUrl = 'https://www.logicpuzzlehub.xyz';
 
 const games = [
   'pinpoint',
@@ -9,7 +9,7 @@ const games = [
   'tango',
   'zip',
   'crossclimb',
-  'mini-sudoku',
+  'minisudoku',
   'patches',
 ];
 
@@ -84,6 +84,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/answers/${game}`,
       lastModified: new Date(),
       priority: 0.9,
+    });
+    // Also add archive pages
+    urls.push({
+      url: `${baseUrl}/answers/${game}/archive`,
+      lastModified: new Date(),
+      priority: 0.7,
+    });
+    // Add /today routes
+    urls.push({
+      url: `${baseUrl}/answers/${game}/today`,
+      lastModified: new Date(),
+      priority: 0.8,
     });
   });
 

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description:
     "Expert strategies for all LinkedIn puzzle games. Proven techniques for Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku. Improve your scores today.",
   alternates: {
-    canonical: `${SITE_URL}/best-strategies-for-linkedin-puzzles`,
+    canonical: `${SITE_URL}/blog/best-strategies-for-linkedin-puzzles`,
   },
   openGraph: {
     title: "Best Strategies for LinkedIn Puzzles – Expert Tips",

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description:
     "Complete guide to all LinkedIn games: Pinpoint, Queens, Tango, Crossclimb, Zip & Mini Sudoku. Rules, strategies, solving techniques and daily tips for every game.",
   alternates: {
-    canonical: `${SITE_URL}/linkedin-games-complete-guide`,
+    canonical: `${SITE_URL}/blog/linkedin-games-complete-guide`,
   },
   openGraph: {
     title: "LinkedIn Games Complete Guide – All 6 Puzzles Explained",

@@ -1,0 +1,1 @@
+# Fix Related Links to Show All 7 Games\n\n- [ ] Step 1: Update src/app/solutions/[game]/page.tsx to use all PUZZLE_GAMES (7 links)\n- [ ] Step 2: Style current game link differently (highlight/badge)\n- [ ] Step 3: Test all 7 URLs show identical 7 links\n- [ ] Step 4: Clear cache and verify consistency\n- [ ] Step 5: Complete task\n

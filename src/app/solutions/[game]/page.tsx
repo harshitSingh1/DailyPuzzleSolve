@@ -60,7 +60,7 @@ const SolutionDetail = () => {
   });
 
   const canonicalUrl = `${SITE_URL}/solutions/${game}`;
-  const relatedGames = PUZZLE_GAMES.filter((g) => g.id !== game);
+  const relatedGames = PUZZLE_GAMES;
 
   // SEO title under 60 chars
   const seoTitle = `${formattedGameName} Answer Today (${todayFormatted})`;

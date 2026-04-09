@@ -19,7 +19,10 @@ export default async function TodayPage({ params }: Props) {
       redirect(`/answers/${game}/${latestSolution.date}`);
     }
   } catch (error) {
-    console.error(`Error fetching latest solution for ${game}:`, error);
+    // Don't log NEXT_REDIRECT errors - they're expected from redirect()
+    if (error && typeof error === 'object' && 'digest' in error && typeof error.digest === 'string' && !error.digest.includes('NEXT_REDIRECT')) {
+      console.error(`Error fetching latest solution for ${game}:`, error);
+    }
   }
 
   // Fallback: use today's date if API fails or no solution available

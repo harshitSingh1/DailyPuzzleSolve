@@ -181,7 +181,7 @@ export default async function AnswerPage({ params }: Props) {
 
   const { yesterday, tomorrow, isToday, isFuture } = getAdjacentDates(actualDate);
   const formattedDate = formatDate(actualDate);
-  const relatedGames = PUZZLE_GAMES.filter((g) => g.id !== game).slice(0, 3);
+  const relatedGames = PUZZLE_GAMES.filter((g) => g.id !== game);
 
   // Show fallback message if needed
   const showFallbackMessage = isFallback && requestedDate;
@@ -543,7 +543,7 @@ export default async function AnswerPage({ params }: Props) {
             <p className="text-muted-foreground mb-4">
               Check out today's answers for other LinkedIn puzzle games:
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {relatedGames.map((relatedGame) => (
                 <Link
                   key={relatedGame.id}
