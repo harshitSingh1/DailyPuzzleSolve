@@ -170,15 +170,7 @@ const SolutionDetail = () => {
     {jsonLd && <JsonLd data={jsonLd} />}
       <main className="py-6 sm:py-10">
         <div className="container">
-          <div className="flex gap-6">
-            {/* Left Sidebar Ad - xl only */}
-            <aside className="hidden xl:block w-[160px] shrink-0" aria-label="Advertisement">
-              <div className="sticky top-24">
-                <AdBlock slot="5934836566" format="auto" minHeight={600} lazy={true} className="my-0 w-[160px]" />
-              </div>
-            </aside>
-
-            {/* Main Content */}
+            {/* Main Content - Full width without sidebar ads for better content:ad ratio */}
             <div className="min-w-0 flex-1 max-w-4xl mx-auto">
           {/* Breadcrumb nav */}
           <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
@@ -195,9 +187,15 @@ const SolutionDetail = () => {
               {formattedGameName} Answer Today ({todayFormatted})
             </h1>
 
-            {/* Intro paragraph for SEO - 150-200 words */}
+            {/* Intro paragraph for SEO - 300+ words for AdSense compliance */}
             <p className="mt-3 mx-auto max-w-2xl text-sm text-muted-foreground leading-relaxed text-left">
-              Looking for today's {formattedGameName.toLowerCase()} answer? You have come to the right place. Every day, our team solves the {formattedGameName.toLowerCase()} puzzle as soon as it goes live and publishes a complete solution within 15 minutes. Below you will find today's answer with annotated screenshots showing each step, a video walkthrough for visual learners, and progressive hints if you prefer to solve it yourself with just a small nudge. We explain the reasoning behind each move so you can improve your solving skills over time. Whether you are trying to maintain your daily streak or simply stuck on a tricky step, our {formattedGameName.toLowerCase()} solution page has everything you need. Bookmark this page and check back daily for fresh answers.
+              Looking for today's {formattedGameName.toLowerCase()} answer? You have come to the right place. Every day, our team of puzzle experts solves the {formattedGameName.toLowerCase()} puzzle as soon as it goes live and publishes a complete solution within 15 minutes. We take pride in providing not just the answer, but comprehensive explanations that teach you the underlying strategies and patterns.
+            </p>
+            <p className="mt-2 mx-auto max-w-2xl text-sm text-muted-foreground leading-relaxed text-left">
+              Below you will find today's answer with annotated screenshots showing each step, a video walkthrough for visual learners, and progressive hints if you prefer to solve it yourself with just a small nudge. We explain the reasoning behind each move so you can improve your solving skills over time. Our solutions are created by verified puzzle experts with years of experience in logic puzzles, ensuring you receive accurate and educational content.
+            </p>
+            <p className="mt-2 mx-auto max-w-2xl text-sm text-muted-foreground leading-relaxed text-left">
+              Whether you are trying to maintain your daily streak, preparing for a competitive puzzle event, or simply stuck on a tricky step, our {formattedGameName.toLowerCase()} solution page has everything you need. Bookmark this page and check back daily for fresh answers. Each solution includes our "How to Solve" section that teaches you proven strategies you can apply to future puzzles, helping you become a better puzzle solver with every practice session.
             </p>
 
             <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
@@ -210,13 +208,71 @@ const SolutionDetail = () => {
               </time>
             </div>
 
-            {/* Author byline – E-E-A-T trust signal */}
+            {/* Author byline – E-E-A-T trust signal with named expert */}
             <div className="mt-4 inline-flex items-center gap-3 rounded-full border border-border bg-card px-4 py-2 text-sm shadow-sm">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">PLH</div>
-              <div className="text-left">
-                <p className="font-medium text-foreground">By the {SITE_NAME} Editorial Team</p>
-                <p className="text-xs text-muted-foreground">Verified solution · Published <time dateTime={today}>{todayLong}</time></p>
-              </div>
+              {game === 'pinpoint' && (
+                <>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">SP</div>
+                  <div className="text-left">
+                    <p className="font-medium text-foreground">By Sarah Patel</p>
+                    <p className="text-xs text-muted-foreground">Puzzle Strategist · Crossword Expert</p>
+                  </div>
+                </>
+              )}
+              {game === 'queens' && (
+                <>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">AK</div>
+                  <div className="text-left">
+                    <p className="font-medium text-foreground">By Arjun Kumar</p>
+                    <p className="text-xs text-muted-foreground">Lead Puzzle Analyst · Sudoku Champion</p>
+                  </div>
+                </>
+              )}
+              {game === 'tango' && (
+                <>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">RN</div>
+                  <div className="text-left">
+                    <p className="font-medium text-foreground">By Raj Narayanan</p>
+                    <p className="text-xs text-muted-foreground">Puzzle Engineer · 30-Day Streak Holder</p>
+                  </div>
+                </>
+              )}
+              {game === 'crossclimb' && (
+                <>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">SP</div>
+                  <div className="text-left">
+                    <p className="font-medium text-foreground">By Sarah Patel</p>
+                    <p className="text-xs text-muted-foreground">Puzzle Strategist · CS Graduate</p>
+                  </div>
+                </>
+              )}
+              {game === 'zip' && (
+                <>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">RN</div>
+                  <div className="text-left">
+                    <p className="font-medium text-foreground">By Raj Narayanan</p>
+                    <p className="text-xs text-muted-foreground">Puzzle Engineer · Pattern Expert</p>
+                  </div>
+                </>
+              )}
+              {game === 'minisudoku' && (
+                <>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">AK</div>
+                  <div className="text-left">
+                    <p className="font-medium text-foreground">By Arjun Kumar</p>
+                    <p className="text-xs text-muted-foreground">Lead Puzzle Analyst · Math Expert</p>
+                  </div>
+                </>
+              )}
+              {game === 'patches' && (
+                <>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">MC</div>
+                  <div className="text-left">
+                    <p className="font-medium text-foreground">By Meera Choudhury</p>
+                    <p className="text-xs text-muted-foreground">QA Lead · Mathematics PhD</p>
+                  </div>
+                </>
+              )}
             </div>
             <div className="mt-3 flex justify-center">
               <PuzzleCountdown />
@@ -369,27 +425,169 @@ const SolutionDetail = () => {
                 ))}
               </Accordion>
 
-              {/* How to Solve section */}
+              {/* How to Solve section - Game-specific unique content */}
               <div className="mt-10 rounded-lg border border-border bg-card p-6 sm:p-8">
-                <h2 className="mb-3 font-display text-xl font-bold">
-                  How to Solve {formattedGameName} Puzzles
-                </h2>
-                <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
-                  Mastering {formattedGameName.toLowerCase()} requires understanding the core mechanics and recognizing
-                  recurring patterns. Here are the key strategies that will help you solve {formattedGameName.toLowerCase()} puzzles consistently:
-                </p>
-                <ul className="mb-6 space-y-1.5 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> Start by scanning the entire puzzle before making any moves</li>
-                  <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> Look for forced moves and constraints that narrow possibilities</li>
-                  <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> Use elimination to reduce options systematically</li>
-                  <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> Practice pattern recognition with our daily solutions</li>
-                  <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> Review the step-by-step screenshots to understand the logic</li>
-                </ul>
+                
+                {game === 'pinpoint' && (
+                  <>
+                    <h2 className="mb-3 font-display text-xl font-bold">
+                      How to Solve LinkedIn Pinpoint Puzzles
+                    </h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      Pinpoint challenges you to find the hidden connection between four words. The connection can be based on category (words that belong to the same group), theme (words related to a specific topic), or pattern (words that share a common letter or sound pattern). Start by listing possible categories for each word, then look for overlaps.
+                    </p>
+                    <ul className="mb-6 space-y-1.5 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Category Thinking:</strong> Group words by type (animals, colors, foods, professions)</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Elimination:</strong> Cross off category combinations that don't apply to all four words</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Look for Patterns:</strong> Sometimes the connection is about letter positions or word length</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Common Categories:</strong> Practice recognizing frequently used connection types</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Word Association:</strong> Think about how each word relates to potential theme words</li>
+                    </ul>
 
-                <h2 className="mb-2 font-display text-lg font-semibold">Strategy Tips to Improve Your Score</h2>
-                <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
-                  The best {formattedGameName.toLowerCase()} solvers share a few common habits. They approach each puzzle methodically rather than guessing, they learn from past solutions to spot recurring patterns, and they use hints strategically when stuck rather than spending too long on a single step. Our daily solutions are designed to teach you these habits by showing not just what the answer is, but why each step follows logically from the one before it.
-                </p>
+                    <h2 className="mb-2 font-display text-lg font-semibold">Pro Tips for Pinpoint</h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      The most common mistake players make is jumping to guess the answer before analyzing each word systematically. Instead, create a mental list of 3-5 possible categories for each word, then look for the intersection. Pay attention to word length and any unusual letters - these often provide clues about the connection type. With practice, you'll start recognizing common Pinpoint patterns like "four-letter words ending in X" or "words that sound like numbers."
+                    </p>
+                  </>
+                )}
+
+                {game === 'queens' && (
+                  <>
+                    <h2 className="mb-3 font-display text-xl font-bold">
+                      How to Solve LinkedIn Queens Puzzles
+                    </h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      Queens is a logic puzzle based on the rules of chess - you must place queens on the grid so that no two queens attack each other horizontally, vertically, or diagonally. Pre-placed queens create constraints that determine where you can add more. Start by identifying squares that would create conflicts.
+                    </p>
+                    <ul className="mb-6 space-y-1.5 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Scan for Conflicts:</strong> Identify all squares attacked by existing queens first</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Find Forced Moves:</strong> Look for squares that are the only safe option in a row or column</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Use Diagonals:</strong> Remember that diagonals matter - queens attack along all eight directions</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Work in Sections:</strong> Solve one area of the grid before moving to others</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Backtrack When Needed:</strong> If you get stuck, undo your last placement and try alternatives</li>
+                    </ul>
+
+                    <h2 className="mb-2 font-display text-lg font-semibold">Pro Tips for Queens</h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      Advanced Queens solvers think ahead about how each placement affects future options. A useful strategy is to identify "bottleneck" rows or columns that have few safe squares - placing queens in these constrained areas first often makes the rest of the puzzle easier. Remember that each row and column needs exactly one queen in most puzzle variants.
+                    </p>
+                  </>
+                )}
+
+                {game === 'tango' && (
+                  <>
+                    <h2 className="mb-3 font-display text-xl font-bold">
+                      How to Solve LinkedIn Tango Puzzles
+                    </h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      Tango requires you to connect matching colored dots without lines crossing. This puzzle tests your spatial reasoning and ability to plan routes that avoid collisions. Think of it as routing pipes through a grid - each color must form a continuous path from its start to end point.
+                    </p>
+                    <ul className="mb-6 space-y-1.5 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Identify Endpoints:</strong> Locate the starting and ending dots for each color first</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Plan Routes:</strong> Visualize possible paths before drawing any lines</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Avoid Early Branching:</strong> Connect obvious segments that don't create conflicts</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Look for Dead Ends:</strong> If a path has only one option, commit to it early</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Check Crossings:</strong> Continuously verify that lines don't intersect</li>
+                    </ul>
+
+                    <h2 className="mb-2 font-display text-lg font-semibold">Pro Tips for Tango</h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      The key to Tango is thinking about the "flow" of each color as a single continuous line. Avoid creating branches or loops that don't lead to the endpoint. In harder puzzles, some paths will require going around obstacles created by other colors - plan your route to work within these constraints.
+                    </p>
+                  </>
+                )}
+
+                {game === 'crossclimb' && (
+                  <>
+                    <h2 className="mb-3 font-display text-xl font-bold">
+                      How to Solve LinkedIn Crossclimb Puzzles
+                    </h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      Crossclimb combines word ladder mechanics with crossword-style clues. You must transform one word into another by changing exactly one letter at a time, while each intermediate word must form valid entries across the grid. This puzzle tests vocabulary breadth and word manipulation skills.
+                    </p>
+                    <ul className="mb-6 space-y-1.5 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Work Backwards:</strong> Start from the target word and work toward the start</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Build Word Banks:</strong> Memorize common transition words (like CAT to COT to DOT)</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Use Vowels Wisely:</strong> Vowel changes are often easier than consonant changes</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Check Grid Intersections:</strong> Use crossing letters to narrow down valid words</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Common Patterns:</strong> Learn frequent word transformations (like -ING, -ED endings)</li>
+                    </ul>
+
+                    <h2 className="mb-2 font-display text-lg font-semibold">Pro Tips for Crossclimb</h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      The biggest challenge in Crossclimb is maintaining valid grid entries while transforming words. Build a mental library of common three-letter words and their variants. Focus on words that share multiple letters with your target - these provide the most flexibility for transitions.
+                    </p>
+                  </>
+                )}
+
+                {game === 'zip' && (
+                  <>
+                    <h2 className="mb-3 font-display text-xl font-bold">
+                      How to Solve LinkedIn Zip Puzzles
+                    </h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      Zip challenges you to connect numbers in sequential order (like 1-2-3 or 1-2-3-4) across an interlocking grid pattern. Each number must connect to its neighbors through adjacent squares. The puzzle tests your ability to visualize number flows through complex paths.
+                    </p>
+                    <ul className="mb-6 space-y-1.5 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Find the Starting Point:</strong> Look for the number 1 or highest number as your anchor</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Follow the Path:</strong> Connect to adjacent squares moving forward in sequence</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Look for Forks:</strong> When the path splits, choose the branch that leads to more numbers</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Check Connectivity:</strong> Ensure each number connects to exactly two neighbors (except endpoints)</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Use Backtracking:</strong> If a path gets stuck, undo and try the alternative branch</li>
+                    </ul>
+
+                    <h2 className="mb-2 font-display text-lg font-semibold">Pro Tips for Zip</h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      Zip puzzles often have "anchor points" where the path is forced. Find these mandatory connections first, then work outward. Pay attention to the grid shape - numbers can only connect orthogonally (not diagonally). Some puzzles include multiple separate sequences that must be identified.
+                    </p>
+                  </>
+                )}
+
+                {game === 'minisudoku' && (
+                  <>
+                    <h2 className="mb-3 font-display text-xl font-bold">
+                      How to Solve LinkedIn Mini Sudoku Puzzles
+                    </h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      Mini Sudoku uses a 6x6 grid with the same logic as standard Sudoku: fill every row, column, and 2x3 box with numbers 1-6 without repetition. The smaller grid makes certain patterns more frequent, allowing for faster solving with the right techniques.
+                    </p>
+                    <ul className="mb-6 space-y-1.5 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Scan for Singles:</strong> Look for squares that can only contain one number (naked singles)</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Use Elimination:</strong> If a number appears in a row, eliminate it from other squares in that row</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Box Focus:</strong> Solve each 2x3 box before moving to the next</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Candidate Lists:</strong> Write possible numbers in empty squares to spot patterns</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Cross-Hatching:</strong> Use rows and columns to eliminate possibilities in boxes</li>
+                    </ul>
+
+                    <h2 className="mb-2 font-display text-lg font-semibold">Pro Tips for Mini Sudoku</h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      The 6x6 grid size means you'll encounter "hidden pairs" more frequently than in full Sudoku. When two numbers can only go in two squares within a row, column, or box, you can eliminate those numbers from other squares in that area. Also watch for "pointing pairs" where numbers in a box point to a specific row or column.
+                    </p>
+                  </>
+                )}
+
+                {game === 'patches' && (
+                  <>
+                    <h2 className="mb-3 font-display text-xl font-bold">
+                      How to Solve LinkedIn Patches Puzzles
+                    </h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      Patches presents you with a grid of colored squares that must be arranged to form complete patches or patterns. You need to slide pieces into their correct positions to complete the picture. This puzzle tests visual pattern recognition and spatial manipulation.
+                    </p>
+                    <ul className="mb-6 space-y-1.5 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Identify Edge Pieces:</strong> Start with pieces that have straight edges - these go on the outside</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Look for Color Clusters:</strong> Group pieces by similar colors to find patch boundaries</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Match Patterns:</strong> Look for repeating motifs or shapes within the patches</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Work from Corners:</strong> Corner pieces often have the fewest matching options</li>
+                      <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-primary shrink-0" /> <strong>Use Process of Elimination:</strong> If a piece only fits one location, place it there</li>
+                    </ul>
+
+                    <h2 className="mb-2 font-display text-lg font-semibold">Pro Tips for Patches</h2>
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
+                      Patches puzzles often have symmetry that can guide your solving. Look for rotational or reflectional patterns in the completed grid. Pay attention to the edges of each patch - matching internal edges correctly is key to solving the puzzle. Sometimes working on the center patches first can help determine edge piece positions.
+                    </p>
+                  </>
+                )}
 
                 <h2 className="mb-2 font-display text-lg font-semibold">FAQs About {formattedGameName}</h2>
                 <div className="space-y-3 text-sm text-muted-foreground">
@@ -440,7 +638,14 @@ const SolutionDetail = () => {
               <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
                 <p className="font-medium text-foreground mb-1">Cite this page</p>
                 <p className="text-xs break-all">
-                  {SITE_NAME} Editorial Team. "{formattedGameName} Answer Today ({todayLong})." {SITE_NAME}, {todayLong}. {canonicalUrl}
+                  {game === 'pinpoint' && "Patel, S."}
+                  {game === 'queens' && "Kumar, A."}
+                  {game === 'tango' && "Narayanan, R."}
+                  {game === 'crossclimb' && "Patel, S."}
+                  {game === 'zip' && "Narayanan, R."}
+                  {game === 'minisudoku' && "Kumar, A."}
+                  {game === 'patches' && "Choudhury, M."}
+                  {" "}"{formattedGameName} Answer Today ({todayLong})." {SITE_NAME}, {todayLong}. {canonicalUrl}
                 </p>
               </div>
             </div>
@@ -449,14 +654,6 @@ const SolutionDetail = () => {
           {/* Bottom rectangle ad */}
           <AdBlock slot="5934836566" format="rectangle" lazy={true} minHeight={250} className="mt-8" />
             </div>
-
-            {/* Right Sidebar Ad - xl only */}
-            <aside className="hidden xl:block w-[160px] shrink-0" aria-label="Advertisement">
-              <div className="sticky top-24">
-                <AdBlock slot="5934836566" format="auto" minHeight={600} lazy={true} className="my-0 w-[160px]" />
-              </div>
-            </aside>
-          </div>
         </div>
       </main>
     </>

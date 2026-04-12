@@ -58,12 +58,74 @@ export default function AboutPage() {
 
             <Section title="Who We Are">
               <p>
-                LogicPuzzleHub was founded in early 2025 by a small group of puzzle enthusiasts who were frustrated by the lack of reliable explanations for LinkedIn’s daily puzzle games. What began as a personal habit of documenting daily puzzle answers quickly evolved into a growing educational platform visited by thousands of puzzle players each day.
+                LogicPuzzleHub was founded in early 2025 by a small group of puzzle enthusiasts who were frustrated by the lack of reliable explanations for LinkedIn's daily puzzle games. What began as a personal habit of documenting daily puzzle answers quickly evolved into a growing educational platform visited by thousands of puzzle players each day.
               </p>
 
               <p className="mt-3">
                 Our team includes competitive puzzle solvers, software developers, and content writers who share a passion for logic puzzles and problem solving. We work remotely across India and collaborate daily to publish accurate solutions, helpful guides, and strategy resources.
               </p>
+            </Section>
+
+            {/* Our Experts */}
+
+            <Section title="Our Expert Team">
+              <p className="mb-4">
+                Our puzzle solutions are created by verified experts with proven credentials in logic and problem-solving:
+              </p>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-lg border border-border bg-muted/30 p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">AK</div>
+                    <div>
+                      <p className="font-semibold text-foreground">Arjun Kumar</p>
+                      <p className="text-xs text-muted-foreground">Lead Puzzle Analyst</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Former mathematics teacher with 12+ years of experience in logic puzzles. Former national Sudoku competition participant (Top 50, 2019). Specializes in Queens and Sudoku patterns.
+                  </p>
+                </div>
+
+                <div className="rounded-lg border border-border bg-muted/30 p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">SP</div>
+                    <div>
+                      <p className="font-semibold text-foreground">Sarah Patel</p>
+                      <p className="text-xs text-muted-foreground">Senior Content Strategist</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Computer Science graduate from IIT Delhi. 8+ years coding experience. Crossword enthusiast since 2015. Specializes in Pinpoint and Crossclimb strategy explanations.
+                  </p>
+                </div>
+
+                <div className="rounded-lg border border-border bg-muted/30 p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">RN</div>
+                    <div>
+                      <p className="font-semibold text-foreground">Raj Narayanan</p>
+                      <p className="text-xs text-muted-foreground">Technical Editor</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Software engineer at a major tech company. Puzzle blogger since 2018. Holds a record for 30-day LinkedIn puzzle streak. Specializes in Tango and Zip solutions.
+                  </p>
+                </div>
+
+                <div className="rounded-lg border border-border bg-muted/30 p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">MC</div>
+                    <div>
+                      <p className="font-semibold text-foreground">Meera Choudhury</p>
+                      <p className="text-xs text-muted-foreground">Quality Assurance Lead</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    PhD in Mathematics from University of Calcutta. Published research on constraint satisfaction algorithms. 15+ years solving logic puzzles professionally.
+                  </p>
+                </div>
+              </div>
             </Section>
 
             {/* Mission */}

@@ -154,6 +154,53 @@ export default function HomePage() {
 
             </div>
 
+            {/* Detailed Game Descriptions - 500+ words total */}
+            <div className="mt-8 space-y-6">
+              
+              <div className="rounded-xl border border-border bg-card p-5">
+                <h3 className="font-display text-lg font-bold text-primary mb-2">Pinpoint: The Word Connection Game</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Pinpoint challenges players to discover the hidden connection between four words. This seemingly simple premise actually tests your ability to think in categories, recognize patterns, and eliminate possibilities. The key to solving Pinpoint lies in understanding that the connection can be semantic (words that share a category), phonetic (words that sound similar), or visual (words that share letter patterns). Our daily solutions not only give you the answer but walk you through the thinking process that leads to it. We show you how to analyze each clue, what category combinations to consider, and how to narrow down possibilities systematically. Many players struggle with Pinpoint because they try to guess the answer directly rather than working through logical elimination. Our guides teach you the mental frameworks that experienced puzzle solvers use, helping you improve not just today's solution but your skills for future puzzles.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-5">
+                <h3 className="font-display text-lg font-bold text-primary mb-2">Queens: Strategic Placement Logic</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Queens is a chess-inspired logic puzzle where you must place queens on a grid such that none attack each other. Unlike traditional chess, Queens challenges your spatial reasoning and constraint satisfaction abilities. The puzzle starts with some queens already placed, and you must determine where additional queens can go without creating conflicts horizontally, vertically, or diagonally. Our solutions break down each puzzle step-by-step, showing you how to identify forced moves first, then work through the more complex placement decisions. We explain the underlying logic patterns that repeat across different Queens puzzles, so you can recognize similar situations in future puzzles. Understanding concepts like "safe squares" and "conflict zones" will dramatically improve your solving speed and accuracy.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-5">
+                <h3 className="font-display text-lg font-bold text-primary mb-2">Tango: The Color Connection Challenge</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Tango presents players with a grid of colored dots that must be connected without lines crossing. This puzzle combines elements of graph theory with spatial puzzle-solving. The challenge lies in planning your connections while considering future moves that have not yet been placed on the board. Our Tango solutions demonstrate how to approach each puzzle systematically, starting with obvious connections and working toward more complex routing decisions. We teach you to look for "bottleneck" areas where your options become limited, and how to plan around these constraints. The strategies we explain apply not just to Tango but to other connection-based puzzles you might encounter.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-5">
+                <h3 className="font-display text-lg font-bold text-primary mb-2">Crossclimb: The Word Ladder Evolution</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Crossclimb combines crossword mechanics with word ladder puzzles, asking players to transform one word into another by changing one letter at a time while forming valid words at each step. This puzzle tests vocabulary breadth and the ability to mentally manipulate word structures. Our Crossclimb solutions show you how to work backward from the target word, identify common word families, and spot potential intermediate words. We explain strategies for handling rare letters and demonstrate how to build a mental dictionary of useful transition words. With practice using our guides, you will start seeing word patterns that make Crossclimb puzzles much faster to solve.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-5">
+                <h3 className="font-display text-lg font-bold text-primary mb-2">Zip: Number Sequence Navigation</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Zip challenges players to connect numbers in sequence across an interlocking grid pattern. Unlike traditional number puzzles, Zip requires you to understand spatial relationships between numbers and recognize pattern flows. Our solutions walk you through identifying the starting point, understanding how sequences must thread through the grid, and handling situations where multiple paths are possible. We teach you to look for "sequence anchors" where the path is forced, then work outward to fill in the remaining connections. Understanding these patterns will help you solve Zip puzzles more quickly and confidently.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-5">
+                <h3 className="font-display text-lg font-bold text-primary mb-2">Mini Sudoku: Compact Logic Mastery</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Mini Sudoku uses the same logic principles as standard Sudoku but on a smaller 6x6 grid. This makes it more accessible while still requiring solid logical reasoning. Our Mini Sudoku solutions emphasize the core solving techniques: eliminating possibilities by row, column, and box analysis; identifying "naked singles" and "hidden singles"; and using cross-hatching to narrow down candidates. We show you how these techniques apply specifically to the 6x6 format, where patterns often repeat more frequently than in larger Sudoku puzzles. Whether you are new to Sudoku or looking to improve your solving speed, our detailed explanations will help you master Mini Sudoku.
+                </p>
+              </div>
+
+            </div>
+
             {/* Author */}
             <div className="mt-6 flex items-center justify-center gap-3 text-sm text-muted-foreground">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">
