@@ -16,6 +16,8 @@
 # next.js
 /.next/
 /out/
+/.kilo
+/.kilo/
 
 # production
 /build

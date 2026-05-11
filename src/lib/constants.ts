@@ -90,11 +90,10 @@ export const NAV_LINKS = [
 ] as const;
 
 export const SOCIAL_LINKS = {
-  youtube: "https://youtube.com/@LogicPuzzleHub",
+  discord: "https://discord.gg/LogicPuzzleHub",
   twitter: "https://twitter.com/LogicPuzzleHub",
   linkedin: "https://linkedin.com/company/LogicPuzzleHub",
   reddit: "https://reddit.com/r/LogicPuzzleHub",
-  facebook: "https://facebook.com/LogicPuzzleHub",
   instagram: "https://instagram.com/LogicPuzzleHub",
 };
 
