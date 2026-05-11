@@ -1,124 +1,127 @@
-import { MetadataRoute } from 'next';
-import { fetchAvailableDates } from '@/lib/solutionUtils';
+import { MetadataRoute } from "next";
+import { fetchAvailableDates } from "@/lib/solutionUtils";
 
-const baseUrl = 'https://www.logicpuzzlehub.xyz';
-
-const games = [
-  'pinpoint',
-  'queens',
-  'tango',
-  'zip',
-  'crossclimb',
-  'minisudoku',
-  'patches',
-];
-
-function getDates(days: number) {
-  const dates: string[] = [];
-  const today = new Date();
-
-  for (let i = 0; i < days; i++) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
-    dates.push(d.toISOString().split('T')[0]);
-  }
-
-  return dates;
-}
+const SITE_URL = "https://www.logicpuzzlehub.xyz";
+const GAMES = ["pinpoint", "queens", "tango", "crossclimb", "zip", "minisudoku", "patches"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticPages = [
-    '',
-    '/blog',
-    '/about',
-    '/contact',
-    '/games',
-    '/tools',
-    '/shop',
-    '/memes',
-    '/privacy',
-    '/terms',
-    '/disclaimer',
-    '/editorial-policy',
-    '/solutions',
-  ];
-
-  const blogPages = [
-    '/blog/how-to-solve-linkedin-pinpoint',
-    '/blog/how-to-solve-linkedin-queens',
-    '/blog/how-to-solve-linkedin-tango',
-    '/blog/how-to-solve-linkedin-zip',
-    '/blog/how-to-solve-linkedin-crossclimb',
-    '/blog/how-to-solve-linkedin-minisudoku',
-    '/blog/how-to-solve-linkedin-patches',
-    '/blog/linkedin-games-complete-guide',
-    '/blog/linkedin-puzzle-guide',
-    '/blog/best-strategies-for-linkedin-puzzles',
-    '/blog/brain-training-techniques',
-    '/blog/daily-puzzle-strategy-guide',
-  ];
-
-  const urls: MetadataRoute.Sitemap = [];
-
-  // Static pages
-  staticPages.forEach((route) => {
-    urls.push({
-      url: `${baseUrl}${route}`,
+  const basePages = [
+    {
+      url: SITE_URL,
       lastModified: new Date(),
-      priority: route === '' ? 1 : 0.8,
-    });
-  });
-
-  // Blog pages
-  blogPages.forEach((route) => {
-    urls.push({
-      url: `${baseUrl}${route}`,
+      changeFrequency: "daily" as const,
+      priority: 1,
+    },
+    {
+      url: `${SITE_URL}/solutions`,
       lastModified: new Date(),
-      priority: 0.8,
-    });
-  });
-
-  // Game landing pages
-  games.forEach((game) => {
-    urls.push({
-      url: `${baseUrl}/answers/${game}`,
-      lastModified: new Date(),
+      changeFrequency: "daily" as const,
       priority: 0.9,
-    });
-    // Also add archive pages
-    urls.push({
-      url: `${baseUrl}/answers/${game}/archive`,
+    },
+    {
+      url: `${SITE_URL}/games`,
       lastModified: new Date(),
-      priority: 0.7,
-    });
-    // Add /today routes
-    urls.push({
-      url: `${baseUrl}/answers/${game}/today`,
-      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
       priority: 0.8,
-    });
-  });
+    },
+    {
+      url: `${SITE_URL}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/about`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.3,
+    },
+    {
+      url: `${SITE_URL}/terms`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.3,
+    },
+    {
+      url: `${SITE_URL}/tools`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/shop`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/editorial-policy`,
+      lastModified: new Date(),
+      changeFrequency: "yearly" as const,
+      priority: 0.3,
+    },
+    {
+      url: `${SITE_URL}/disclaimer`,
+      lastModified: new Date(),
+      changeFrequency: "yearly" as const,
+      priority: 0.3,
+    },
+    {
+      url: `${SITE_URL}/memes`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.3,
+    },
+  ];
 
-  for (const game of games) {
-    let dates: string[] = [];
+  // Generate solution pages for each game (today + last 30 days)
+  const solutionPages: MetadataRoute.Sitemap = [];
 
+  for (const game of GAMES) {
     try {
-      dates = await fetchAvailableDates(game);
-    } catch (err) {
-      console.error(`sitemap: failed to fetch dates for ${game}`, err);
-      dates = getDates(10);
-    }
+      const dates = await fetchAvailableDates(game);
+      // Include today + up to 30 most recent dates
+      const recentDates = dates.slice(0, 30);
 
-    dates = [...new Set(dates)].sort((a, b) => b.localeCompare(a));
+      for (const date of recentDates) {
+        solutionPages.push({
+          url: `${SITE_URL}/answers/${game}/${date}`,
+          lastModified: new Date(),
+          changeFrequency: "daily" as const,
+          priority: 0.8,
+        });
+      }
 
-    for (const date of dates) {
-      urls.push({
-        url: `${baseUrl}/answers/${game}/${date}`,
-        lastModified: new Date(date),
-        priority: 0.7,
+      // Also add the /solutions/[game] page
+      solutionPages.push({
+        url: `${SITE_URL}/solutions/${game}`,
+        lastModified: new Date(),
+        changeFrequency: "daily" as const,
+        priority: 0.9,
+      });
+    } catch (error) {
+      console.error(`Error generating sitemap for ${game}:`, error);
+      // Fallback: add the game page without dates
+      solutionPages.push({
+        url: `${SITE_URL}/solutions/${game}`,
+        lastModified: new Date(),
+        changeFrequency: "daily" as const,
+        priority: 0.9,
       });
     }
   }
 
-  return urls;
+  return [...basePages, ...solutionPages];
 }

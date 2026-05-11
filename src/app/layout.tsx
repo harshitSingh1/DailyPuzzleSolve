@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Providers from "@/components/providers";
 import RecruitmentBanner from "@/components/RecruitmentBanner";
+import JsonLd from "@/components/JsonLd";
 
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/constants";
 
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 
   title: {
     default: `${SITE_NAME} | Daily LinkedIn Puzzle Answers`,
-    template: `%s | ${SITE_NAME}`
+    template: `%s | ${SITE_NAME}`,
   },
 
   description: SITE_DESCRIPTION,
@@ -22,12 +23,12 @@ export const metadata: Metadata = {
     icon: [
       { url: "/favicon.ico" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" }
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
     ],
 
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }
-    ]
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
 
   manifest: "/site.webmanifest",
@@ -42,23 +43,36 @@ export const metadata: Metadata = {
       {
         url: "/images/hero.jpeg",
         width: 1200,
-        height: 630
-      }
+        height: 630,
+      },
     ],
 
-    type: "website"
+    type: "website",
   },
 
   twitter: {
     card: "summary_large_image",
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
-    images: ["/images/hero.jpeg"]
+    images: ["/images/hero.jpeg"],
   },
 
   alternates: {
-    canonical: SITE_URL
-  }
+    canonical: SITE_URL,
+    languageAlternates: [{ hrefLang: "en", href: SITE_URL }],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -66,24 +80,47 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Organization schema for E-E-A-T trust signals
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/images/logo1.png`,
+    },
+    sameAs: [
+      "https://youtube.com/@LogicPuzzleHub",
+      "https://twitter.com/LogicPuzzleHub",
+      "https://linkedin.com/company/LogicPuzzleHub",
+      "https://reddit.com/r/LogicPuzzleHub",
+      "https://facebook.com/LogicPuzzleHub",
+      "https://instagram.com/LogicPuzzleHub",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      "contactType": "customer support",
+      "url": `${SITE_URL}/contact`,
+    },
+  };
+
   return (
     <html lang="en">
-
-      {/* ✅ MOVE ADSENSE SCRIPT HERE */}
       <head>
+        {/* AdSense */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5138062904998916"
           crossOrigin="anonymous"
+          strategy="afterInteractive"
         />
       </head>
 
       <body className="min-h-screen flex flex-col">
-
         <Providers>
-
           <RecruitmentBanner />
-
           <Header />
 
           <main className="flex-1">
@@ -91,22 +128,24 @@ export default function RootLayout({
           </main>
 
           <Footer />
-          
-          {/* AdSense Compliance Disclaimer */}
+
+          {/* Organization Structured Data */}
+          <JsonLd data={organizationSchema} />
+
+          {/* AdSense Compliance */}
           <div className="border-t border-border/50 bg-muted/50 px-4 py-3 text-xs text-muted-foreground text-center hidden md:block">
             <p>
               <strong>{SITE_NAME}</strong> is an independent publication providing daily LinkedIn puzzle solutions.{" "}
               <a href="/editorial-policy" className="underline hover:no-underline">Editorial Policy</a> |{" "}
-              <a href="/privacy" className="underline hover:no-underline">Privacy</a> |{" "}
-              <a href="/terms" className="underline hover:no-underline">Terms</a>
+              <a href="/privacy" className="underline hover:no-underline">Privacy Policy</a> |{" "}
+              <a href="/terms" className="underline hover:no-underline">Terms of Service</a> |{" "}
+              <a href="/advertise" className="underline hover:no-underline">Advertise</a>
             </p>
             <p className="mt-1">
               Solutions verified daily • Not affiliated with LinkedIn® • Independent publication
             </p>
           </div>
-
         </Providers>
-
       </body>
     </html>
   );

@@ -2,7 +2,7 @@
 
 import { useState, memo } from "react";
 import Link from "next/link";
-import { Youtube, Twitter, Linkedin, Send, Facebook, Instagram } from "lucide-react";
+import { Twitter, Linkedin, Send, Instagram, Disc } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SOCIAL_LINKS, SITE_NAME, PUZZLE_GAMES } from "@/lib/constants";
@@ -26,10 +26,9 @@ const infoLinks = [
 ];
 
 const socialItems = [
-  { icon: Youtube, url: SOCIAL_LINKS.youtube, label: "YouTube", hoverColor: "hover:bg-[hsl(0,100%,50%)]" },
+  { icon: Disc, url: SOCIAL_LINKS.discord, label: "Discord", hoverColor: "hover:bg-[hsl(234,88%,62%)]" },
   { icon: Linkedin, url: SOCIAL_LINKS.linkedin, label: "LinkedIn", hoverColor: "hover:bg-[hsl(210,70%,35%)]" },
   { icon: Twitter, url: SOCIAL_LINKS.twitter, label: "Twitter", hoverColor: "hover:bg-[hsl(203,89%,53%)]" },
-  { icon: Facebook, url: SOCIAL_LINKS.facebook, label: "Facebook", hoverColor: "hover:bg-[hsl(220,46%,48%)]" },
   { icon: Instagram, url: SOCIAL_LINKS.instagram, label: "Instagram", hoverColor: "hover:bg-[hsl(340,75%,54%)]" },
 ];
 
